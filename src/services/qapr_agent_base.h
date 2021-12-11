@@ -12,103 +12,93 @@
 
 namespace QApr {
 
-    class Agent;
-    class Q_APR_EXPORT AgentBase : public QThread{
-        Q_OBJECT
-        QORM_CONNECTION_SUPPORT
-        friend class AgentBasePvt;
-    public:
-        Q_INVOKABLE explicit AgentBase(QObject*parent=nullptr);
-        Q_INVOKABLE ~AgentBase();
+class Agent;
 
-        /**
-         * @brief agentSetting
-         * @return
-         *
-         * assiciate settings
-         */
-        virtual QRpc::ServiceSetting&agentSetting();
+//!
+//! \brief The AgentBase class
+//!
+class Q_APR_EXPORT AgentBase : public QThread{
+    Q_OBJECT
+    QORM_CONNECTION_SUPPORT
+    friend class AgentBasePvt;
+public:
+    //!
+    //! \brief AgentBase
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit AgentBase(QObject*parent=nullptr);
 
-        /**
-         * @brief run
-         *
-         * run thread
-         */
-        void run() override;
+    //!
+    //! \brief ~AgentBase
+    //!
+    Q_INVOKABLE ~AgentBase();
 
-        /**
-         * @brief canMethodExecute
-         * @param method
-         * @return
-         *
-         * verify can execute selected method
-         */
-        virtual bool canMethodExecute(const QMetaMethod&method);
+    //!
+    //! \brief agentSetting
+    //! \return
+    //!assiciate settings
+    virtual QRpc::ServiceSetting&agentSetting();
 
-        /**
-         * @brief runCheck
-         * @return
-         *
-         * verify run method
-         */
-        virtual bool runCheck();
+    //!
+    //! \brief run
+    //!run thread
+    void run() override;
 
-        /**
-         * @brief start
-         *
-         * start thread
-         */
-        virtual void start();
+    //!
+    //! \brief canMethodExecute
+    //! \param method
+    //! \return
+    //!verify can execute selected method
+    virtual bool canMethodExecute(const QMetaMethod&method);
 
-        /**
-         * @brief agentName
-         * @return
-         *
-         * agent name defined
-         */
-        virtual QByteArray agentName() const;
-        virtual void setAgentName(const QVariant &v);
+    //!
+    //! \brief runCheck
+    //! \return
+    //!verify run method
+    virtual bool runCheck();
 
-        /**
-         * @brief stats
-         * @return
-         *
-         * current state
-         */
-        virtual QVariantHash &stats();
+    //!
+    //! \brief start
+    //! start thread
+    virtual void start();
 
-        /**
-         * @brief settings_SERVER
-         * @return
-         *
-         * server setting file
-         */
-        Q_INVOKABLE static const QVariant settings_SERVER();
+    //!
+    //! \brief agentName
+    //! \return
+    //!agent name defined
+    virtual QByteArray agentName() const;
 
-    signals:
-        /**
-         * @brief serviceStart
-         */
-        void serviceStart();
+    //!
+    //! \brief setAgentName
+    //! \param v
+    //!agent name defined
+    virtual void setAgentName(const QVariant &v);
 
-        /**
-         * @brief taskError
-         * @param agentName
-         * @param error
-         */
-        void taskError(const QByteArray&agentName, const QVariant&error);
+    //!
+    //! \brief stats
+    //! \return
+    //!current state
+    virtual QVariantHash &stats();
 
-        /**
-         * @brief taskFinished
-         * @param agentName
-         */
-        void taskFinished(const QByteArray&agentName);
+    //!
+    //! \brief settings_SERVER
+    //! \return
+    //!server setting file
+    Q_INVOKABLE static const QVariant settings_SERVER();
 
-        /**
-         * @brief taskResume
-         */
-        void taskResume();
-    private:
-        void*p=nullptr;
-    };
+signals:
+
+    void serviceStart();
+
+
+    void taskError(const QByteArray&agentName, const QVariant&error);
+
+
+    void taskFinished(const QByteArray&agentName);
+
+
+    void taskResume();
+private:
+    void*p=nullptr;
+};
 }

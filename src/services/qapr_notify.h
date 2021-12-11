@@ -13,58 +13,71 @@
 static QApr::NotifyDispatch&methodName##_dispatch = QApr::Notify::instance().dispatcherRegister(NotifyClass::staticMetaObject, QByteArrayLiteral(#methodName));
 
 namespace QApr{
-    class Q_APR_EXPORT Notify : public QThread
-    {
-        Q_OBJECT
-        QORM_DECLARE_INSTANCE(Notify)
-    public:
+//!
+//! \brief The Notify class
+//!
+class Q_APR_EXPORT Notify : public QThread
+{
+    Q_OBJECT
+    QORM_DECLARE_INSTANCE(Notify)
+public:
 
-        Q_INVOKABLE explicit Notify(QObject*parent=nullptr);
-        Q_INVOKABLE ~Notify();
-        Q_INVOKABLE static const QVariant settings_SERVER();
+    //!
+    //! \brief Notify
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit Notify(QObject*parent=nullptr);
 
-        /**
-         * @brief run
-         */
-        void run() override;
+    //!
+    //! \brief ~Notify
+    //!
+    Q_INVOKABLE ~Notify();
 
-        /**
-         * @brief start
-         * @return
-         */
-        virtual bool start();
+    //!
+    //! \brief settings_SERVER
+    //! \return
+    //!
+    Q_INVOKABLE static const QVariant settings_SERVER();
 
-        /**
-         * @brief stop
-         * @return
-         */
-        virtual bool stop();
+    void run() override;
 
-        /**
-         * @brief serviceStart
-         * @param service
-         */
-        virtual void serviceStart(const QByteArray &service);
+    //!
+    //! \brief start
+    //! \return
+    //!
+    virtual bool start();
 
-        /**
-         * @brief dispatcherRegister
-         * @param metaObject
-         * @param name
-         * @return
-         */
-        virtual NotifyDispatch &dispatcherRegister(const QMetaObject &metaObject, const QByteArray &name);
+    //!
+    //! \brief stop
+    //! \return
+    //!
+    virtual bool stop();
 
-        /**
-         * @brief notify
-         * @param channel
-         * @param payload
-         * @return
-         */
-        virtual bool notify(const QString&channel, const QVariant&payload);
+    //!
+    //! \brief serviceStart
+    //! \param service
+    //!
+    virtual void serviceStart(const QByteArray &service);
 
-    private:
-        void*p=nullptr;
-    };
+    //!
+    //! \brief dispatcherRegister
+    //! \param metaObject
+    //! \param name
+    //! \return
+    //!
+    virtual NotifyDispatch &dispatcherRegister(const QMetaObject &metaObject, const QByteArray &name);
 
-    //static auto&NotifyApp=Notify::instance();
+    //!
+    //! \brief notify
+    //! \param channel
+    //! \param payload
+    //! \return
+    //!
+    virtual bool notify(const QString&channel, const QVariant&payload);
+
+private:
+    void*p=nullptr;
+};
+
+//static auto&NotifyApp=Notify::instance();
 }

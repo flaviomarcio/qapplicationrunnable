@@ -59,24 +59,28 @@ public:
 
         if(dirHome.exists()){
             QDir dir(qsl(":"));
-            dir.setNameFilters(QStringList()<<qsl("*.json"));
+            dir.setNameFilters(QStringList{qsl("*.json")});
             for(auto&info:dir.entryInfoList()){
                 QFile fileSrc(info.filePath());
                 QFile fileDst(qsl("%1/%2").arg(applicationSettingDir,info.fileName()));
                 if(fileDst.exists())
                     continue;
-                else if(!fileSrc.open(fileSrc.ReadOnly))
+
+                if(!fileSrc.open(fileSrc.ReadOnly)){
 #if Q_RPC_LOG
                     sWarning()<<qsl("No open file:")<<fileSrc.fileName()<<qsl(", error: ")<<fileSrc.errorString();
 #endif
-                else if(!fileDst.open(fileDst.Truncate | fileDst.Unbuffered | fileDst.WriteOnly))
+
+                }
+                if(!fileDst.open(fileDst.Truncate | fileDst.Unbuffered | fileDst.WriteOnly)){
 #if Q_RPC_LOG
                     sWarning()<<qsl("No open file:")<<fileDst.fileName()<<qsl(", error: ")<<fileDst.errorString();
 #endif
-                else{
-                    fileDst.write(fileSrc.readAll());
-                    fileDst.close();
+
                 }
+
+                fileDst.write(fileSrc.readAll());
+                fileDst.close();
                 if(fileDst.isOpen())
                     fileSrc.close();
             }
@@ -90,26 +94,27 @@ public:
                 if(l.isEmpty()){
                     continue;
                 }
-                else if(l.size()==1){
+
+                if(l.size()==1){
                     auto key=l.first();
                     auto value=l.last();
-                    __arguments.insert(key,value);
+                    __arguments[key]=value;
                 }
                 else{
                     auto key=l.first().toLower();
                     auto value=l.last();
-                    __arguments.insert(key,value);
+                    __arguments[key]=value;
                 }
             }
 
             QHashIterator<QString, QVariant> i(manager.arguments());
             while (i.hasNext()) {
                 i.next();
-                __arguments.insert(i.key(), i.value());
+                __arguments[i.key()]=i.value();
             }
         }
         return __arguments;
     }
 };
 
-} // namespace QApr
+}

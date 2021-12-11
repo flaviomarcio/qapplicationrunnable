@@ -175,12 +175,12 @@ QVariantList MenuObject::menu()const
 MenuObject &MenuObject::menu(const QVariant&v)
 {
     dPvt();
-    if(v.type()==v.List){
+    if(qTypeId(v)==QMetaType_QVariantList){
         for(auto&v:v.toList())
-            if(v.type()==v.Map || v.type()==v.Hash)
+            if(qTypeId(v)==QMetaType_QVariantMap || qTypeId(v)==QMetaType_QVariantHash)
                 p.menuAdd(v.toMap());
     }
-    else if(v.type()==v.Map || v.type()==v.Hash){
+    else if(qTypeId(v)==QMetaType_QVariantMap || qTypeId(v)==QMetaType_QVariantHash){
         p.menuAdd(v.toMap());
     }
     return*this;
@@ -206,13 +206,13 @@ MenuObject &MenuObject::permission(const QVariant &v)
 {
     if(v.isValid()){
         dPvt();
-        if(v.type()==v.List){
+        if(qTypeId(v)==QMetaType_QVariantList){
             for(auto&v:v.toList()){
-                if(v.type()==v.Map || v.type()==v.Hash)
+                if(qTypeId(v)==QMetaType_QVariantMap || qTypeId(v)==QMetaType_QVariantHash)
                     this->menu(v);
             }
         }
-        else if(v.type()==v.Map || v.type()==v.Hash){
+        else if(qTypeId(v)==QMetaType_QVariantMap || qTypeId(v)==QMetaType_QVariantHash){
             p.permissionAdd(v);
         }
     }
@@ -242,10 +242,11 @@ bool MenuObject::isValid() const
 {
     if(this->text().isNull())
         return false;
-    else if(this->route().isNull() && this->routeLoad().isNull())
+
+    if(this->route().isNull() && this->routeLoad().isNull())
         return false;
-    else
-        return true;
+
+    return true;
 }
 
 }

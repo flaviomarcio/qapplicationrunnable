@@ -1,6 +1,7 @@
 #include "./qapr_controller.h"
-#include "./qapr_interface_authorization.h"
+#include "./qapr_interface_database.h"
 #include "./qapr_application.h"
+#include "./qrpc_controller.h"
 
 namespace QApr {
 
@@ -10,7 +11,7 @@ namespace QApr {
 class ControllerPvt{
 public:
     Controller*parent=nullptr;
-    InterfaceAuthorization*request_=nullptr;
+    InterfaceDatabase*request_=nullptr;
     QVariantHash accountModel;
     explicit ControllerPvt(Controller*parent){
         this->parent=parent;
@@ -18,15 +19,14 @@ public:
     virtual ~ControllerPvt(){
     }
 
-    InterfaceAuthorization*request(){
+    InterfaceDatabase*request(){
         if(this->request_==nullptr){
             QObject*__parent=this->parent;
             while(__parent!=nullptr){
                 if(__parent->metaObject()->inherits(&InterfaceBase::staticMetaObject)){
-                    request_=dynamic_cast<InterfaceAuthorization*>(__parent);
-                    if(request_!=nullptr){
+                    request_=dynamic_cast<InterfaceDatabase*>(__parent);
+                    if(request_!=nullptr)
                         break;
-                    }
                 }
                 __parent=__parent->parent();
             }
@@ -46,13 +46,28 @@ Controller::~Controller()
     delete&p;
 }
 
-InterfaceAuthorization *Controller::interfaceRequest()
+const QVariant Controller::resultInfo()
+{
+    if(this->parent()==nullptr)
+        return this->lr().resultVariantInfo();
+
+    auto interface=dynamic_cast<QRpc::QRPCController*>(this->parent());
+    if(interface==nullptr)
+        return this->lr().resultVariantInfo();
+
+    auto&rq=interface->rq();
+    if(this->lr().isNotOk())
+        rq.co(this->lr().sc());
+    return this->lr().resultVariantInfo();
+}
+
+InterfaceDatabase *Controller::interfaceRequest()
 {
     dPvt();
     return p.request();
 }
 
-InterfaceAuthorization *Controller::irq()
+InterfaceDatabase *Controller::irq()
 {
     dPvt();
     return p.request();
@@ -61,20 +76,21 @@ InterfaceAuthorization *Controller::irq()
 bool Controller::transactionRollbackForce() const
 {
     dPvt();
-    if(p.request()==nullptr)
+    if(p.request()==nullptr){
         sWarning()<<tr("Request não identificado");
-    else
-        return p.request()->transactionRollbackForce();
-    return false;
+        return false;
+    }
+    return p.request()->transactionRollbackForce();
 }
 
 void Controller::setTransactionRollbackForce(bool value)
 {
     dPvt();
-    if(p.request()==nullptr)
+    if(p.request()==nullptr){
         sWarning()<<tr("Request não identificado");
-    else
-        p.request()->setTransactionRollbackForce(value);
+        return;
+    }
+    p.request()->setTransactionRollbackForce(value);
 }
 
 }

@@ -82,8 +82,12 @@ public slots:
     }
 
     void taskCheck(){
-        QMutexLocker locker(&mutexAgent);
+        QMutexLOCKER locker(&mutexAgent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QHashIterator<QByteArray, const QMetaObject*> i(this->services);
+#else
+        QMultiHashIterator<QByteArray, const QMetaObject*> i(this->services);
+#endif
         while (i.hasNext()) {
             i.next();
             auto&service=i.key();
@@ -109,7 +113,7 @@ public slots:
     }
 
     bool serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames){
-        static auto chars=QStringList()<<qsl(";")<<qsl("|")<<qsl(",")<<qsl("  ");
+        static auto chars=QStringList{qsl(";"),qsl("|"),qsl(","),qsl("  ")};
         QString service=methodNames;
         for(auto&c:chars){
             while(service.contains(c))

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "./qapr_global.h"
 #include "./qapr_session_credential.h"
 #include <QMutex>
 #include <QThread>
@@ -7,56 +8,43 @@
 
 namespace QApr {
 
-static QHash<QThread*, QObject*> static_session_instance;
-
-static QMutex static_session_instance_mutex;
-
-class Session : public QStm::Object
+//!
+//! \brief The Session class
+//!
+class Q_APR_EXPORT Session : public QStm::Object
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE explicit Session(QObject *parent = nullptr) : QStm::Object(parent), p_credential(parent){
-        this->session_thread=QThread::currentThread();
-    }
+    //!
+    //! \brief Session
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit Session(QObject *parent = nullptr);
 
-    Q_INVOKABLE ~Session(){
-    }
+    //!
+    //! \brief ~Session
+    //!
+    Q_INVOKABLE ~Session();
 
-    /**
-     * @brief instance
-     * @return
-     */
-    Session&instance(){
-        return*dynamic_cast<Session*>(this->session);
-    }
+    //!
+    //! \brief instance
+    //! \return
+    //!
+    Session&instance();
 
-    /**
-     * @brief i
-     * @return
-     */
-    Session&i(){
-        return*dynamic_cast<Session*>(this->session);
-    }
+    //!
+    //! \brief i
+    //! \return
+    //!
+    Session&i();
 
-    /**
-     * @brief credentials
-     * @return
-     */
-    virtual SessionCredential&credential(){
-        return this->p_credential;
-    }
+    //!
+    //! \brief credential
+    //! \return
+    //!
+    virtual SessionCredential&credential();
 
-    void init(){
-        auto session=dynamic_cast<Session*>(static_session_instance.value(this->session_thread));
-        if(this->session==nullptr){
-            QMutexLocker locker(&static_session_instance_mutex);
-            this->session=dynamic_cast<QStm::Object*>(static_session_instance.value(this->session_thread));
-            if(this->session==nullptr){
-                static_session_instance.insert(session_thread, session);
-                this->session=dynamic_cast<QStm::Object*>(static_session_instance.value(this->session_thread));
-            }
-        }
-    }
+    void init();
 
 private:
     SessionCredential p_credential;

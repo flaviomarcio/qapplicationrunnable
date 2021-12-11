@@ -7,196 +7,164 @@
 
 namespace QApr {
 
+//!
+//! \brief The SessionCredential class
+//!
 class Q_APR_EXPORT SessionCredential : public QObject
 {
     Q_OBJECT
 public:
-    /**
-     * @brief Credentials
-     * @param parent
-     */
+    //!
+    //! \brief SessionCredential
+    //! \param parent
+    //!
     Q_INVOKABLE explicit SessionCredential(QObject *parent = nullptr);
 
-    /**
-     * @brief ~Credentials
-     */
+    //!
+    //! \brief ~SessionCredential
+    //!
     Q_INVOKABLE ~SessionCredential();
 
-    /**
-     * @brief toVariant
-     * @return
-     *
-     * return QVariantHash with credential information
-     */
+    //!
+    //! \brief toVariant
+    //! \return
+    //!return QVariantHash with credential information
     virtual QVariantHash toVariant()const;
 
-    /**
-     * @brief isValid
-     * @return
-     *
-     * validate values SessionCredential
-     */
+    //!
+    //! \brief isValid
+    //! \return
+    //!validate values SessionCredential
     virtual bool isValid()const;
 
-
-    /**
-     * @brief permits
-     * @return
-     */
+    //!
+    //! \brief permits
+    //! \return
+    //!
     virtual QVariantHash &permits() const;
 
-    /**
-     * @brief setPermits
-     * @param permits
-     */
+    //!
+    //! \brief setPermits
+    //! \param permits
+    //! \return
+    //!
     virtual SessionCredential &setPermits(const QVariantHash &permits);
 
-    /**
-     * @brief uuid
-     * @return
-     *
-     * generic uuid for identification
-     */
+    //!
+    //! \brief uuid
+    //! \return
+    //!generic uuid for identification
     virtual QUuid &uuid() const;
 
-    /**
-     * @brief setUuid
-     * @param value
-     */
+    //!
+    //! \brief setUuid
+    //! \param value
+    //! \return
+    //!
     virtual SessionCredential &setUuid(const QUuid &value);
 
-    /**
-     * @brief domain_uuid
-     * @return
-     *
-     * isolation level for systems
-     */
+    //!
+    //! \brief domain_uuid
+    //! \return
+    //!isolation level for systems
     virtual QUuid domain_uuid()const;
-    /**
-     * @brief set_domain_uuid
-     * @param uuid
-     * @return
-     *
-     * set domain
-     */
+
+    //!
+    //! \brief set_domain_uuid
+    //! \param uuid
+    //! \return
+    //!set domain
     virtual SessionCredential&set_domain_uuid(const QVariant &uuid);
 
-    /**
-     * @brief account_uuid
-     * @return
-     *
-     * account identification
-     */
+    //!
+    //! \brief account_uuid
+    //! \return
+    //!account identification
     virtual QUuid account_uuid()const;
 
-    /**
-     * @brief set_account_uuid
-     * @param uuid
-     * @return
-     *
-     * set account_uuid
-     */
+    //!
+    //! \brief set_account_uuid
+    //! \param uuid
+    //! \return
+    //!
     virtual SessionCredential&set_account_uuid(const QVariant &uuid);
 
-    /**
-     * @brief session_uuid
-     * @return
-     *
-     * session identitication for account
-     */
+    //!
+    //! \brief session_uuid
+    //! \return
+    //!
     virtual QUuid session_uuid()const;
 
-    /**
-     * @brief set_session_uuid
-     * @param uuid
-     * @return
-     *
-     * set session_uuid
-     */
+    //!
+    //! \brief set_session_uuid
+    //! \param uuid
+    //! \return
+    //!
     virtual SessionCredential&set_session_uuid(const QVariant &uuid);
 
-    /**
-     * @brief service_uuid
-     * @return
-     *
-     * service identification
-     *
-     */
+    //!
+    //! \brief service_uuid
+    //! \return
+    //!service identification
     virtual QUuid service_uuid()const;
-    /**
-     * @brief set_service_uuid
-     * @param uuid
-     * @return
-     *
-     * set service_uuid
-     */
+
+    //!
+    //! \brief set_service_uuid
+    //! \param uuid
+    //! \return
+    //!
     virtual SessionCredential&set_service_uuid(const QVariant &uuid);
 
-    /**
-     * @brief body
-     * @return
-     *
-     * full body of SessionCredential
-     */
+    //!
+    //! \brief body
+    //! \return
+    //!full body of SessionCredential
     virtual QVariantHash&body()const;
-    /**
-     * @brief setBody
-     * @param value
-     * @return
-     *
-     * set body
-     */
+
+    //!
+    //! \brief setBody
+    //! \param value
+    //! \return
+    //!
     virtual SessionCredential&setBody(const QVariantHash&value);
 
-    /**
-     * @brief profile
-     * @return
-     *
-     * account body
-     */
+    //!
+    //! \brief profile
+    //! \return
+    //! account body
     virtual QVariant profile()const;
 
-    /**
-     * @brief setAccount
-     * @param value
-     * @return
-     *
-     * set account body
-     */
+    //!
+    //! \brief setProfile
+    //! \param value
+    //! \return
+    //!
     virtual SessionCredential&setProfile(const QVariant&value);
 
-    /**
-     * @brief session
-     * @return
-     *
-     * session body of account
-     */
+    //!
+    //! \brief session
+    //! \return
+    //!session body of account
     virtual QVariant session()const;
 
-    /**
-     * @brief setSession
-     * @param value
-     * @return
-     *
-     * set session body
-     */
+    //!
+    //! \brief setSession
+    //! \param value
+    //! \return
+    //!
     virtual SessionCredential&setSession(const QVariant&value);
 
-    /**
-     * @brief token
-     * @return
-     *
-     * token body
-     */
+    //!
+    //! \brief token
+    //! \return
+    //!token body
     virtual QVariant token()const;
 
-    /**
-     * @brief setToken
-     * @param value
-     * @return
-     *
-     * set token payload
-     */
+    //!
+    //! \brief setToken
+    //! \param value
+    //! \return
+    //!set token payload
     virtual SessionCredential&setToken(const QVariant&value);
 
 private:

@@ -6,50 +6,69 @@
 
 namespace QApr {
 
-    class Q_APR_EXPORT Runnable : public QObject
-    {
-        Q_OBJECT
-    public:
+//!
+//! \brief The Runnable class
+//!
+class Q_APR_EXPORT Runnable : public QObject
+{
+    Q_OBJECT
+public:
+    //!
+    //! \brief a
+    //! \return
+    //!
+    static QCoreApplication&a();
 
-        static QCoreApplication&a();
+    //!
+    //! \brief Runnable
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit Runnable(QObject *parent = nullptr);
 
-        Q_INVOKABLE explicit Runnable(QObject *parent = nullptr);
-        Q_INVOKABLE ~Runnable();
+    //!
+    //! \brief ~Runnable
+    //!
+    Q_INVOKABLE ~Runnable();
 
-        virtual int run();
+    //!
+    //! \brief run
+    //! \return
+    //!
+    virtual int run();
 
-    public slots:
-        /**
-         * @brief resoucesInitialize
-         * @return
-         */
-        Q_INVOKABLE virtual bool resoucesInitialize();
+public slots:
 
-        /**
-         * @brief settingInitialize
-         * @return
-         */
-        Q_INVOKABLE virtual bool settingInitialize();
+    //!
+    //! \brief resoucesInitialize
+    //! \return
+    //!
+    Q_INVOKABLE virtual bool resoucesInitialize();
 
-        /**
-         * @brief serviceSecondPlanInitialize
-         * @return
-         */
-        Q_INVOKABLE virtual bool serviceSecondPlanInitialize();
+    //!
+    //! \brief settingInitialize
+    //! \return
+    //!
+    Q_INVOKABLE virtual bool settingInitialize();
 
-        /**
-         * @brief serviceFirstPlanInitialize
-         * @return
-         */
-        Q_INVOKABLE virtual bool serviceFirstPlanInitialize();
+    //!
+    //! \brief serviceSecondPlanInitialize
+    //! \return
+    //!
+    Q_INVOKABLE virtual bool serviceSecondPlanInitialize();
 
-        /**
-         * @brief serviceGUIInitialize
-         * @return
-         */
-        Q_INVOKABLE virtual bool serviceGUIInitialize();
+    //!
+    //! \brief serviceFirstPlanInitialize
+    //! \return
+    //!
+    Q_INVOKABLE virtual bool serviceFirstPlanInitialize();
 
-    };
+    //!
+    //! \brief serviceGUIInitialize
+    //! \return
+    //!
+    Q_INVOKABLE virtual bool serviceGUIInitialize();
+
+};
 
 
 }

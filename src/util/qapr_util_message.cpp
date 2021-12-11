@@ -15,7 +15,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant&vMsg
     QVariantHash map;
     QStm::Message message(vMsg);
     map.insert(qsl("uuid"),message.uuid().toByteArray());
-    map.insert(qsl("type"),message.type());
+    map.insert(qsl("type"),message.typeId());
     map.insert(qsl("from"),message.from());
     map.insert(qsl("to"),message.to());
     map.insert(qsl("subject"),message.subject());

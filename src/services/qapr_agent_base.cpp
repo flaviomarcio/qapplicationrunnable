@@ -70,22 +70,24 @@ public slots:
             auto method = metaObject->method(methodIndex);
             if(method.parameterCount()>0)
                 continue;
-            else if(method.name().toLower() != methodName)
+
+            if(method.name().toLower() != methodName)
                 continue;
-            else if(!pp.canMethodExecute(method))
+
+            if(!pp.canMethodExecute(method))
                 continue;
-            else if(!method.invoke(&pp, Qt::DirectConnection)){
+
+            if(!method.invoke(&pp, Qt::DirectConnection)){
                 message=tr("Method not called");
 #if QAPR_LOG_VERBOSE
                 sDebug()<<"invoke method: error=="<<message;
 #endif
+                continue;
             }
-            else{
 #if QAPR_LOG_VERBOSE
-                sDebug()<<"invoke method:"<<method.name();
+            sDebug()<<"invoke method:"<<method.name();
 #endif
-                break;
-            }
+            break;
         }
 #if QAPR_LOG_VERBOSE
         aDebugMethodFinish();
@@ -133,7 +135,8 @@ public slots:
             auto now=QDateTime::currentDateTime();
             if(p.runner_date.isNull())
                 return _run();
-            else if(now>p.runner_date)
+
+            if(now>p.runner_date)
                 return _run();
         }
         return false;

@@ -5,4 +5,5 @@ HEADERS += \
     $$PWD/qapr_session_credential.h
 
 SOURCES += \
+    $$PWD/qapr_session.cpp \
     $$PWD/qapr_session_credential.cpp

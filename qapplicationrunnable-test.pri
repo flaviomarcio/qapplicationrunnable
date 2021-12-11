@@ -7,4 +7,4 @@ LIBS += -L/usr/local/lib -lgtest
 Q_APR_TEST=true
 QMAKE_CXXFLAGS += -DQ_APR_TEST=\\\"$$Q_APR_TEST\\\"
 
-include($$PWD/test/qapplicationrunnable-test.pri)
+include($$PWD/test/qapr-test.pri)

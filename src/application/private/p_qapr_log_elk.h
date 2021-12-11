@@ -16,7 +16,7 @@ public:
     Q_INVOKABLE ~LogELK(){
     }
 
-    void run() {
+    void run()override{
         this->exec();
     }
 public slots:
@@ -25,4 +25,4 @@ public slots:
     }
 };
 
-} // namespace QApr
+}

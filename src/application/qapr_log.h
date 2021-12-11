@@ -5,22 +5,34 @@
 
 namespace QApr {
 
+//!
+//! \brief The Log class
+//!
 class Q_APR_EXPORT Log : public QObject
 {
     Q_OBJECT
 public:
+
+    //!
+    //! \brief Log
+    //! \param parent
+    //!
     Q_INVOKABLE explicit Log(QObject *parent = nullptr);
+
+    //!
+    //! \brief ~Log
+    //!
     Q_INVOKABLE ~Log();
 
-    /**
-     * @brief enabled
-     */
+    //!
+    //! \brief enabled
+    //!
     static void enabled();
 
-    /**
-     * @brief disabled
-     */
+    //!
+    //! \brief disabled
+    //!
     static void disabled();
 };
 
-} // namespace QApr
+}

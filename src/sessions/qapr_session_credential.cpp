@@ -37,8 +37,6 @@ namespace QApr {
         vHash[qsl_fy(profile)]=this->profile();
         vHash[qsl_fy(session)]=this->session();
         vHash[qsl_fy(permits)]=this->permits();
-        //vHash[qsl_fy(token_uuid)]=(this->session_uuid().isNull()?this->account_uuid():this->session_uuid()).toString();
-        //vHash[qsl_fy(token)]=this->token();
         return vHash;
     }
 
@@ -47,10 +45,11 @@ namespace QApr {
         auto&credentials=*this;
         if(!credentials.service_uuid().isNull())
             return true;
-        else if(!credentials.account_uuid().isNull() && !credentials.session_uuid().isNull())
+
+        if(!credentials.account_uuid().isNull() && !credentials.session_uuid().isNull())
             return true;
-        else
-            return false;
+
+        return false;
     }
 
     QVariantHash&SessionCredential::permits()const

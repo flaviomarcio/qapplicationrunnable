@@ -6,45 +6,68 @@
 
 namespace QApr {
 
-    class Q_APR_EXPORT CircuitBreaker : public QObject
-    {
-        Q_OBJECT
-    public:
-        Q_INVOKABLE explicit CircuitBreaker(QObject *parent = nullptr);
-        Q_INVOKABLE ~CircuitBreaker();
+//!
+//! \brief The CircuitBreaker class
+//!
+class Q_APR_EXPORT CircuitBreaker : public QObject
+{
+    Q_OBJECT
+public:
+    //!
+    //! \brief CircuitBreaker
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit CircuitBreaker(QObject *parent = nullptr);
 
-        /**
-         * @brief settings
-         * @return
-         */
-        QVariantHash settings()const;
-        CircuitBreaker&settings(const QVariantHash&v);
-        CircuitBreaker&setSettings(const QVariantHash&v);
+    //!
+    //! \brief ~CircuitBreaker
+    //!
+    Q_INVOKABLE ~CircuitBreaker();
 
-        /**
-         * @brief start
-         * @return
-         */
-        virtual bool start();
+    //!
+    //! \brief settings
+    //! \return
+    //!
+    QVariantHash settings()const;
 
-        /**
-         * @brief stop
-         * @return
-         */
-        virtual bool stop();
+    //!
+    //! \brief settings
+    //! \param v
+    //! \return
+    //!
+    CircuitBreaker&settings(const QVariantHash&v);
 
-        /**
-         * @brief print
-         */
-        virtual void print() const;
+    //!
+    //! \brief setSettings
+    //! \param v
+    //! \return
+    //!
+    CircuitBreaker&setSettings(const QVariantHash&v);
 
-        /**
-         * @brief isRunning
-         * @return
-         */
-        virtual bool isRunning();
-    private:
-        void*p=nullptr;
-    };
+    //!
+    //! \brief start
+    //! \return
+    //!
+    virtual bool start();
+
+    //!
+    //! \brief stop
+    //! \return
+    //!
+    virtual bool stop();
+
+    //!
+    //! \brief print
+    //!
+    virtual void print() const;
+
+    //!
+    //! \brief isRunning
+    //! \return
+    //!
+    virtual bool isRunning();
+private:
+    void*p=nullptr;
+};
 
 }

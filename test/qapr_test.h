@@ -48,19 +48,21 @@ public:
     }
 
     static QByteArray toMd5(const QVariant&v){
-        QByteArray bytes;
-        if(v.type()==QVariant::List || v.type()==QVariant::StringList || v.type()==QVariant::Map || v.type()==QVariant::Hash)
-            bytes=QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact);
-        else
-            bytes=v.toByteArray();
-        return QCryptographicHash::hash(v.toByteArray(), QCryptographicHash::Md5).toHex();
+        QByteArray bytes=QStmTypesListObjects.contains(qTypeId(v))
+                               ?
+                               QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
+                               :
+                               v.toByteArray();
+        return QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
     }
 
     static QVariant toVar(const QVariant&v){
-        if(v.type()==QVariant::String || v.type()==QVariant::ByteArray)
-            return QJsonDocument::fromJson(v.toByteArray()).toVariant();
-        else
-            return v;
+        return
+            QStmTypesListString.contains(qTypeId(v))
+                ?
+                QJsonDocument::fromJson(v.toByteArray()).toVariant()
+                :
+                v;
     }
 
     QByteArray fakeBody(const int maxloop=1){

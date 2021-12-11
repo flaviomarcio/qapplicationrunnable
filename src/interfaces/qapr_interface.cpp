@@ -4,7 +4,7 @@
 
 namespace QApr {
 
-Interface::Interface(QObject *parent):InterfaceAuthorization(parent)
+Interface::Interface(QObject *parent):InterfaceDatabase(parent)
 {
 }
 

@@ -10,7 +10,9 @@
 
 namespace QApr {
 
-
+//!
+//! \brief The Application class
+//!
 class Q_APR_EXPORT Application : public QObject
 {
     Q_OBJECT
@@ -19,79 +21,75 @@ public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
     Q_INVOKABLE ~Application();
 
-    /**
-     * @brief settings_SERVER
-     * @return
-     */
+    //!
+    //! \brief settings_SERVER
+    //! \return
+    //!
     Q_INVOKABLE virtual QVariant settings_SERVER() const;
 
-    /**
-     * @brief manager
-     * @return
-     *
-     * configuracoes para servicos
-     */
+    //!
+    //! \brief manager
+    //! \return
+    //!configuracoes para servicos
     virtual QRpc::ServiceManager&manager();
 
-    /**
-     * @brief exec
-     * @param a
-     * @return
-     *
-     * init application and resource to Application
-     */
+    //!
+    //! \brief exec
+    //! \param a
+    //! \return
+    //!init application and resource to Application
     virtual int exec(QCoreApplication &a);
 
-    /**
-     * @brief instance
-     * @return
-     */
+    //!
+    //! \brief instance
+    //! \return
+    //!
     static Application&instance();
+
+    //!
+    //! \brief i
+    //! \return
+    //!
     static Application&i();
 
-    /**
-     * @brief memoryUsage
-     * @return
-     */
+    //!
+    //! \brief memoryUsage
+    //! \return
+    //!
     static qlonglong memoryUsage();
-    /**
-     * @brief instanceUuid
-     * @return
-     *
-     * application instance
-     */
+
+    //!
+    //! \brief instanceUuid
+    //! \return
+    //!application instance
     virtual const QUuid &instanceUuid();
 
-    /**
-     * @brief arguments
-     * @return
-     *
-     * mix entre qApp->arguments() e manager->arguments();
-     */
+    //!
+    //! \brief arguments
+    //! \return
+    //!mix entre qApp->arguments() e manager->arguments();
     virtual QVariantHash &arguments() const;
 
-    /**
-     * @brief printArguments
-     * @return
-     */
+    //!
+    //! \brief printArguments
+    //! \return
+    //!
     virtual Application &printArguments();
 
-    /**
-     * @brief resourceExtract
-     */
+    //!
+    //! \brief resourceExtract
+    //! \return
+    //!
     virtual Application &resourceExtract();
 
-    /**
-     * @brief circuitBreaker
-     * @return
-     */
+    //!
+    //! \brief circuitBreaker
+    //! \return
+    //!
     virtual QApr::CircuitBreaker&circuitBreaker();
-
 
 private:
     void*p=nullptr;
 };
 
-//static auto&rpcApp=Application::instance();
-
-} // namespace QApr
+}

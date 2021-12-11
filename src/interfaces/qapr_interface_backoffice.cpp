@@ -15,9 +15,9 @@ public:
     bool connectionDb=true;
     bool transactionRollbackForce=false;
     QOrm::Transaction transaction;
-    QRpc::QRPCInterfaceCheck*parent=nullptr;
+    QRpc::QRPCController*parent=nullptr;
 
-    explicit InterfaceBackOfficePvt(QRpc::QRPCInterfaceCheck*parent):transaction(parent){
+    explicit InterfaceBackOfficePvt(QRpc::QRPCController*parent):transaction(parent){
         this->parent=parent;
     }
 
@@ -26,7 +26,7 @@ public:
     }
 };
 
-InterfaceBackOffice::InterfaceBackOffice(QObject *parent):QApr::InterfaceAuthorization(parent)
+InterfaceBackOffice::InterfaceBackOffice(QObject *parent):QApr::InterfaceDatabase(parent)
 {
     this->p = new InterfaceBackOfficePvt(this);
 }

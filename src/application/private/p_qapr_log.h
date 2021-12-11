@@ -10,13 +10,13 @@ namespace QApr {
 
 static const QHash<int,QString> makeQtMsgTypeMap(){
     QHash<int,QString> map;
-    map.insert(QtDebugMsg   , "D");
-    map.insert(QtWarningMsg , "W");
-    map.insert(QtCriticalMsg, "C");
-    map.insert(QtFatalMsg   , "F");
-    map.insert(QtInfoMsg    , "I");
-    map.insert(QtSystemMsg  , "S");
-    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false;qml.debug=true;*.debug=true;*.warning=true;*.critical=true;*.info=true");
+    map[QtDebugMsg   ]=qsl("D");
+    map[QtWarningMsg ]=qsl("W");
+    map[QtCriticalMsg]=qsl("C");
+    map[QtFatalMsg   ]=qsl("F");
+    map[QtInfoMsg    ]=qsl("I");
+    map[QtSystemMsg  ]=qsl("S");
+    qputenv(qbl("QT_LOGGING_RULES"), qbl("qt.network.ssl.warning=false;qml.debug=true;*.debug=true;*.warning=true;*.critical=true;*.info=true"));
     return map;
 }
 

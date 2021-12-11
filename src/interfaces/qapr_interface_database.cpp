@@ -1,5 +1,7 @@
 #include "./qapr_interface_database.h"
 #include "./qapr_application.h"
+#include "./qapr_application.h"
+#include "./qapr_session.h"
 #include "./qorm_transaction.h"
 
 namespace QApr {
@@ -14,14 +16,23 @@ public:
     bool transactionRollbackForce=false;
     QOrm::Transaction transaction;
     QOrm::ConnectionPool pool;
-    QRpc::QRPCInterfaceCheck*parent=nullptr;
+    QRpc::QRPCController*parent=nullptr;
+    Session session;
 
-    explicit InterfaceDatabasePvt(QRpc::QRPCInterfaceCheck*parent):transaction(parent),pool(QApr::Application::i().pool()){
+    explicit InterfaceDatabasePvt(QRpc::QRPCController*parent):
+        transaction(parent),
+        pool(QApr::Application::i().pool()),
+        session(parent)
+    {
         this->parent=parent;
     }
 
     virtual ~InterfaceDatabasePvt(){
         transaction.rollback();
+    }
+
+    auto&credentials(){
+        return this->session.credential();
     }
 };
 
@@ -36,9 +47,21 @@ InterfaceDatabase::~InterfaceDatabase()
     delete&p;
 }
 
+Session &InterfaceDatabase::sessionObject()
+{
+    dPvt();
+    return p.session;
+}
+
+const SessionCredential &InterfaceDatabase::credential()
+{
+    dPvt();
+    return p.credentials();
+}
+
 bool InterfaceDatabase::requestBeforeInvoke()
 {
-    if(!QRpc::QRPCInterfaceCheck::requestBeforeInvoke())
+    if(!QApr::InterfaceBase::requestBeforeInvoke())
         return false;
 
 
@@ -89,7 +112,7 @@ bool InterfaceDatabase::requestBeforeInvoke()
 
 bool InterfaceDatabase::requestAfterInvoke()
 {
-    if(!QRpc::QRPCInterfaceCheck::requestAfterInvoke())
+    if(!QApr::InterfaceBase::requestAfterInvoke())
         return false;
 
     dPvt();

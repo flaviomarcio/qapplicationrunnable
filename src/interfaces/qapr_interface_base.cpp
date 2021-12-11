@@ -9,9 +9,8 @@ namespace QApr {
 
 class InterfacePvt{
 public:
-    VariantUtil vu;
-    QApr::InterfaceBase*parent=nullptr;
-    explicit InterfacePvt(QApr::InterfaceBase*parent){
+    QRpc::QRPCController*parent=nullptr;
+    explicit InterfacePvt(QRpc::QRPCController*parent){
         this->parent=parent;
     }
 
@@ -19,7 +18,7 @@ public:
     }
 };
 
-InterfaceBase::InterfaceBase(QObject *parent):QRpc::QRPCInterfaceCheck(parent)
+InterfaceBase::InterfaceBase(QObject *parent):QRpc::QRPCController(parent)
 {
     this->p = new InterfacePvt(this);
 }
@@ -28,41 +27,6 @@ InterfaceBase::~InterfaceBase()
 {
     dPvt();
     delete&p;
-}
-
-VariantUtil &InterfaceBase::vu()
-{
-    dPvt();
-    return p.vu;
-}
-
-QVariant InterfaceBase::check()
-{
-    QRPC_RETURN_VARIANT();
-}
-
-QVariant InterfaceBase::ping()
-{
-    this->rq().co().setOK();
-    return QDateTime::currentDateTime();
-}
-
-QVariant InterfaceBase::fullCheck()
-{
-    this->rq().co().setOK();
-    return QVariant();
-}
-
-QVariant InterfaceBase::connectionsCheck()
-{
-    this->rq().co().setOK();
-    return QVariant();
-}
-
-QVariant InterfaceBase::businessCheck()
-{
-    this->rq().co().setNotImplemented();
-    return QVariant();
 }
 
 }

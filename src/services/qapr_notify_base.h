@@ -12,54 +12,78 @@
 
 namespace QApr {
 
-    class Notify;
-    class Q_APR_EXPORT NotifyBase : public QThread{
-        Q_OBJECT
-        QORM_CONNECTION_SUPPORT
-        QORM_DECLARE_TOPIC(qsl("nothing/null"))
-    public:
-        Q_INVOKABLE explicit NotifyBase(QObject*parent=nullptr);
-        Q_INVOKABLE ~NotifyBase();
+class Notify;
 
-        /**
-         * @brief notifySetting
-         * @return
-         */
-        virtual QRpc::ServiceSetting&notifySetting();
+//!
+//! \brief The NotifyBase class
+//!
+class Q_APR_EXPORT NotifyBase : public QThread{
+    Q_OBJECT
+    QORM_CONNECTION_SUPPORT
+    QORM_DECLARE_TOPIC(qsl("nothing/null"))
+public:
+    //!
+    //! \brief NotifyBase
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit NotifyBase(QObject*parent=nullptr);
 
-        /**
-         * @brief run
-         */
-        void run() override;
+    //!
+    //! \brief ~NotifyBase
+    //!
+    Q_INVOKABLE ~NotifyBase();
 
-        /**
-         * @brief start
-         */
-        virtual void start();
+    //!
+    //! \brief notifySetting
+    //! \return
+    //!
+    virtual QRpc::ServiceSetting&notifySetting();
 
-        /**
-         * @brief notifyName
-         * @return
-         */
-        Q_INVOKABLE virtual QString notifyName() const;
+    //!
+    //! \brief run
+    //!
+    void run() override;
 
-        /**
-         * @brief setNotifyName
-         * @param v
-         */
-        Q_INVOKABLE virtual void setNotifyName(const QVariant &v);
+    //!
+    //! \brief start
+    //!
+    virtual void start();
 
-        /**
-         * @brief settings_SERVER
-         * @return
-         */
-        Q_INVOKABLE static const QVariant settings_SERVER();
+    //!
+    //! \brief notifyName
+    //! \return
+    //!
+    Q_INVOKABLE virtual QString notifyName() const;
 
-    private slots:
-        virtual void onNotifyReceived(const QString&channel, const QVariant &payload);
-    signals:
-        void notifyReceived(const QString&channel, const QVariant&payload);
-    private:
-        void*p=nullptr;
-    };
+    //!
+    //! \brief setNotifyName
+    //! \param v
+    //!
+    Q_INVOKABLE virtual void setNotifyName(const QVariant &v);
+
+    //!
+    //! \brief settings_SERVER
+    //! \return
+    //!
+    Q_INVOKABLE static const QVariant settings_SERVER();
+
+private slots:
+
+    //!
+    //! \brief onNotifyReceived
+    //! \param channel
+    //! \param payload
+    //!
+    virtual void onNotifyReceived(const QString&channel, const QVariant &payload);
+signals:
+
+    //!
+    //! \brief notifyReceived
+    //! \param channel
+    //! \param payload
+    //!
+    void notifyReceived(const QString&channel, const QVariant&payload);
+private:
+    void*p=nullptr;
+};
 }

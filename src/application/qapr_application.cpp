@@ -37,6 +37,19 @@ static void init(Application&i){
         sWarning()<<qtr("Connection manager is not loaded");
 }
 
+static void init(){
+    if(____instance==nullptr){
+        static QMutex ____instance_mutex;
+        QMutexLocker locker(&____instance_mutex);/*garantia de unica instancia*/
+        if(____instance==nullptr){
+            ____instance=new Application(nullptr);
+            init(*____instance);
+        }
+    }
+}
+
+Q_COREAPP_STARTUP_FUNCTION(init)
+
 Application::Application(QObject *parent) : QObject(parent)
 {
     this->p=new ApplicationPvt(this);
@@ -72,15 +85,9 @@ int Application::exec(QCoreApplication&a)
     return a.exec();
 }
 
-Application &Application::instance(){
-    if(____instance==nullptr){
-        static QMutex ____instance_mutex;
-        QMutexLocker locker(&____instance_mutex);/*garantia de unica instancia*/
-        if(____instance==nullptr){
-            ____instance=new Application(nullptr);
-            init(*____instance);
-        }
-    }
+Application &Application::instance()
+{
+    init();
     return*____instance;
 }
 
@@ -151,4 +158,4 @@ QApr::CircuitBreaker &Application::circuitBreaker()
     return p.circuitBreaker;
 }
 
-} // namespace QApr
+}
