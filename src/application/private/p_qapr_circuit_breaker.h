@@ -1,11 +1,11 @@
 #pragma once
 
 #include <QDateTime>
-#include "./qapr_circuit_breaker.h"
-#include "./qapr_application.h"
-#include "../../../../qstm/src/qstm_setting_base.h"
 #include <QTimer>
 #include <QCoreApplication>
+#include "../qapr_circuit_breaker.h"
+#include "../qapr_application.h"
+#include "../../../../qstm/src/qstm_setting_base.h"
 
 namespace QApr {
 

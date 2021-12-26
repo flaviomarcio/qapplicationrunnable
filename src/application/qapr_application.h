@@ -2,9 +2,9 @@
 
 #include <QCoreApplication>
 #include <QObject>
+#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_global.h"
-#include "../../qrpc/src/qrpc_service_manager.h"
-#include "../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_consts.h"
 #include "./qapr_circuit_breaker.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../qstm/src/qstm_macro.h"
+//#include "../../qstm/src/qstm_macro.h"
 #include "./qapr_global.h"
 #include <QCoreApplication>
 #include <QObject>

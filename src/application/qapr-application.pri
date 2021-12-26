@@ -1,7 +1,7 @@
 QT += core
 QT += network
 
-INCLUDEPATH+=$$PWD
+#INCLUDEPATH+=$$PWD
 
 HEADERS += \
     $$PWD/private/p_qapr_circuit_breaker.h \

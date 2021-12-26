@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "../../qrpc/src/qrpc_server.h"
+#include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_global.h"
 
 namespace QApr {

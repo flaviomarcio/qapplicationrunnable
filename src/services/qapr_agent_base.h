@@ -4,8 +4,8 @@
 #include <QThread>
 #include <QMap>
 #include <QVariant>
-#include "../../qrpc/src/qrpc_service_manager.h"
-#include "../../qorm/src/qorm_connection_manager.h"
+#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qorm/src/qorm_connection_manager.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_consts.h"
 #include "../application/qapr_consts.h"
