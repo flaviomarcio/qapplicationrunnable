@@ -2,7 +2,7 @@
 
 #include <QCoreApplication>
 #include <QObject>
-#include "../application/qapr_global.h"
+#include "./qapr_global.h"
 #include "../../qrpc/src/qrpc_service_manager.h"
 #include "../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_consts.h"

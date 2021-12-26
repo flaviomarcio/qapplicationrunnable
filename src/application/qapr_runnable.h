@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QCoreApplication>
-#include "../application/qapr_global.h"
+#include "./qapr_global.h"
 
 namespace QApr {
 
