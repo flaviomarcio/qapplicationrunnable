@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QVariantHash>
-#include "../../qstm/src/qstm_macro.h"
+#include "../../../qstm/src/qstm_macro.h"
 #include "../application/qapr_global.h"
 
 namespace QApr {

@@ -11,11 +11,11 @@
 #include <QLocale>
 #include <QJsonDocument>
 #include <gtest/gtest.h>
-#include "./qrpc_types.h"
-#include "./qrpc_request.h"
+#include "../../qrpc/src/qrpc_types.h"
+#include "../../qrpc/src/qrpc_request.h"
+#include "../../qrpc/src/qrpc_listen_protocol.h"
 #include "../../qstm/src/qstm_util_variant.h"
-#include "./qapr_server.h"
-#include "./qrpc_listen_protocol.h"
+#include "../src/services/qapr_server.h"
 
 namespace QApr{
 class SDKGoogleTest : public testing::Test{

@@ -1,7 +1,7 @@
 #include "./qapr_util_message.h"
 #include "../application/qapr_application.h"
-#include "../../qstm/src/qstm_message.h"
-#include "../../qrpc/src/qrpc_request.h"
+#include "../../../qstm/src/qstm_message.h"
+#include "../../../qrpc/src/qrpc_request.h"
 
 namespace QApr {
 

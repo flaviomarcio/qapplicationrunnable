@@ -1,7 +1,7 @@
 #include "./qapr_controller.h"
 #include "../interfaces/qapr_interface_database.h"
 #include "../application/qapr_application.h"
-#include "../../qrpc/src/qrpc_controller.h"
+#include "../../../qrpc/src/qrpc_controller.h"
 
 namespace QApr {
 
