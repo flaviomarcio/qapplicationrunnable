@@ -31,7 +31,7 @@ public:
     //!
     //! \brief ~AgentBase
     //!
-    Q_INVOKABLE ~AgentBase();
+    ~AgentBase();
 
     //!
     //! \brief agentSetting

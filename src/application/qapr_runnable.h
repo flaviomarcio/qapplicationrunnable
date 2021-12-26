@@ -28,7 +28,7 @@ public:
     //!
     //! \brief ~Runnable
     //!
-    Q_INVOKABLE ~Runnable();
+    ~Runnable();
 
     //!
     //! \brief run

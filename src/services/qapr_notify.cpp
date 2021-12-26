@@ -1,5 +1,5 @@
 #include "./qapr_notify.h"
-#include "./application/qapr_application.h"
+#include "../application/qapr_application.h"
 #include "./qapr_notify_base.h"
 #include "../../qorm/src/qorm_connection_notify.h"
 #include <QCryptographicHash>

@@ -71,7 +71,7 @@ public:
     //!
     //! \brief ~Interface
     //!
-    Q_INVOKABLE ~Interface();
+    ~Interface();
 
     //!
     //! \brief backOfficeMenu

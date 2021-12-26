@@ -23,7 +23,7 @@ public:
     //!
     //! \brief ~Server
     //!
-    Q_INVOKABLE ~Server();
+    ~Server();
 
     //!
     //! \brief settings_SERVER

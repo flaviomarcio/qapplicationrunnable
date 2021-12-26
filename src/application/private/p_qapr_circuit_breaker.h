@@ -9,8 +9,7 @@
 
 namespace QApr {
 
-class Q_APR_EXPORT CircuitBreakerPvt : public QObject
-{
+class CircuitBreakerPvt:public QObject{
     Q_OBJECT
 public:
     QStm::SettingBase settingService;
@@ -20,9 +19,9 @@ public:
     QDateTime activityLimit;
     qlonglong memoryLimitKB=0;
 
-    explicit CircuitBreakerPvt(QObject *parent = nullptr);
+    explicit CircuitBreakerPvt(QObject*parent=nullptr);
 
-    Q_INVOKABLE ~CircuitBreakerPvt();
+    virtual ~CircuitBreakerPvt();
 
     bool start();
 

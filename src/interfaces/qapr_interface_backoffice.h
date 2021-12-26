@@ -23,7 +23,7 @@ public:
     //!
     //! \brief ~InterfaceBackOffice
     //!
-    Q_INVOKABLE ~InterfaceBackOffice();
+    ~InterfaceBackOffice();
 
     //!
     //! \brief rootObject

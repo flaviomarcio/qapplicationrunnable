@@ -19,7 +19,7 @@ class Q_APR_EXPORT Application : public QObject
     QORM_SERVER_CONNECTION_MANAGER_SUPPORT(Application)
 public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
-    Q_INVOKABLE ~Application();
+    ~Application();
 
     //!
     //! \brief settings_SERVER

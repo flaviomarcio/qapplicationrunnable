@@ -31,7 +31,7 @@ public:
     //!
     //! \brief ~Notify
     //!
-    Q_INVOKABLE ~Notify();
+    ~Notify();
 
     //!
     //! \brief settings_SERVER

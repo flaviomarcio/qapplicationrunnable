@@ -24,7 +24,7 @@ public:
     //!
     //! \brief ~Session
     //!
-    Q_INVOKABLE ~Session();
+    ~Session();
 
     //!
     //! \brief instance

@@ -23,7 +23,7 @@ public:
     //!
     //! \brief ~SessionCredential
     //!
-    Q_INVOKABLE ~SessionCredential();
+    ~SessionCredential();
 
     //!
     //! \brief toVariant

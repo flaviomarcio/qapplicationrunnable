@@ -4,7 +4,7 @@
 #include "../../qorm/src/qorm_controller.h"
 #include "../../qrpc/src/qrpc_listen_request.h"
 #include "../../qrpc/src/qrpc_service_setting.h"
-#include "./application/qapr_global.h"
+#include "../application/qapr_global.h"
 #include <QUuid>
 
 namespace QApr {
@@ -26,7 +26,7 @@ public:
     //!
     //! \brief ~Controller
     //!
-    Q_INVOKABLE ~Controller();
+    ~Controller();
 
     //!
     //! \brief resultInfo

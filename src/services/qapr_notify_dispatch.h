@@ -28,7 +28,7 @@ public:
     //!
     //! \brief ~NotifyDispatch
     //!
-    Q_INVOKABLE ~NotifyDispatch();
+    ~NotifyDispatch();
 
     //!
     //! \brief clear

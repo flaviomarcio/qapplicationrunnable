@@ -22,7 +22,7 @@ public:
     //!
     //! \brief ~Log
     //!
-    Q_INVOKABLE ~Log();
+    ~Log();
 
     //!
     //! \brief enabled

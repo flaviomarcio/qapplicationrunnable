@@ -30,7 +30,7 @@ public:
     //!
     //! \brief ~NotifyBase
     //!
-    Q_INVOKABLE ~NotifyBase();
+    ~NotifyBase();
 
     //!
     //! \brief notifySetting

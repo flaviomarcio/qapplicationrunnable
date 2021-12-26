@@ -23,7 +23,7 @@ public:
     //!
     //! \brief ~UtilMessage
     //!
-    Q_INVOKABLE ~UtilMessage();
+    ~UtilMessage();
 
     //!
     //! \brief send

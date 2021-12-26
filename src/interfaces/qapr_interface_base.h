@@ -2,8 +2,8 @@
 
 #include "../../qorm/src/qorm_object_db.h"
 #include "../../qrpc/src/qrpc_interface_record.h"
-#include "./application/qapr_consts.h"
-#include "./application/qapr_global.h"
+#include "../application/qapr_consts.h"
+#include "../application/qapr_global.h"
 #include <QtSql/QSqlDatabase>
 
 namespace QApr {

@@ -31,7 +31,7 @@ public:
     //!
     //! \brief ~Agent
     //!
-    Q_INVOKABLE ~Agent();
+    ~Agent();
 
     //!
     //! \brief settings_SERVER

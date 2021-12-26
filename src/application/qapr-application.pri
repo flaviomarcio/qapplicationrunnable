@@ -19,6 +19,7 @@ HEADERS += \
 
 
 SOURCES += \
+    $$PWD/private/p_qapr_circuit_breaker.cpp \
     $$PWD/qapr_log.cpp \
     $$PWD/qapr_circuit_breaker.cpp \
     $$PWD/qapr_runnable.cpp \

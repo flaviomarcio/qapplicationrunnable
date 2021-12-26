@@ -22,7 +22,7 @@ public:
     //!
     //! \brief ~CircuitBreaker
     //!
-    Q_INVOKABLE ~CircuitBreaker();
+    ~CircuitBreaker();
 
     //!
     //! \brief settings

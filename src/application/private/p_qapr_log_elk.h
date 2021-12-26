@@ -1,22 +1,25 @@
 #pragma once
 
 #include <QObject>
+#include <QThread>
 #include <QJsonDocument>
-#include "../../application/qapr_global.h"
 
 namespace QApr {
 
-class Q_APR_EXPORT LogELK : public QThread
+class LogELK : public QThread
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE explicit LogELK(QObject *parent = nullptr):QThread(nullptr){
+    explicit LogELK(QObject *parent = nullptr):QThread(nullptr)
+    {
         Q_UNUSED(parent)
     }
-    Q_INVOKABLE ~LogELK(){
+    ~LogELK()
+    {
     }
 
-    void run()override{
+    void run()override
+    {
         this->exec();
     }
 public slots:

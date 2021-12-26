@@ -12,7 +12,7 @@ class ControllerBackOffice : public QApr::Controller
     Q_OBJECT
 public:
     Q_INVOKABLE explicit ControllerBackOffice(QObject *parent = nullptr);
-    Q_INVOKABLE ~ControllerBackOffice();
+    ~ControllerBackOffice();
 
     //!
     //! \brief sessionAccount

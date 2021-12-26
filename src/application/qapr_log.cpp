@@ -1,4 +1,5 @@
 #include "./private/p_qapr_log.h"
+#include "./qapr_log.h"
 
 namespace QApr {
 
@@ -14,7 +15,8 @@ static void qtMessageHandlerCustomized(QtMsgType type, const QMessageLogContext 
     fprintf(stderr, QByteArrayLiteral("%s\n"), message.toUtf8().constData());
 }
 
-static void init(){
+static void init()
+{
     QApr::Log::enabled();
 }
 

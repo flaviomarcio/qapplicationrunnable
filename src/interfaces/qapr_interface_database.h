@@ -26,7 +26,7 @@ public:
     //!
     //! \brief ~InterfaceDatabase
     //!
-    Q_INVOKABLE ~InterfaceDatabase();
+    ~InterfaceDatabase();
 
     //!
     //! \brief sessionObject
