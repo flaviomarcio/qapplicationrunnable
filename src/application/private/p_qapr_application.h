@@ -58,7 +58,7 @@ public:
         if(!dirHome.exists())
             dirHome.mkpath(applicationSettingDir);
 
-        if(dirHome.exists())
+        if(!dirHome.exists())
             return;
 
         QDir dir(qsl(":"));
