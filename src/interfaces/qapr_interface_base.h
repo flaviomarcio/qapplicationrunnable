@@ -15,7 +15,7 @@ class Q_APR_EXPORT InterfaceBase : public QRpc::QRPCController
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()
-    QORM_CONNECTION_SUPPORT
+    QORM_CONNECTION_SUPPORT()
     Q_RPC_DECLARE_INTERFACE_METHOD_CHECK()
 public:
     //!
