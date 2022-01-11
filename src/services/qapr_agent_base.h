@@ -19,7 +19,7 @@ class Agent;
 //!
 class Q_APR_EXPORT AgentBase : public QThread{
     Q_OBJECT
-    QORM_CONNECTION_SUPPORT
+    QORM_CONNECTION_SUPPORT()
     friend class AgentBasePvt;
 public:
     //!

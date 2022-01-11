@@ -18,7 +18,7 @@ class Notify;
 //!
 class Q_APR_EXPORT NotifyBase : public QThread{
     Q_OBJECT
-    QORM_CONNECTION_SUPPORT
+    QORM_CONNECTION_SUPPORT()
     QORM_DECLARE_TOPIC(qsl("nothing/null"))
 public:
     //!
