@@ -10,7 +10,7 @@
 #include <QThread>
 
 static const auto appInstanceUuid=QUuid::createUuidV5(QUuid::createUuid(),QUuid::createUuid().toString());
-static const auto settings_HOME_DIR=QStringLiteral("%1/erp.files").arg(QDir::homePath());
+static const auto settings_HOME_DIR=QStringLiteral("%1/qtreforce.files").arg(QDir::homePath());
 
 #ifdef Q_APR_TEST
 static const auto settings_SERVER_FILE=QStringLiteral("settings.test.json");
