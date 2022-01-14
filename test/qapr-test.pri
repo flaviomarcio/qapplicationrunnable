@@ -16,6 +16,6 @@ HEADERS += \
     $$PWD/qapr_test_unit.h
 
 SOURCES += \
-    $$PWD/qapr_test_unit_variant_util.cpp
+    $$PWD/qapr_test_unit.cpp
 
 
