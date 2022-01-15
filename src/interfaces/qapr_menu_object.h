@@ -31,7 +31,7 @@ public:
     //!
     //! \brief ~MenuObject
     //!
-    Q_INVOKABLE virtual ~MenuObject();
+    ~MenuObject();
 
     //!
     //! \brief build
