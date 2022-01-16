@@ -6,6 +6,7 @@ namespace QApr {
 
 //!
 //! \brief The InterfaceBackOffice class
+//!
 //!camada criada para organizar menus e aesso do backoffice
 class Q_APR_EXPORT InterfaceBackOffice : public QApr::InterfaceDatabase
 {

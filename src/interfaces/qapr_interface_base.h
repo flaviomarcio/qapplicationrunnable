@@ -10,6 +10,7 @@ namespace QApr {
 
 //!
 //! \brief The InterfaceBase class
+//!
 //!base inicial criada para aplicacoes, contem metodos e verificacao e alguns utilitarios
 class Q_APR_EXPORT InterfaceBase : public QRpc::QRPCController
 {

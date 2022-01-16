@@ -26,12 +26,6 @@ private:                                                                        
 QApr::Interface*___irq=nullptr;                                                     \
 public:                                                                             \
                                                                                     \
-/**                                                                                 \
-* @brief transactionRollbackForce                                                   \
-* @return                                                                           \
-*                                                                                   \
-* se true mesmo com tudo correto ocorrerá o rollback da transacao                   \
-*/                                                                                  \
 virtual bool transactionRollbackForce() const                                       \
 {                                                                                   \
     dPvt();                                                                         \
@@ -54,6 +48,7 @@ virtual void setTransactionRollbackForce(bool value)                            
 
 //!
 //! \brief The Interface class
+//!
 //!base inicial criada para aplicacoes, contem metodos e verificacao e alguns utilitarios
 class Q_APR_EXPORT Interface : public InterfaceDatabase
 {
@@ -67,10 +62,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit Interface(QObject *parent = nullptr);
-
-    //!
-    //! \brief ~Interface
-    //!
     ~Interface();
 
     //!

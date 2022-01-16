@@ -11,12 +11,14 @@ namespace QApr {
 
 //!
 //! \brief The InterfaceDatabase class
+//!
 //!camada criada para implementacao da parte de banco de dados
 class Q_APR_EXPORT InterfaceDatabase : public QApr::InterfaceBase
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()
 public:
+
     //!
     //! \brief InterfaceDatabase
     //! \param parent
