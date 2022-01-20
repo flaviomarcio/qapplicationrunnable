@@ -13,9 +13,12 @@ public:
 
 struct ConstsApplicationBase{
     QRpc::ServiceSetting circuit_breaker;
-    void init(){
+    void init()
+    {
         auto&manager=QApr::Application::instance().manager();
         circuit_breaker=manager.setting(qsl("circuit-breaker"));
+        if(!circuit_breaker.isValid())
+            circuit_breaker=manager.setting(qsl("circuit_breaker"));
     }
 };
 
@@ -23,29 +26,33 @@ static ConstsApplicationBase*____constsApplicationBase=nullptr;
 
 static Application*____instance=nullptr;
 
-static void init(Application&i){
+static void init(Application&i)
+{
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif
     auto settingFile=i.settings_SERVER();
     auto&manager=i.manager();
     manager.load(settingFile);
-    ____constsApplicationBase=new ConstsApplicationBase();
+    ____constsApplicationBase = new ConstsApplicationBase();
     ____constsApplicationBase->init();
     auto&cnn=i.connectionManager();
     if(!cnn.isLoaded())
         sWarning()<<qtr("Connection manager is not loaded");
 }
 
-static void init(){
-    if(____instance==nullptr){
-        static QMutex ____instance_mutex;
-        QMutexLocker locker(&____instance_mutex);/*garantia de unica instancia*/
-        if(____instance==nullptr){
-            ____instance=new Application(nullptr);
-            init(*____instance);
-        }
-    }
+static void init()
+{
+    if(____instance!=nullptr)
+        return;
+
+    static QMutex ____instance_mutex;
+    QMutexLocker locker(&____instance_mutex);/*garantia de unica instancia*/
+    if(____instance!=nullptr)
+        return;
+
+    ____instance=new Application(nullptr);
+    init(*____instance);
 }
 
 Q_COREAPP_STARTUP_FUNCTION(init)
@@ -87,7 +94,8 @@ int Application::exec(QCoreApplication&a)
 
 Application &Application::instance()
 {
-    init();
+    if(____instance==nullptr)//manter, em caso de include do .pri a inicializacao ocorre estranhamento e inicializa antes deste init
+        init();
     return*____instance;
 }
 
@@ -99,24 +107,29 @@ Application &Application::i()
 qlonglong Application::memoryUsage()
 {
     QProcess process;
-    process.start(qsl("cat"), qvsl_null<<qsl("/proc/%1/status").arg(qApp->applicationPid()));
-    if(process.waitForStarted(1000)){
-        if(!process.waitForFinished(1000)){
-            process.terminate();
-        }
-        else{
-            QString bytes=process.readAllStandardOutput().toLower();
-            bytes=bytes.replace(qsl("\t"), qsl_null);
-            while(bytes.contains(qsl("  ")))
-                   bytes=bytes.replace(qsl("  "), qsl_space);
-            auto vList=bytes.split(qsl("\n"));
-            for(auto&s:vList){
-                if(s.contains(qsl_fy(vmpeak))){
-                    auto vmRSS=s.split(qsl(":")).last().trimmed().replace(qsl("kb"),qsl_null).trimmed();
-                    return vmRSS.toLongLong();
-                }
-            }
-        }
+    process.start(qsl("cat"), qvsl{qsl("/proc/%1/status").arg(qApp->applicationPid())});
+
+    if(!process.waitForStarted(1000)){
+        return 0;
+    }
+
+    if(!process.waitForFinished(1000)){
+        process.terminate();
+        return 0;
+    }
+
+    QString bytes=process.readAllStandardOutput().toLower();
+    bytes=bytes.replace(qsl("\t"), qsl_null);
+    while(bytes.contains(qsl("  ")))
+        bytes=bytes.replace(qsl("  "), qsl_space);
+
+    auto vList=bytes.split(qsl("\n"));
+    for(auto&s:vList){
+        if(!s.contains(qsl_fy(vmpeak)))
+            continue;
+
+        auto vmRSS=s.split(qsl(":")).last().trimmed().replace(qsl("kb"),qsl_null).trimmed();
+        return vmRSS.toLongLong();
     }
     return 0;
 }
