@@ -24,9 +24,9 @@ struct ConstsApplicationBase{
 
 static ConstsApplicationBase*____constsApplicationBase=nullptr;
 
-static Application*____instance=nullptr;
+Q_GLOBAL_STATIC(Application, ____instance);
 
-static void init(Application&i)
+static void initApp(Application&i)
 {
 #ifdef QT_DEBUG
     i.resourceExtract();
@@ -43,16 +43,7 @@ static void init(Application&i)
 
 static void init()
 {
-    if(____instance!=nullptr)
-        return;
-
-    static QMutex ____instance_mutex;
-    QMutexLocker locker(&____instance_mutex);/*garantia de unica instancia*/
-    if(____instance!=nullptr)
-        return;
-
-    ____instance=new Application(nullptr);
-    init(*____instance);
+    initApp(*____instance);
 }
 
 Q_COREAPP_STARTUP_FUNCTION(init)
@@ -64,8 +55,6 @@ Application::Application(QObject *parent) : QObject(parent)
 
 Application::~Application()
 {
-    if(this==&this->instance())
-        ____instance=nullptr;
     dPvt();
     delete&p;
 }
@@ -94,8 +83,6 @@ int Application::exec(QCoreApplication&a)
 
 Application &Application::instance()
 {
-    if(____instance==nullptr)//manter, em caso de include do .pri a inicializacao ocorre estranhamento e inicializa antes deste init
-        init();
     return*____instance;
 }
 
