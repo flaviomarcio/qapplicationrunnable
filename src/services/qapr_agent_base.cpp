@@ -79,7 +79,7 @@ public slots:
 
             if(!method.invoke(&pp, Qt::DirectConnection)){
                 message=tr("Method not called");
-#if QAPR_LOG_VERBOSE
+#if QAPR_LOG
                 sDebug()<<"invoke method: error=="<<message;
 #endif
                 continue;
@@ -87,6 +87,7 @@ public slots:
 #if QAPR_LOG_VERBOSE
             sDebug()<<"invoke method:"<<method.name();
 #endif
+            message.clear();
             break;
         }
 #if QAPR_LOG_VERBOSE
