@@ -11,11 +11,14 @@ public:
     QVariant USER,PID,CPU_percent, MEM_percent, VSZ, RSS , TTY , STAT, START;
 };
 
+Q_GLOBAL_STATIC(Application, ____instance);
+Q_GLOBAL_STATIC(QMutex, ____mutex);
+
 struct ConstsApplicationBase{
     QRpc::ServiceSetting circuit_breaker;
     void init()
     {
-        auto&manager=QApr::Application::instance().manager();
+        auto&manager=____instance->manager();
         circuit_breaker=manager.setting(qsl("circuit-breaker"));
         if(!circuit_breaker.isValid())
             circuit_breaker=manager.setting(qsl("circuit_breaker"));
@@ -24,7 +27,8 @@ struct ConstsApplicationBase{
 
 static ConstsApplicationBase*____constsApplicationBase=nullptr;
 
-Q_GLOBAL_STATIC(Application, ____instance);
+
+
 
 static void initApp(Application&i)
 {
@@ -41,9 +45,19 @@ static void initApp(Application&i)
         sWarning()<<qtr("Connection manager is not loaded");
 }
 
+static bool initCheck=false;
 static void init()
 {
+    if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
+        return;
+
+    QMutexLocker locker(____mutex);//em caso de chamada direta do instance ele vai controlar o acesso
+
+    if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
+        return;
+
     initApp(*____instance);
+    initCheck=true;
 }
 
 Q_COREAPP_STARTUP_FUNCTION(init)
@@ -83,6 +97,8 @@ int Application::exec(QCoreApplication&a)
 
 Application &Application::instance()
 {
+    if(!initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
+        init();
     return*____instance;
 }
 
