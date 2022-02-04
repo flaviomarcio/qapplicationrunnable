@@ -18,11 +18,14 @@ public:
     QDateTime runner_date;
     QVariantHash stats;
     AgentBase*parent = nullptr;
-    explicit AgentBasePvt(AgentBase*parent=nullptr):QObject(parent){
+    explicit AgentBasePvt(AgentBase*parent=nullptr):QObject(parent)
+    {
         this->parent=parent;
     }
+
 public slots:
-    void onServiceRun(){
+    void onServiceRun()
+    {
 #if QAPR_LOG_VERBOSE
         sWarning()<<this->parent->agentName()<<tr(": started");
 #endif
@@ -45,19 +48,24 @@ public slots:
 #if QAPR_LOG
             sInfo()<<pp.agentName()<<qsl(", no connection db: ")<<pool.lastError().text();
 #endif
+            return;
         }
-        else if(pp.setConnection(db)){
+
+        if(pp.setConnection(db)){
 #if QAPR_LOG_VERBOSE
             sInfo()<<this->agentName()<<", "<<agentSetting.name();
 #endif
             this->service_start();
             pool.finish(db);
+            return;
         }
 #if QAPR_LOG_VERBOSE
         sWarning()<<this->parent->agentName()<<tr(": finished");
 #endif
     }
-    void service_start(){
+
+    void service_start()
+    {
 #if QAPR_LOG_VERBOSE
         aDebugMethodStart();
 #endif
@@ -115,31 +123,31 @@ public slots:
 #if QAPR_LOG_VERBOSE
             sInfo()<<service<<qsl(" disabled");
 #endif
+            return false;
         }
-        else{
-            auto _run=[this, &p, &service](){
-                Q_UNUSED(service)
-                this->runner_date=this->makeNewDateRun();
-                if(!p.serviceStartLock.tryLock(10)){
+
+        auto _run=[this, &p, &service](){
+            Q_UNUSED(service)
+            this->runner_date=this->makeNewDateRun();
+            if(!p.serviceStartLock.tryLock(10)){
 #if QAPR_LOG_VERBOSE
-                    sInfo()<<service<<qsl(" skipped");
+                sInfo()<<service<<qsl(" skipped");
 #endif
-                }
-                else{
-                    emit this->parent->serviceStart();
-                    p.serviceStartLock.unlock();
-                    return true;
-                }
                 return false;
-            };
+            }
 
-            auto now=QDateTime::currentDateTime();
-            if(p.runner_date.isNull())
-                return _run();
+            emit this->parent->serviceStart();
+            p.serviceStartLock.unlock();
+            return true;
+        };
 
-            if(now>p.runner_date)
-                return _run();
-        }
+        auto now=QDateTime::currentDateTime();
+        if(p.runner_date.isNull())
+            return _run();
+
+        if(now>p.runner_date)
+            return _run();
+
         return false;
     }
 };
@@ -169,9 +177,8 @@ QRpc::ServiceSetting &AgentBase::agentSetting()
         static QRpc::ServiceSetting __default;
         return __default;
     }
-    else{
-        return setting;
-    }
+
+    return setting;
 }
 
 void AgentBase::run()
@@ -196,13 +203,15 @@ bool AgentBase::runCheck()
 
 void AgentBase::start()
 {
-    if(this->agentSetting().enabled()){
-        if(!this->isRunning()){
-            QThread::start();
-            while(this->eventDispatcher()==nullptr)
-                QThread::msleep(1);
-        }
-    }
+    if(!this->agentSetting().enabled())
+        return;
+
+    if(this->isRunning())
+        return;
+
+    QThread::start();
+    while(this->eventDispatcher()==nullptr)
+        QThread::msleep(1);
 }
 
 QByteArray AgentBase::agentName() const
