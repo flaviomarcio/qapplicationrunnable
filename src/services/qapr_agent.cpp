@@ -16,45 +16,52 @@ public:
     QMutex mutexAgent;
     Agent*agent=nullptr;
     QOrm::ConnectionNotify connectionNotify;
-    QMultiHash<QByteArray, const QMetaObject*> services;
+    QHash<QByteArray, const QMetaObject*> services;
     QHash<QByteArray, AgentBase*> tasks;
     QHash<QByteArray, QDateTime> tasksInterval;
     QTimer*timer=nullptr;
-    explicit AgentPvt(Agent*parent) : QObject(parent), agent(parent){
-
-
+    explicit AgentPvt(Agent*parent) : QObject(parent), agent(parent)
+    {
     }
-    virtual ~AgentPvt(){
+
+    virtual ~AgentPvt()
+    {
         this->freeTimer();
     }
 
-    void freeTimer(){
-        if(this->timer!=nullptr){
-            QObject::disconnect(timer, &QTimer::timeout, this, &AgentPvt::taskCheck);
-            this->timer->stop();
-            this->timer=nullptr;
-        }
+    void freeTimer()
+    {
+        if(this->timer==nullptr)
+            return;
+        QObject::disconnect(timer, &QTimer::timeout, this, &AgentPvt::taskCheck);
+        this->timer->stop();
+        this->timer->deleteLater();
+        this->timer=nullptr;
     }
 
-    QTimer*newTimer(){
+    QTimer*newTimer()
+    {
         freeTimer();
-        auto timer=new QTimer(nullptr);
+        this->timer=new QTimer(nullptr);
         timer->setInterval(500);
         QObject::connect(timer, &QTimer::timeout, this, &AgentPvt::taskCheck);
         return timer;
     }
 
-    AgentBase*taskInstance(const QByteArray&service){
+    AgentBase*taskInstance(const QByteArray&service)
+    {
         return this->tasks.value(service);
     }
 
-    const QVariantHash taskStats(const QByteArray&service){
+    const QVariantHash taskStats(const QByteArray&service)
+    {
         QMutexLocker locker(&mutexAgent);
         auto task=this->taskInstance(service);
         return (task==nullptr)?QVariantHash():task->stats();
     }
 public slots:
-    void taskRun(const QByteArray&service){
+    void taskRun(const QByteArray&service)
+    {
         auto task = this->tasks.value(service);
         if(task==nullptr){
             auto metaObject=this->services.value(service);
@@ -72,22 +79,20 @@ public slots:
             }
         }
 
-        if(task!=nullptr){
-            auto&settings=task->agentSetting();
-            if(settings.enabled()){
-                task->start();
-                task->runCheck();
-            }
+        if(task==nullptr)
+            return;
+
+        auto&settings=task->agentSetting();
+        if(settings.enabled()){
+            task->start();
+            task->runCheck();
         }
     }
 
-    void taskCheck(){
+    void taskCheck()
+    {
         QMutexLOCKER locker(&mutexAgent);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QHashIterator<QByteArray, const QMetaObject*> i(this->services);
-#else
-        QMultiHashIterator<QByteArray, const QMetaObject*> i(this->services);
-#endif
         while (i.hasNext()) {
             i.next();
             auto&service=i.key();
@@ -107,12 +112,12 @@ public slots:
                     }
                 }
             }
-
             this->taskRun(service);
         }
     }
 
-    bool serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames){
+    bool serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames)
+    {
         static auto chars=QStringList{qsl(";"),qsl("|"),qsl(","),qsl("  ")};
         QString service=methodNames;
         for(auto&c:chars){
@@ -121,27 +126,27 @@ public slots:
         }
         auto listMethod=methodNames.split(' ');
         for(auto&service:listMethod){
-            if(services.contains(service.trimmed()))
-                services.replace(service.trimmed(), &metaObject);
-            else
-                services.insert(service.trimmed(), &metaObject);
+            services.insert(service.trimmed(), &metaObject);
         }
         return true;
     }
 
 
 private slots:
-    void db_notification(const QString &channel, const QVariant &payload){
+    void db_notification(const QString &channel, const QVariant &payload)
+    {
         if(channel.toLower()==this->topicSetting){
             this->agent->notifySettingsChanged(payload);
         }
     }
-    void taskFinished(const QVariant&v){
+    void taskFinished(const QVariant&v)
+    {
         auto service = v.toByteArray();
         auto task = this->tasks.value(service);
-        if(task!=nullptr){
-            emit task->taskResume();
-        }
+        if(task==nullptr)
+            return;
+
+        emit task->taskResume();
     }
 };
 
