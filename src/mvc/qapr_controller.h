@@ -8,7 +8,7 @@
 #include <QUuid>
 
 namespace QApr {
-class InterfaceDatabase;
+class Interface;
 
 //!
 //! \brief The Controller class
@@ -38,13 +38,13 @@ public:
     //! \brief interfaceRequest
     //! \return
     //!
-    virtual InterfaceDatabase *interfaceRequest();
+    virtual Interface *interfaceRequest();
 
     //!
     //! \brief irq
     //! \return
     //!alias for interfaceRequest
-    virtual InterfaceDatabase *irq();
+    virtual Interface *irq();
 
     //!
     //! \brief transactionRollbackForce

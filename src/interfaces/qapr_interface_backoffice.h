@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./qapr_interface_database.h"
+#include "./qapr_interface.h"
 
 namespace QApr {
 
@@ -8,7 +8,7 @@ namespace QApr {
 //! \brief The InterfaceBackOffice class
 //!
 //!camada criada para organizar menus e aesso do backoffice
-class Q_APR_EXPORT InterfaceBackOffice : public QApr::InterfaceDatabase
+class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()

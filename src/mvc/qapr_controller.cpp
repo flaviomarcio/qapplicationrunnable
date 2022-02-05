@@ -1,5 +1,5 @@
 #include "./qapr_controller.h"
-#include "../interfaces/qapr_interface_database.h"
+#include "../interfaces/qapr_interface.h"
 #include "../application/qapr_application.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 
@@ -11,7 +11,7 @@ namespace QApr {
 class ControllerPvt{
 public:
     Controller*parent=nullptr;
-    InterfaceDatabase*request_=nullptr;
+    Interface*request_=nullptr;
     QVariantHash accountModel;
     explicit ControllerPvt(Controller*parent)
     {
@@ -21,13 +21,13 @@ public:
     {
     }
 
-    InterfaceDatabase*request()
+    Interface*request()
     {
         if(this->request_==nullptr){
             QObject*__parent=this->parent;
             while(__parent!=nullptr){
-                if(__parent->metaObject()->inherits(&InterfaceBase::staticMetaObject)){
-                    request_=dynamic_cast<InterfaceDatabase*>(__parent);
+                if(__parent->metaObject()->inherits(&Interface::staticMetaObject)){
+                    request_=dynamic_cast<Interface*>(__parent);
                     if(request_!=nullptr)
                         break;
                 }
@@ -64,13 +64,13 @@ const QVariant Controller::resultInfo()
     return this->lr().resultVariantInfo();
 }
 
-InterfaceDatabase *Controller::interfaceRequest()
+Interface *Controller::interfaceRequest()
 {
     dPvt();
     return p.request();
 }
 
-InterfaceDatabase *Controller::irq()
+Interface *Controller::irq()
 {
     dPvt();
     return p.request();

@@ -25,7 +25,7 @@ public:
     }
 };
 
-InterfaceBackOffice::InterfaceBackOffice(QObject *parent):QApr::InterfaceDatabase(parent)
+InterfaceBackOffice::InterfaceBackOffice(QObject *parent):QApr::Interface(parent)
 {
     this->p = new InterfaceBackOfficePvt(this);
 }

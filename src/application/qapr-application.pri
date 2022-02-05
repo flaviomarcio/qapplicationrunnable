@@ -13,6 +13,7 @@ HEADERS += \
     $$PWD/qapr_global.h \
     $$PWD/qapr_log.h \
     $$PWD/qapr_circuit_breaker.h \
+    $$PWD/qapr_macro.h \
     $$PWD/qapr_runnable.h \
     $$PWD/qapr_mainservice.h \
     $$PWD/qapr_application.h \
