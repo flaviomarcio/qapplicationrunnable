@@ -11,24 +11,21 @@ public:
     QVariant USER,PID,CPU_percent, MEM_percent, VSZ, RSS , TTY , STAT, START;
 };
 
-Q_GLOBAL_STATIC(Application, ____instance);
+Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QMutex, ____mutex);
 
 struct ConstsApplicationBase{
     QRpc::ServiceSetting circuit_breaker;
     void init()
     {
-        auto&manager=____instance->manager();
+        auto&manager=staticInstance->manager();
         circuit_breaker=manager.setting(qsl("circuit-breaker"));
         if(!circuit_breaker.isValid())
             circuit_breaker=manager.setting(qsl("circuit_breaker"));
     }
 };
 
-static ConstsApplicationBase*____constsApplicationBase=nullptr;
-
-
-
+Q_GLOBAL_STATIC(ConstsApplicationBase, constsApplicationBase)
 
 static void initApp(Application&i)
 {
@@ -38,8 +35,7 @@ static void initApp(Application&i)
     auto settingFile=i.settings_SERVER();
     auto&manager=i.manager();
     manager.load(settingFile);
-    ____constsApplicationBase = new ConstsApplicationBase();
-    ____constsApplicationBase->init();
+    constsApplicationBase->init();
     auto&cnn=i.connectionManager();
     if(!cnn.isLoaded())
         sWarning()<<qtr("Connection manager is not loaded");
@@ -56,7 +52,7 @@ static void init()
     if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
         return;
 
-    initApp(*____instance);
+    initApp(*staticInstance);
     initCheck=true;
 }
 
@@ -89,7 +85,7 @@ QRpc::ServiceManager &Application::manager()
 int Application::exec(QCoreApplication&a)
 {
     dPvt();
-    p.circuitBreaker.setSettings(____constsApplicationBase->circuit_breaker.toHash());
+    p.circuitBreaker.setSettings(constsApplicationBase->circuit_breaker.toHash());
     if(p.circuitBreaker.start())
         p.circuitBreaker.print();
     return a.exec();
@@ -99,7 +95,7 @@ Application &Application::instance()
 {
     if(!initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
         init();
-    return*____instance;
+    return*staticInstance;
 }
 
 Application &Application::i()
