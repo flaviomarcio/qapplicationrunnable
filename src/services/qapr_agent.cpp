@@ -180,7 +180,7 @@ bool Agent::start()
         while(objectName.contains(qsl("__")))
             objectName=objectName.replace(qsl("__"),qsl("_"));
     }
-    this->setObjectName(objectName);
+    this->setObjectName(objectName.left(60));
     QThread::start();
     while(this->eventDispatcher()==nullptr)
         QThread::msleep(1);

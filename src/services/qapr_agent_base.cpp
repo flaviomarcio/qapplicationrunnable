@@ -46,7 +46,7 @@ public slots:
 #endif
         if(!pool.get(db)){
 #if QAPR_LOG
-            sInfo()<<pp.agentName()<<qsl(", no connection db: ")<<pool.lastError().text();
+            sInfo()<<qsl("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
 #endif
             return;
         }
@@ -84,11 +84,13 @@ public slots:
 
             if(!pp.canMethodExecute(method))
                 continue;
-
+#if QAPR_LOG_VERBOSE
+            sWarning()<<qsl("invoke method(%1)").arg(QString(method.name()));
+#endif
             if(!method.invoke(&pp, Qt::DirectConnection)){
                 message=tr("Method not called");
 #if QAPR_LOG
-                sDebug()<<"invoke method: error=="<<message;
+                sWarning()<<qsl("invoke method(%1): error==%2").arg(method.name(), message);
 #endif
                 continue;
             }
