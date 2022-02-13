@@ -104,8 +104,8 @@ public slots:
         this->runner_date=this->makeNewDateRun();
     }
 
-    QDateTime makeNewDateRun(){
-
+    QDateTime makeNewDateRun()
+    {
         auto&agentSetting=this->parent->agentSetting();
         auto interval = agentSetting.activityInterval();
         auto next=QDateTime::currentDateTime();
