@@ -65,18 +65,20 @@ public slots:
         auto task = this->tasks.value(service);
         if(task==nullptr){
             auto metaObject=this->services.value(service);
+
             auto object=metaObject->newInstance(Q_ARG(QObject*, nullptr ));
-            if(object!=nullptr){
-                task=dynamic_cast<AgentBase*>(object);
-                if(task==nullptr)
-                    delete object;
-                else{
-                    //QObject::connect(task, &AgentBase::task_finished, this, &AgentPvt::taskFinished);
-                    this->tasks.insert(service, task);
-                    task->setAgentName(service);
-                    task->start();
-                }
+            if(object==nullptr)
+                return;
+
+            task=dynamic_cast<AgentBase*>(object);
+            if(task==nullptr){
+                delete object;
+                return;
             }
+
+            this->tasks.insert(service, task);
+            task->setAgentName(service);
+            task->start();
         }
 
         if(task==nullptr)
@@ -96,22 +98,6 @@ public slots:
         while (i.hasNext()) {
             i.next();
             auto&service=i.key();
-            auto task = this->tasks.value(service);
-            if(task==nullptr){
-                auto metaObject=this->services.value(service);
-                auto object=metaObject->newInstance(Q_ARG(QObject*, nullptr ));
-                if(object!=nullptr){
-                    task=dynamic_cast<AgentBase*>(object);
-                    if(task==nullptr)
-                        delete object;
-                    else{
-                        //QObject::connect(task, &AgentBase::task_finished, this, &AgentPvt::taskFinished);
-                        this->tasks.insert(service, task);
-                        task->setAgentName(service);
-                        task->start();
-                    }
-                }
-            }
             this->taskRun(service);
         }
     }
