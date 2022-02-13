@@ -9,7 +9,7 @@
 #include "../services/qapr_agent_base.h"
 
 
-#define DECLARE_AGENT_SCHEDULE(AgentClass, methodName)\
+#define QAPR_AGENT_DECLARE_SCHEDULE(AgentClass, methodName)\
 const auto agentRegistered##AgentClass = QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, QByteArrayLiteral(#methodName));
 
 namespace QApr{
