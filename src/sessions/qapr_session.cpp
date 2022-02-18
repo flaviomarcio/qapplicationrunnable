@@ -28,7 +28,7 @@ SessionCredential &Session::credential(){
 void Session::init(){
     auto session=dynamic_cast<Session*>(static_session_instance.value(this->session_thread));
     if(this->session==nullptr){
-        QMutexLocker locker(&static_session_instance_mutex);
+        QMutexLOCKER locker(&static_session_instance_mutex);
         this->session=dynamic_cast<QStm::Object*>(static_session_instance.value(this->session_thread));
         if(this->session==nullptr){
             static_session_instance.insert(session_thread, session);

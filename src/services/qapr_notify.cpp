@@ -71,7 +71,7 @@ public:
     bool taskStart()
     {
         if(this->connectionNotify.start()){
-            QMutexLocker locker(&mutexNotify);
+            QMutexLOCKER locker(&mutexNotify);
             QHashIterator<QByteArray, const QMetaObject*> i(this->services);
             while (i.hasNext()) {
                 i.next();

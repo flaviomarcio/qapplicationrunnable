@@ -29,7 +29,7 @@ public slots:
 #if QAPR_LOG_VERBOSE
         sWarning()<<this->parent->agentName()<<tr(": started");
 #endif
-        QMutexLocker locker(&serviceStartLock);
+        QMutexLOCKER locker(&serviceStartLock);
         auto&pp=*this->parent;
 #if QAPR_LOG_SUPER_VERBOSE
         sInfo()<<"run "<<pp.agentName();

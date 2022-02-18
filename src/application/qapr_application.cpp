@@ -47,7 +47,7 @@ static void init()
     if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
         return;
 
-    QMutexLocker locker(____mutex);//em caso de chamada direta do instance ele vai controlar o acesso
+    QMutexLOCKER locker(____mutex);//em caso de chamada direta do instance ele vai controlar o acesso
 
     if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
         return;

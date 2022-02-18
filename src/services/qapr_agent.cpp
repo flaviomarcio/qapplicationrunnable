@@ -55,7 +55,7 @@ public:
 
     const QVariantHash taskStats(const QByteArray&service)
     {
-        QMutexLocker locker(&mutexAgent);
+        QMutexLOCKER locker(&mutexAgent);
         auto task=this->taskInstance(service);
         return (task==nullptr)?QVariantHash():task->stats();
     }
