@@ -8,6 +8,7 @@
 #include <QUuid>
 
 namespace QApr {
+
 class Interface;
 
 //!
@@ -22,6 +23,13 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit Controller(QObject *parent = nullptr);
+
+    //!
+    //! \brief Controller
+    //! \param connection
+    //! \param parent
+    //!
+    Q_INVOKABLE explicit Controller(const QSqlDatabase&connection, QObject *parent = nullptr);
 
     //!
     //! \brief ~Controller
