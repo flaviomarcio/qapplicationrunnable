@@ -1,55 +1,67 @@
 #pragma once
 
+#include <QtSql/QSqlDatabase>
 #include "../../../qorm/src/qorm_object_db.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "./qapr_menu_object.h"
 #include "../sessions/qapr_session.h"
 #include "../application/qapr_global.h"
-#include <QtSql/QSqlDatabase>
+#include "../../qswagger/src/qswagger.h"
 
-const static QVariantHash flags_connection_db_ignore{{qsl("connection_db_ignore"), true}};
-const static QVariantHash flags_connection_db_transaction{{qsl("connection_db_transaction"), true}};
+
+Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_ignore,(QVariantHash{{"connection_db_ignore", true}}));
+Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_transaction,(QVariantHash{{"connection_db_transaction", true}}));
+
+static const auto &flags_connection_db_ignore=*__flags_connection_db_ignore;
+static const auto &flags_connection_db_transaction=*__flags_connection_db_transaction;
+
+
+typedef QSwagger::Document APIDocument;
+typedef QSwagger::RequestParameter APIRequestParameter;
+typedef QSwagger::PathOperation APIPathOperation;
+typedef QSwagger::Response APIResponse;
 
 namespace QApr {
 
 #define QAPR_DECLARE_IRQ()                                                          \
-QApr::Interface*irq(){                                                              \
-    if(this->___irq==nullptr){                                                      \
+public:                                                                             \
+    QApr::Interface*irq()                                                           \
+    {                                                                               \
+        if(this->___irq!=nullptr)                                                   \
+            return this->___irq;                                                    \
         QObject*__parent=this->parent();                                            \
         while(__parent!=nullptr){                                                   \
-            if(__parent->metaObject()->inherits(&Interface::staticMetaObject)){     \
-                ___irq=dynamic_cast<QApr::Interface*>(__parent);                    \
-                if(___irq!=nullptr){                                                \
-                    break;                                                          \
-                }                                                                   \
-            }                                                                       \
+            if(!__parent->metaObject()->inherits(&Interface::staticMetaObject))     \
+                continue;                                                           \
+            ___irq=dynamic_cast<QApr::Interface*>(__parent);                        \
+            if(___irq!=nullptr)                                                     \
+                break;                                                              \
             __parent=__parent->parent();                                            \
         }                                                                           \
+        return this->___irq;                                                        \
     }                                                                               \
-    return this->___irq;                                                            \
-}                                                                                   \
 private:                                                                            \
-QApr::Interface*___irq=nullptr;                                                     \
+    QApr::Interface*___irq=nullptr;                                                 \
 public:                                                                             \
-                                                                                    \
-virtual bool transactionRollbackForce() const                                       \
-{                                                                                   \
-    dPvt();                                                                         \
-    if(this->irq()==nullptr)                                                        \
-        sWarning()<<tr("Request não identificado");                                 \
-    else                                                                            \
-        ->irq()->transactionRollbackForce();                                        \
-    return false;                                                                   \
-}                                                                                   \
-                                                                                    \
-virtual void setTransactionRollbackForce(bool value)                                \
-{                                                                                   \
-    dPvt();                                                                         \
-    if(this->irq()==nullptr)                                                        \
-        sWarning()<<tr("Request não identificado");                                 \
-    else                                                                            \
+    virtual bool transactionRollbackForce() const                                   \
+    {                                                                               \
+        dPvt();                                                                     \
+        if(this->irq()==nullptr){                                                   \
+            sWarning()<<tr("Request não identificado");                             \
+            return false;                                                           \
+        }                                                                           \
+        this->irq()->transactionRollbackForce();                                    \
+        return true;                                                                \
+    }                                                                               \
+    virtual void setTransactionRollbackForce(bool value)                            \
+    {                                                                               \
+        dPvt();                                                                     \
+        if(this->irq()==nullptr){                                                   \
+            sWarning()<<tr("Request não identificado");                             \
+            return;                                                                 \
+        }                                                                           \
         this->irq()->setTransactionRollbackForce(value);                            \
-}
+    }
 
 //!
 //! \brief The InterfaceDatabase class
@@ -159,9 +171,6 @@ public:
     //! \param value
     //!
     virtual void setTransactionRollbackForce(bool value);
-
-
-public:
 
 private:
     void *p = nullptr;
