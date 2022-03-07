@@ -6,8 +6,6 @@
 #include "./qapr_menu_object.h"
 #include "../sessions/qapr_session.h"
 #include "../application/qapr_global.h"
-#include "../../qswagger/src/qswagger.h"
-
 
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_ignore,(QVariantHash{{"connection_db_ignore", true}}));
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_transaction,(QVariantHash{{"connection_db_transaction", true}}));
@@ -15,11 +13,6 @@ Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_transaction,(QVari
 static const auto &flags_connection_db_ignore=*__flags_connection_db_ignore;
 static const auto &flags_connection_db_transaction=*__flags_connection_db_transaction;
 
-
-typedef QSwagger::Document APIDocument;
-typedef QSwagger::RequestParameter APIRequestParameter;
-typedef QSwagger::PathOperation APIPathOperation;
-typedef QSwagger::Response APIResponse;
 
 namespace QApr {
 
@@ -40,9 +33,6 @@ public:                                                                         
         }                                                                           \
         return this->___irq;                                                        \
     }                                                                               \
-private:                                                                            \
-    QApr::Interface*___irq=nullptr;                                                 \
-public:                                                                             \
     virtual bool transactionRollbackForce() const                                   \
     {                                                                               \
         dPvt();                                                                     \
@@ -61,7 +51,10 @@ public:                                                                         
             return;                                                                 \
         }                                                                           \
         this->irq()->setTransactionRollbackForce(value);                            \
-    }
+    }                                                                               \
+private:                                                                            \
+    QApr::Interface*___irq=nullptr;                                                 \
+public:
 
 //!
 //! \brief The InterfaceDatabase class
