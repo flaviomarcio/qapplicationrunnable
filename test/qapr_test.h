@@ -48,7 +48,7 @@ public:
     }
 
     static QByteArray toMd5(const QVariant&v){
-        QByteArray bytes=QStmTypesListObjects.contains(qTypeId(v))
+        QByteArray bytes=QMetaTypeUtilObjects.contains(qTypeId(v))
                                ?
                                QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
                                :
@@ -58,7 +58,7 @@ public:
 
     static QVariant toVar(const QVariant&v){
         return
-            QStmTypesListString.contains(qTypeId(v))
+            QMetaTypeUtilString.contains(qTypeId(v))
                 ?
                 QJsonDocument::fromJson(v.toByteArray()).toVariant()
                 :
