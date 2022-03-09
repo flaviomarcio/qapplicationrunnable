@@ -6,8 +6,7 @@ namespace QApr{
 class SDKGoogleTestUnit : public SDKGoogleTest{
 public:
 
-    explicit SDKGoogleTestUnit():SDKGoogleTest(){
-    }
+    explicit SDKGoogleTestUnit();
 
 public:
 };

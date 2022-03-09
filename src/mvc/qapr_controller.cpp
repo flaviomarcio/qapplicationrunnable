@@ -13,10 +13,12 @@ public:
     Controller*parent=nullptr;
     Interface*request_=nullptr;
     QVariantHash accountModel;
+
     explicit ControllerPvt(Controller*parent)
     {
         this->parent=parent;
     }
+
     virtual ~ControllerPvt()
     {
     }

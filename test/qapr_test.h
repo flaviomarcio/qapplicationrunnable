@@ -18,80 +18,36 @@
 #include "../src/services/qapr_server.h"
 
 namespace QApr{
+
 class SDKGoogleTest : public testing::Test{
 public:
-    explicit SDKGoogleTest(){
-        this->clear();
-        QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
-    }
+    explicit SDKGoogleTest();
 
-    static QApr::Server&service(){
-        return QApr::Server::instance();
-    }
+    static QApr::Server&service();
 
-    virtual bool clear(){
-        return true;
-    }
+    virtual bool clear();
 
-    virtual bool serviceStart(){
-        return service().start();
-    }
+    virtual bool serviceStart();
 
+    virtual bool serviceStop();
 
-    virtual bool serviceStop(){
-        return service().stop();
+    virtual QStringList arguments();
 
-    }
+    static QByteArray toMd5(const QVariant&v);
 
-    virtual QStringList arguments(){
-        return qApp->arguments();
-    }
+    static QVariant toVar(const QVariant&v);
 
-    static QByteArray toMd5(const QVariant&v){
-        QByteArray bytes=QMetaTypeUtilObjects.contains(qTypeId(v))
-                               ?
-                               QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
-                               :
-                               v.toByteArray();
-        return QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
-    }
+    QByteArray fakeBody(const int maxloop=1);;
 
-    static QVariant toVar(const QVariant&v){
-        return
-            QMetaTypeUtilString.contains(qTypeId(v))
-                ?
-                QJsonDocument::fromJson(v.toByteArray()).toVariant()
-                :
-                v;
-    }
+    static QUuid toUUID(const QVariant&v);
 
-    QByteArray fakeBody(const int maxloop=1){
-        QByteArray __return;
-        Q_LOOP_LIMIT(maxloop){
-            __return.append(QUuid::createUuid().toByteArray());
-        }
-        return __return;
-    };
+    static void SetUpTestCase();
 
-    static QUuid toUUID(const QVariant&v){
-        return VariantUtil().toUuid(v);
-    }
+    virtual void SetUp();
 
-    static void SetUpTestCase()
-    {
-    }
+    virtual void TearDown();
 
-    virtual void SetUp()
-    {
-    }
-
-    virtual void TearDown()
-    {
-    }
-
-    static void TearDownTestCase()
-    {
-    }
+    static void TearDownTestCase();
 
 public:
 

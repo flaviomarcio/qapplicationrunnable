@@ -9,22 +9,24 @@ QVector<QApr::Interface*> makeInterfaces(QObject*parent)
     QVector<QApr::Interface*> __return;
     auto&staticInterfaceList=QRpc::QRPCController::staticInterfaceList();
     for(auto&v:staticInterfaceList){
-        if(!QApr::Interface::staticMetaObject.inherits(v)){
-            auto&metaObject=*v;
-            auto object=metaObject.newInstance(Q_ARG(QObject*, parent));
-            if(object!=nullptr){
-                auto parser=dynamic_cast<QApr::Interface*>(object);
-                if(parser==nullptr)
-                    delete object;
-                else
-                    __return<<parser;
-            }
+        if(QApr::Interface::staticMetaObject.inherits(v))
+            continue;
+        auto&metaObject=*v;
+        auto object=metaObject.newInstance(Q_ARG(QObject*, parent));
+        if(object==nullptr)
+            continue;
+        auto parser=dynamic_cast<QApr::Interface*>(object);
+        if(parser==nullptr){
+            delete object;
+            continue;
         }
+        __return<<parser;
     }
     return __return;
 }
 
-static QVariantList&menuMaker(ControllerBackOffice*parent){
+static QVariantList&menuMaker(ControllerBackOffice*parent)
+{
     static QVariantList rootMenuMaked;
     if(rootMenuMaked.isEmpty()){
         QHash<QString,QVariant> cacheMenu;
@@ -33,27 +35,27 @@ static QVariantList&menuMaker(ControllerBackOffice*parent){
             auto vMenuList=v->backOfficeMenu();
             if(vMenuList.isEmpty())
                 continue;
-            else{
-                for(auto&v:vMenuList){
-                    MenuObject menu(v);
-                    auto name=menu.text();
-                    if(menu.isEmpty())
-                        continue;
-                    else if(!cacheMenu.contains(name))
-                        cacheMenu[name]=menu.build();
-                    else{
-                        MenuObject menuRoot(cacheMenu[name]);
-                        for(auto&v:menu.menu()){
-                            MenuObject menuItem(v);
-                            auto vMenu=v.toMap();
-                            if(vMenu.isEmpty())
-                                continue;
-                            else
-                                menuRoot.menu(v);
-                        }
-                        cacheMenu[name]=menuRoot.build();
-                    }
+
+            for(auto&v:vMenuList){
+                MenuObject menu(v);
+                auto name=menu.text();
+                if(menu.isEmpty())
+                    continue;
+
+                if(!cacheMenu.contains(name)){
+                    cacheMenu[name]=menu.build();
+                    continue;
                 }
+
+                MenuObject menuRoot(cacheMenu[name]);
+                for(auto&v:menu.menu()){
+                    MenuObject menuItem(v);
+                    auto vMenu=v.toMap();
+                    if(vMenu.isEmpty())
+                        continue;
+                    menuRoot.menu(v);
+                }
+                cacheMenu[name]=menuRoot.build();
             }
         }
         qDeleteAll(makedInterfaces);
@@ -106,13 +108,7 @@ ResultValue &ControllerBackOffice::menuInfo(const QVariant &body)
 
 ResultValue &ControllerBackOffice::enviroment()
 {
-//    QVariantHash vMap;
-//    //--**--////--**--////--**--////--**--////--**--////--**--////--**--////--**--//
-//    vMap[qsl("colors")]=QVariant();
-//    vMap[qsl("captions")]=QVariant();
-//    vMap[qsl("images")]=QVariant();
-//    return this->lr(vMap);
-    return this->lr(qvh_null);
+    return this->lr(qvh{{qsl("version"), qsl("1.0.0")}});
 }
 
 }
