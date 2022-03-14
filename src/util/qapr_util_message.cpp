@@ -47,7 +47,8 @@ static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant&vMsg
     return response.isOk();
 }
 
-static bool sendMessage(const QRpc::ServiceSetting &setting, const QByteArray&serviceToken, const QString&type, const QString&to, const QString&payload, const QVariantList&attachment, QVariant&responseBody){
+static bool sendMessage(const QRpc::ServiceSetting &setting, const QByteArray&serviceToken, const QString&type, const QString&to, const QString&payload, const QVariantList&attachment, QVariant&responseBody)
+{
     auto base=qsl("%1%2").arg(__PRETTY_FUNCTION__, QDateTime::currentDateTime().toString()).toUtf8();
     auto uuid=QUuid::createUuidV3(QUuid::createUuid(),base);
     QRpc::QRPCRequest request;
