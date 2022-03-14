@@ -20,7 +20,7 @@ public:
     }
 };
 
-Server::Server(QObject *parent) : QRpc::QRPCServer(Application::instance().settings_SERVER(), parent)
+Server::Server(QObject *parent) : QRpc::Server(Application::instance().settings_SERVER(), parent)
 {
     this->p=new ServerPvt(this);
 }

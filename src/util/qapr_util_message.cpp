@@ -11,7 +11,7 @@ namespace QApr {
 static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant&vMsg)
 {
 
-    QRpc::QRPCRequest request;
+    QRpc::Request request;
     request=setting;
     QVariantHash map;
     QStm::Message message(vMsg);
@@ -51,7 +51,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting, const QByteArray&se
 {
     auto base=qsl("%1%2").arg(__PRETTY_FUNCTION__, QDateTime::currentDateTime().toString()).toUtf8();
     auto uuid=QUuid::createUuidV3(QUuid::createUuid(),base);
-    QRpc::QRPCRequest request;
+    QRpc::Request request;
     request=setting;
     if(!serviceToken.trimmed().isEmpty())
         request.header().setAuthorization(QRpc::Service, serviceToken);

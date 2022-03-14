@@ -9,7 +9,7 @@ namespace QApr {
 //!
 //! \brief The Server class
 //!
-class Q_APR_EXPORT Server : public QRpc::QRPCServer
+class Q_APR_EXPORT Server : public QRpc::Server
 {
     Q_OBJECT
     Q_DECLARE_INSTANCE(Server)
