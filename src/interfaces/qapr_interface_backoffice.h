@@ -58,7 +58,7 @@ public:
     //! \return
     //!objeto principal com toda a informacao
     Q_INVOKABLE virtual const QVariant rootObject();
-    Q_API_DOC_PATH_OPERATION(rootObject){
+    Q_API_DOC_PATH(rootObject){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -75,7 +75,7 @@ public:
     //! \return
     //!objeto com a informacao da sessao e conta relacionada ao request
     Q_INVOKABLE virtual const QVariant sessionAccount();
-    Q_API_DOC_PATH_OPERATION(sessionAccount){
+    Q_API_DOC_PATH(sessionAccount){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -92,7 +92,7 @@ public:
     //! \return
     //!variaveis de ambiente para ajustes no front
     Q_INVOKABLE virtual const QVariant enviroment();
-    Q_API_DOC_PATH_OPERATION(enviroment){
+    Q_API_DOC_PATH(enviroment){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -109,7 +109,7 @@ public:
     //! \return
     //!menu principal com todos as opcoes
     Q_INVOKABLE virtual const QVariant menu();
-    Q_API_DOC_PATH_OPERATION(menu){
+    Q_API_DOC_PATH(menu){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -126,7 +126,7 @@ public:
     //! \return
     //!requisita da dos de um menu especifico
     Q_INVOKABLE virtual const QVariant menuInfo();
-    Q_API_DOC_PATH_OPERATION(menuInfo){
+    Q_API_DOC_PATH(menuInfo){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)

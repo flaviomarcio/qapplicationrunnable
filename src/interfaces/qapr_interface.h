@@ -114,7 +114,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariantList backOfficeMenu() const;
-    Q_API_DOC_PATH_OPERATION(backOfficeMenu){
+    Q_API_DOC_PATH(backOfficeMenu){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -132,7 +132,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant check();
-    Q_API_DOC_PATH_OPERATION(check){
+    Q_API_DOC_PATH(check){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -148,7 +148,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant ping();
-    Q_API_DOC_PATH_OPERATION(ping){
+    Q_API_DOC_PATH(ping){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -165,7 +165,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant fullCheck();
-    Q_API_DOC_PATH_OPERATION(fullCheck){
+    Q_API_DOC_PATH(fullCheck){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -182,7 +182,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant connectionsCheck();
-    Q_API_DOC_PATH_OPERATION(connectionsCheck){
+    Q_API_DOC_PATH(connectionsCheck){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -200,7 +200,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant businessCheck();
-    Q_API_DOC_PATH_OPERATION(businessCheck){
+    Q_API_DOC_PATH(businessCheck){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)

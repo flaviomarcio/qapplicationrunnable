@@ -56,7 +56,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant serverStart();
-    Q_API_DOC_PATH_OPERATION(serverStart){
+    Q_API_DOC_PATH(serverStart){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -73,7 +73,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant serverStop();
-    Q_API_DOC_PATH_OPERATION(serverStop){
+    Q_API_DOC_PATH(serverStop){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -90,7 +90,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant serverRestart();
-    Q_API_DOC_PATH_OPERATION(serverRestart){
+    Q_API_DOC_PATH(serverRestart){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -107,7 +107,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant servicesCheck();
-    Q_API_DOC_PATH_OPERATION(servicesCheck){
+    Q_API_DOC_PATH(servicesCheck){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
@@ -124,7 +124,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant applicationQuit();
-    Q_API_DOC_PATH_OPERATION(applicationQuit){
+    Q_API_DOC_PATH(applicationQuit){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
