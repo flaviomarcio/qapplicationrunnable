@@ -7,8 +7,8 @@ namespace QApr {
 QVector<QApr::Interface*> makeInterfaces(QObject*parent)
 {
     QVector<QApr::Interface*> __return;
-    auto&staticInterfaceList=QRpc::Controller::staticInterfaceList();
-    for(auto&v:staticInterfaceList){
+    auto&staticApiList=QRpc::Controller::staticApiList();
+    for(auto&v:staticApiList){
         if(QApr::Interface::staticMetaObject.inherits(v))
             continue;
         auto&metaObject=*v;
