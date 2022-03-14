@@ -15,10 +15,10 @@ public:
     bool transactionRollbackForce = false;
     QOrm::Transaction transaction;
     QOrm::ConnectionPool pool;
-    QRpc::QRPCController *parent = nullptr;
+    QRpc::Controller *parent = nullptr;
     Session session;
 
-    explicit InterfaceDatabasePvt(QRpc::QRPCController *parent)
+    explicit InterfaceDatabasePvt(QRpc::Controller *parent)
         : transaction(parent), pool(QApr::Application::i().pool()), session(parent)
     {
         this->parent = parent;
@@ -29,7 +29,7 @@ public:
     auto &credentials() { return this->session.credential(); }
 };
 
-Interface::Interface(QObject *parent) : QRpc::QRPCController(parent)
+Interface::Interface(QObject *parent) : QRpc::Controller(parent)
 {
     this->p = new InterfaceDatabasePvt(this);
 }
@@ -89,7 +89,7 @@ const SessionCredential &Interface::credential()
 
 bool Interface::requestBeforeInvoke()
 {
-    if (!QRpc::QRPCController::requestBeforeInvoke())
+    if (!QRpc::Controller::requestBeforeInvoke())
         return false;
 
 
@@ -141,7 +141,7 @@ bool Interface::requestBeforeInvoke()
 
 bool Interface::requestAfterInvoke()
 {
-    if (!QRpc::QRPCController::requestAfterInvoke())
+    if (!QRpc::Controller::requestAfterInvoke())
         return false;
 
     dPvt();

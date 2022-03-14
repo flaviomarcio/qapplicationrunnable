@@ -10,7 +10,7 @@ namespace QApr {
 //!
 //! \brief The InterfaceMaintence class
 //!
-class Q_APR_EXPORT InterfaceMaintence : public QRpc::QRPCController
+class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller
 {
     Q_OBJECT
     QRPC_DECLARE_BASE_PATH(QRPCInterfaceCheck,"v1/maintence")
@@ -28,7 +28,7 @@ class Q_APR_EXPORT InterfaceMaintence : public QRpc::QRPCController
             .title(qsl("QApr API for custom maintenance"))
             .version(qsl("1.0.0"))
             .termsOfService(qsl("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-            .description(qsl("Inherited from QRpc::QRPCController, this is the class for builder interface for maintenance"))
+            .description(qsl("Inherited from QRpc::Controller, this is the class for builder interface for maintenance"))
             ;
 
         document->info().contact()

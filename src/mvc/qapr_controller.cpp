@@ -1,4 +1,4 @@
-#include "./qapr_controller.h"
+    #include "./qapr_controller.h"
 #include "../interfaces/qapr_interface.h"
 #include "../application/qapr_application.h"
 #include "../../../qrpc/src/qrpc_controller.h"
@@ -61,7 +61,7 @@ const QVariant Controller::resultInfo()
     if(this->parent()==nullptr)
         return this->lr().resultVariantInfo();
 
-    auto interface=dynamic_cast<QRpc::QRPCController*>(this->parent());
+    auto interface=dynamic_cast<QRpc::Controller*>(this->parent());
     if(interface==nullptr)
         return this->lr().resultVariantInfo();
 

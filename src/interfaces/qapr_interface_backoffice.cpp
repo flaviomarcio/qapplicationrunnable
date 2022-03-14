@@ -14,9 +14,9 @@ public:
     bool connectionDb=true;
     bool transactionRollbackForce=false;
     QOrm::Transaction transaction;
-    QRpc::QRPCController*parent=nullptr;
+    QRpc::Controller*parent=nullptr;
 
-    explicit InterfaceBackOfficePvt(QRpc::QRPCController*parent):transaction(parent){
+    explicit InterfaceBackOfficePvt(QRpc::Controller*parent):transaction(parent){
         this->parent=parent;
     }
 

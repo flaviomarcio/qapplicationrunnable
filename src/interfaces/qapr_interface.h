@@ -61,7 +61,7 @@ public:
 //! \brief The InterfaceDatabase class
 //!
 //!camada criada para implementacao da parte de banco de dados
-class Q_APR_EXPORT Interface : public QRpc::QRPCController
+class Q_APR_EXPORT Interface : public QRpc::Controller
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()

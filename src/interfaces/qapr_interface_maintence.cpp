@@ -3,7 +3,7 @@
 
 namespace QApr {
 
-InterfaceMaintence::InterfaceMaintence(QObject *parent) : QRpc::QRPCController(parent)
+InterfaceMaintence::InterfaceMaintence(QObject *parent) : QRpc::Controller(parent)
 {
     this->setEnabled(true);
 }
