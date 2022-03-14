@@ -13,7 +13,7 @@ namespace QApr {
 class Q_APR_EXPORT InterfaceMaintence : public QRpc::QRPCController
 {
     Q_OBJECT
-    QRPC_DECLARE_ROUTE(QRPCInterfaceCheck,"v1/maintence")
+    QRPC_DECLARE_BASE_PATH(QRPCInterfaceCheck,"v1/maintence")
     Q_APR_DECLARE_INTERFACE_METHOD_CHECK()
 
     Q_API_DOC_INFO(){
