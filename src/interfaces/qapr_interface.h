@@ -6,6 +6,7 @@
 #include "./qapr_menu_object.h"
 #include "../sessions/qapr_session.h"
 #include "../application/qapr_global.h"
+#include "./qapr_notations.h"
 #include <QtReforce/QApiDoc>
 
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_ignore,(QVariantHash{{"connection_db_ignore", true}}));
@@ -61,7 +62,7 @@ public:
 //! \brief The InterfaceDatabase class
 //!
 //!camada criada para implementacao da parte de banco de dados
-class Q_APR_EXPORT Interface : public QRpc::Controller
+class Q_APR_EXPORT Interface : public QRpc::Controller, QAprPrivate::NotationsExtended
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()
@@ -120,7 +121,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Menus for currenty API"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->backOfficeMenu()}})
                     );
@@ -131,6 +132,7 @@ public:
     //! \brief check
     //! \return
     //!
+    Q_NOTATION(check, qvl({opGet, dbIgnore, healtCheck, rqSecurityIgnore}))
     Q_INVOKABLE virtual QVariant check();
     Q_API_DOC_PATH(check){
         path->
@@ -138,7 +140,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Simple check method for tests"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200)
                     );
     }
@@ -148,13 +150,14 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant ping();
+    Q_NOTATION(ping, qvl({opGet, dbIgnore, healtCheck, rqSecurityIgnore}))
     Q_API_DOC_PATH(ping){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
                 .description(qsl("Simple method check with response body"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->ping()}})
                     );
@@ -164,6 +167,7 @@ public:
     //! \brief fullCheck
     //! \return
     //!
+    Q_NOTATION(fullCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant fullCheck();
     Q_API_DOC_PATH(fullCheck){
         path->
@@ -171,7 +175,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Execute healt check "))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->fullCheck()}})
                     );
@@ -181,6 +185,7 @@ public:
     //! \brief connectionsCheck
     //! \return
     //!
+    Q_NOTATION(connectionsCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant connectionsCheck();
     Q_API_DOC_PATH(connectionsCheck){
         path->
@@ -188,7 +193,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Implements Connection database check"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->connectionsCheck()}})
                     );
@@ -199,6 +204,7 @@ public:
     //! \brief businessCheck
     //! \return
     //!
+    Q_NOTATION(businessCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant businessCheck();
     Q_API_DOC_PATH(businessCheck){
         path->
@@ -206,7 +212,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Implements business check"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->businessCheck()}})
                     );
@@ -216,7 +222,7 @@ public:
     //! \brief sessionObject
     //! \return
     //!
-    virtual Session&sessionObject();
+    virtual Session &sessionObject();
 
     //!
     //! \brief credential

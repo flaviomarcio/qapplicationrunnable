@@ -3,9 +3,9 @@
 
 namespace QApr {
 
-InterfaceMaintence::InterfaceMaintence(QObject *parent) : QRpc::Controller(parent)
+InterfaceMaintence::InterfaceMaintence(QObject *parent) : QRpc::Controller(parent), QAprPrivate::NotationsExtended(this)
 {
-    this->setEnabled(true);
+
 }
 
 InterfaceMaintence::~InterfaceMaintence()

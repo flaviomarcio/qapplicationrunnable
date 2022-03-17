@@ -57,6 +57,7 @@ public:
     //! \brief rootObject
     //! \return
     //!objeto principal com toda a informacao
+    Q_NOTATION(rootObject, {opGet})
     Q_INVOKABLE virtual const QVariant rootObject();
     Q_API_DOC_PATH(rootObject){
         path->
@@ -64,7 +65,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Full object to currenty session"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl_null}})
                     );
@@ -74,6 +75,7 @@ public:
     //! \brief sessionAccount
     //! \return
     //!objeto com a informacao da sessao e conta relacionada ao request
+    Q_NOTATION(sessionAccount, {opGet})
     Q_INVOKABLE virtual const QVariant sessionAccount();
     Q_API_DOC_PATH(sessionAccount){
         path->
@@ -81,7 +83,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Session of account information"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl_null}})
                     );
@@ -91,6 +93,7 @@ public:
     //! \brief enviroment
     //! \return
     //!variaveis de ambiente para ajustes no front
+    Q_NOTATION(enviroment, {opGet})
     Q_INVOKABLE virtual const QVariant enviroment();
     Q_API_DOC_PATH(enviroment){
         path->
@@ -98,7 +101,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Menus for currenty API"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->enviroment()}})
                     );
@@ -108,6 +111,7 @@ public:
     //! \brief menu
     //! \return
     //!menu principal com todos as opcoes
+    Q_NOTATION(menu, {opGet})
     Q_INVOKABLE virtual const QVariant menu();
     Q_API_DOC_PATH(menu){
         path->
@@ -115,7 +119,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Menus for currenty API"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->menu()}})
                     );
@@ -126,13 +130,14 @@ public:
     //! \return
     //!requisita da dos de um menu especifico
     Q_INVOKABLE virtual const QVariant menuInfo();
+    Q_NOTATION(menuInfo, {opGet})
     Q_API_DOC_PATH(menuInfo){
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
                 .description(qsl("Menus information"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), this->menuInfo()}})
                     );

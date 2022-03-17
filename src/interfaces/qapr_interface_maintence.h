@@ -3,6 +3,7 @@
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_macro.h"
+#include "./qapr_notations.h"
 #include <QtReforce/QApiDoc>
 
 namespace QApr {
@@ -10,11 +11,13 @@ namespace QApr {
 //!
 //! \brief The InterfaceMaintence class
 //!
-class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller
+class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller, QAprPrivate::NotationsExtended
 {
     Q_OBJECT
     QRPC_DECLARE_BASE_PATH(QRPCInterfaceCheck,"v1/maintence")
     Q_APR_DECLARE_INTERFACE_METHOD_CHECK()
+
+    Q_NOTATION(InterfaceMaintence, qvl({apiBasePath("v1/maintence")}))
 
     Q_API_DOC_INFO(){
         document->
@@ -55,6 +58,7 @@ public:
     //! \brief serverStart
     //! \return
     //!
+    Q_NOTATION(serverStart, qvl({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStart();
     Q_API_DOC_PATH(serverStart){
         path->
@@ -62,7 +66,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Start custom services"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl("custom implementation")}})
                     );
@@ -72,6 +76,7 @@ public:
     //! \brief serverStop
     //! \return
     //!
+    Q_NOTATION(serverStop, qvl({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStop();
     Q_API_DOC_PATH(serverStop){
         path->
@@ -79,7 +84,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Stop custom services"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl("custom implementation")}})
                     );
@@ -89,6 +94,7 @@ public:
     //! \brief serverRestart
     //! \return
     //!
+    Q_NOTATION(serverRestart, qvl({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverRestart();
     Q_API_DOC_PATH(serverRestart){
         path->
@@ -96,7 +102,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Restart custom services"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl("custom implementation")}})
                     );
@@ -106,6 +112,7 @@ public:
     //! \brief servicesCheck
     //! \return
     //!
+    Q_NOTATION(servicesCheck, qvl({opPost, opPut}))
     Q_INVOKABLE virtual QVariant servicesCheck();
     Q_API_DOC_PATH(servicesCheck){
         path->
@@ -113,7 +120,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Check custom services"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl("custom implementation")}})
                     );
@@ -123,6 +130,7 @@ public:
     //! \brief applicationQuit
     //! \return
     //!
+    Q_NOTATION(applicationQuit, qvl({opPost, opPut}))
     Q_INVOKABLE virtual QVariant applicationQuit();
     Q_API_DOC_PATH(applicationQuit){
         path->
@@ -130,7 +138,7 @@ public:
                 .operationId(qsl_null)
                 .description(qsl("Quit application"))
                 .responses(
-                    QAPIResponse().
+                    QApiResponse().
                     statusCode(200).
                     examples(qvh{{qsl("response"), qsl("custom implementation")}})
                     );

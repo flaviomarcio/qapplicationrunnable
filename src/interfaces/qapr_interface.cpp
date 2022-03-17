@@ -24,12 +24,18 @@ public:
         this->parent = parent;
     }
 
-    virtual ~InterfaceDatabasePvt() { transaction.rollback(); }
+    virtual ~InterfaceDatabasePvt()
+    {
+        transaction.rollback();
+    }
 
-    auto &credentials() { return this->session.credential(); }
+    auto &credentials()
+    {
+        return this->session.credential();
+    }
 };
 
-Interface::Interface(QObject *parent) : QRpc::Controller(parent)
+Interface::Interface(QObject *parent) : QRpc::Controller(parent), QAprPrivate::NotationsExtended(this)
 {
     this->p = new InterfaceDatabasePvt(this);
 }
@@ -92,13 +98,11 @@ bool Interface::requestBeforeInvoke()
     if (!QRpc::Controller::requestBeforeInvoke())
         return false;
 
-
     auto &rq = this->rq();
     if (rq.isMethodOptions())
         return true;
 
-    const auto requestPath = rq.requestPath();
-    const auto flg = this->routeFlags(requestPath);
+    const auto flg = this->routeFlags(rq.requestPath());
     const auto connection_db_ignore = flg.value(qsl("connection_db_ignore"))
                                           .toBool(); //permitir nao criar conexao
     auto flags_connection_db_transaction
