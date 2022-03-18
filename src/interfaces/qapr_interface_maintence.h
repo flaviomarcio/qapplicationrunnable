@@ -11,7 +11,7 @@ namespace QApr {
 //!
 //! \brief The InterfaceMaintence class
 //!
-class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller, QAprPrivate::NotationsExtended
+class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller, public QAprPrivate::NotationsExtended
 {
     Q_OBJECT
     QRPC_DECLARE_BASE_PATH(QRPCInterfaceCheck,"v1/maintence")

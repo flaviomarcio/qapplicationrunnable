@@ -12,7 +12,7 @@ namespace QAprPrivate
 //!
 //! \brief The NotationsExtended class
 //!
-class NotationsExtended: public QNotation::Extended
+class NotationsExtended
 {
 public:
     enum Classification{
@@ -31,7 +31,17 @@ public:
     //!
     //! \brief dbIgnore
     //!
-    Q_NOTATION_DECLARE(dbIgnore, DataBase)
+    Q_NOTATION_DECLARE(dbNoConnection, DataBase)
+
+    //!
+    //! \brief dbNoTransaction
+    //!
+    Q_NOTATION_DECLARE(dbNoTransaction, DataBase)
+
+    //!
+    //! \brief dbReadOnly
+    //!
+    Q_NOTATION_DECLARE(dbReadOnly, DataBase)
 
     //!
     //! \brief healtCheck

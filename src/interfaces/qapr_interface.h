@@ -9,13 +9,6 @@
 #include "./qapr_notations.h"
 #include <QtReforce/QApiDoc>
 
-Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_ignore,(QVariantHash{{"connection_db_ignore", true}}));
-Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, __flags_connection_db_transaction,(QVariantHash{{"connection_db_transaction", true}}));
-
-static const auto &flags_connection_db_ignore=*__flags_connection_db_ignore;
-static const auto &flags_connection_db_transaction=*__flags_connection_db_transaction;
-
-
 namespace QApr {
 
 #define QAPR_DECLARE_IRQ()                                                          \
@@ -62,7 +55,7 @@ public:
 //! \brief The InterfaceDatabase class
 //!
 //!camada criada para implementacao da parte de banco de dados
-class Q_APR_EXPORT Interface : public QRpc::Controller, QAprPrivate::NotationsExtended
+class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::NotationsExtended
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()
@@ -132,7 +125,7 @@ public:
     //! \brief check
     //! \return
     //!
-    Q_NOTATION(check, qvl({opGet, dbIgnore, healtCheck, rqSecurityIgnore}))
+    Q_NOTATION(check, qvl({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
     Q_INVOKABLE virtual QVariant check();
     Q_API_DOC_PATH(check){
         path->
@@ -150,7 +143,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant ping();
-    Q_NOTATION(ping, qvl({opGet, dbIgnore, healtCheck, rqSecurityIgnore}))
+    Q_NOTATION(ping, qvl({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
     Q_API_DOC_PATH(ping){
         path->
             operation(sptoGet)
@@ -173,7 +166,7 @@ public:
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
-                .description(qsl("Execute healt check "))
+                .description(qsl("Execute healt check"))
                 .responses(
                     QApiResponse().
                     statusCode(200).
@@ -191,7 +184,7 @@ public:
         path->
             operation(sptoGet)
                 .operationId(qsl_null)
-                .description(qsl("Implements Connection database check"))
+                .description(qsl("Implements connection database check"))
                 .responses(
                     QApiResponse().
                     statusCode(200).

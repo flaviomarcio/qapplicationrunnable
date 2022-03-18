@@ -2,7 +2,7 @@
 
 namespace QAprPrivate{
 
-NotationsExtended::NotationsExtended(QObject *parent): QNotation::Extended(parent)
+NotationsExtended::NotationsExtended(QObject *parent)
 {
     Q_UNUSED(parent)
 }

@@ -19,7 +19,7 @@ public:
     Session session;
 
     explicit InterfaceDatabasePvt(QRpc::Controller *parent)
-        : transaction(parent), pool(QApr::Application::i().pool()), session(parent)
+        : transaction{parent}, pool{QApr::Application::i().pool()}, session{parent}
     {
         this->parent = parent;
     }
@@ -95,73 +95,82 @@ const SessionCredential &Interface::credential()
 
 bool Interface::requestBeforeInvoke()
 {
-    if (!QRpc::Controller::requestBeforeInvoke())
-        return false;
-
     auto &rq = this->rq();
     if (rq.isMethodOptions())
         return true;
 
-    const auto flg = this->routeFlags(rq.requestPath());
-    const auto connection_db_ignore = flg.value(qsl("connection_db_ignore"))
-                                          .toBool(); //permitir nao criar conexao
-    auto flags_connection_db_transaction
-        = flg.value(qsl("connection_db_transaction"))
-              .toBool(); //permite criar transacao em qualquer metodo logo get e options nao criam transacao
-    if (connection_db_ignore)
+    const auto &notations=this->notation();
+
+    auto dbConnection = !notations.contains(this->dbNoConnection);
+    if(!dbConnection)//if no connection return true
         return true;
+
+    auto dbReadOnly = notations.contains(this->dbReadOnly);
+    auto dbTransaction = !notations.contains(this->dbNoTransaction);
+
 
     dPvt();
     auto &pool = p.pool;
 
     QSqlDatabase connection;
-    if (flags_connection_db_transaction) {
-        //conexao normal que tera transacao iniciada
-        if (!pool.get(connection))
-            return false;
-    } else if (!(rq.isMethodGet() || rq.isMethodOptions())) {
-        flags_connection_db_transaction = true;
-        if (!pool.get(connection))
-            return false;
-    } else {
-        if (!pool.getReadOnly(connection))
-            return false;
-    }
 
-    if (!this->setConnection(connection)) {
-#ifdef QAPR_LOG
-        sWarning() << qbl("invalid database connection");
-#endif
-        rq.co().setInternalServerError();
-        return false;
-    }
+    auto connectionCreate=[this, &p, &dbTransaction, &dbReadOnly, &pool, &connection](){
 
-    if (!flags_connection_db_transaction) {
+        auto dbSuccess=dbReadOnly?(pool.getReadOnly(connection)):(pool.get(connection));
+
+        if (!dbSuccess)//normal connection
+            return false;
+
+        if(dbReadOnly)
+            return true;
+
+        if(!dbTransaction)
+            return true;
+
+        if (!this->setConnection(connection))
+            return false;
+
+        if(!p.transaction.transaction())//transation
+            return false;
+
         return true;
+    };
+
+    if(!connectionCreate()){
+        pool.finish(connection);
+        this->connectionClear();
+        return {};
     }
 
-    return p.transaction.transaction();
+    return true;
 }
 
 bool Interface::requestAfterInvoke()
 {
     if (!QRpc::Controller::requestAfterInvoke())
-        return false;
+        return {};
 
     dPvt();
-    auto db = this->connection();
-    if (!db.isOpen())
-        return false;
+    auto connection = this->connection();
+    if (!connection.isValid())
+        return {};
 
-    if (p.transactionRollbackForce)
-        p.transaction.rollback(); //rollback obrigatorio
-    else if (this->rq().co().isOK())
-        p.transaction.commit();
-    else
+    auto finish=[&p, this]()
+    {
+        if (p.transactionRollbackForce){
+            p.transaction.rollback(); //rollback obrigatorio
+            return;
+        }
+        if (this->rq().co().isOK()){
+            p.transaction.commit();
+            return;
+        }
         p.transaction.rollback();
+    };
 
-    db.close();
-    p.pool.finish(db);
+    finish();
+    connection.close();
+    p.pool.finish(connection);
 
     return true;
 }
