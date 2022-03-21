@@ -26,7 +26,7 @@ public:
     void setUuid()
     {
         Q_DECLARE_VU;
-        auto route = this->parent->route();
+        auto route = this->parent->basePath();
         auto routeLoad = this->parent->routeLoad();
         auto codeBase = route + qsl("/") + routeLoad;
         this->data[qsl_fy(uuid)] = vu.toMd5Uuid(codeBase);
@@ -49,15 +49,15 @@ public:
             if (menu.text().isEmpty())
                 menu.text(menu.routeLoad());
 
-            auto routeBase = this->parent->route();
-            auto route = menu.route();
+            auto routeBase = this->parent->basePath();
+            auto route = menu.basePath();
             if (!route.startsWith(routeBase)) {
                 if (route.isEmpty())
                     route = routeBase;
                 else
                     route = (routeBase + qsl_fy(/) + route);
             }
-            auto vMap = menu.route(route).build();
+            auto vMap = menu.basePath(route).build();
             if (!vMap.isEmpty()) {
                 auto &vMenu = this->dataMenu[qsl_fy(menu)];
                 if (!vMenu.contains(menu.text())) {
@@ -137,16 +137,16 @@ MenuObject &MenuObject::text(const QVariant &v)
     return *this;
 }
 
-QString MenuObject::route() const
+QString MenuObject::basePath() const
 {
     dPvt();
-    return p.data.value(qsl_fy(route)).toString().trimmed();
+    return p.data.value(qsl_fy(basePath)).toString().trimmed();
 }
 
-MenuObject &MenuObject::route(const QVariant &v)
+MenuObject &MenuObject::basePath(const QVariant &v)
 {
     dPvt();
-    p.data[qsl_fy(route)] = v;
+    p.data[qsl_fy(basePath)] = v;
     return *this;
 }
 
@@ -252,7 +252,7 @@ bool MenuObject::isValid() const
     if (this->text().isNull())
         return false;
 
-    if (this->route().isNull() && this->routeLoad().isNull())
+    if (this->basePath().isNull() && this->routeLoad().isNull())
         return false;
 
     return true;

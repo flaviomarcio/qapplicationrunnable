@@ -62,8 +62,6 @@ class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::Inte
     Q_OBJECT
     Q_DECLARE_OBJECT()
     QORM_CONNECTION_SUPPORT()
-    QRPC_DECLARE_MODULE(qsl_fy(QApr))
-    QRPC_DECLARE_DESCRIPTION(qsl_fy(Interface))
 public:
     Q_API_DOC_INFO()
     {

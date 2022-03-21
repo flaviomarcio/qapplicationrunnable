@@ -69,14 +69,14 @@ public:
     //! \brief route
     //! \return
     //!
-    QString route() const;
+    QString basePath() const;
 
     //!
-    //! \brief route
+    //! \brief basePath
     //! \param v
     //! \return
     //!
-    MenuObject &route(const QVariant &v);
+    MenuObject &basePath(const QVariant &v);
 
     //!
     //! \brief routeLoad

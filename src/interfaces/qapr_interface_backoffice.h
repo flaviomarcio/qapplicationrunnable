@@ -12,9 +12,6 @@ class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
 {
     Q_OBJECT
     Q_DECLARE_OBJECT()
-    QRPC_DECLARE_MODULE(qsl_fy(QApr))
-    QRPC_DECLARE_DESCRIPTION(qsl_fy(QApr::BackOffice))
-
     Q_API_DOC_INFO()
     {
         document->host(qsl("localhost"))
