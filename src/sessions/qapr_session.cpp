@@ -5,7 +5,7 @@ namespace QApr {
 static QHash<QThread*, QObject*> static_session_instance;
 static QMutex static_session_instance_mutex;
 
-Session::Session(QObject *parent) : QStm::Object(parent), p_credential(parent)
+Session::Session(QObject *parent) : QStm::Object{parent}, p_credential(parent)
 {
     this->session_thread=QThread::currentThread();
 }

@@ -20,7 +20,7 @@ public:
     QHash<QByteArray, AgentBase*> tasks;
     QHash<QByteArray, QDateTime> tasksInterval;
     QTimer*timer=nullptr;
-    explicit AgentPvt(Agent*parent) : QObject(parent), agent(parent)
+    explicit AgentPvt(Agent*parent) : QObject{parent}, agent(parent)
     {
     }
 
@@ -136,10 +136,10 @@ private slots:
     }
 };
 
-Agent::Agent(QObject*parent):QThread(nullptr)
+Agent::Agent(QObject*parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
-    this->p = new AgentPvt(this);
+    this->p = new AgentPvt{this};
 }
 
 Agent::~Agent()

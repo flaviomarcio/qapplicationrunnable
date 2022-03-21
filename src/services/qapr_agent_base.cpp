@@ -18,7 +18,7 @@ public:
     QDateTime runner_date;
     QVariantHash stats;
     AgentBase*parent = nullptr;
-    explicit AgentBasePvt(AgentBase*parent=nullptr):QObject(parent)
+    explicit AgentBasePvt(AgentBase*parent=nullptr):QObject{parent}
     {
         this->parent=parent;
     }
@@ -155,10 +155,10 @@ public slots:
 };
 
 
-AgentBase::AgentBase(QObject *parent):QThread(nullptr)
+AgentBase::AgentBase(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
-    this->p = new AgentBasePvt(this);
+    this->p = new AgentBasePvt{this};
     this->moveToThread(this);
     dPvt();
     QObject::connect(this, &AgentBase::serviceStart, &p, &AgentBasePvt::onServiceRun);

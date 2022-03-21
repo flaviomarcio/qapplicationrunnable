@@ -16,17 +16,17 @@ class NotifyBasePvt:public QObject{
 public:
     NotifyBase*parent=nullptr;
     VariantUtil vu;
-    explicit NotifyBasePvt(NotifyBase*parent=nullptr):QObject(parent)
+    explicit NotifyBasePvt(NotifyBase*parent=nullptr):QObject{parent}
     {
         this->parent=parent;
     }
 };
 
 
-NotifyBase::NotifyBase(QObject *parent):QThread(nullptr)
+NotifyBase::NotifyBase(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
-    this->p = new NotifyBasePvt(this);
+    this->p = new NotifyBasePvt{this};
     this->moveToThread(this);
 }
 

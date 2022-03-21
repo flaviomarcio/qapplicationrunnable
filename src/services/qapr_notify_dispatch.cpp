@@ -23,13 +23,13 @@ public:
 NotifyDispatch::NotifyDispatch(QObject *parent)//:QObject(parent)
 {
     Q_UNUSED(parent)
-    this->p= new NotifyDispatchPvt(this);
+    this->p= new NotifyDispatchPvt{this};
 }
 
 NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QObject *parent)//QObject(parent)
 {
     Q_UNUSED(parent)
-    this->p= new NotifyDispatchPvt(this);
+    this->p= new NotifyDispatchPvt{this};
     dPvt();
     p.channel=name;
     p.md5=md5;

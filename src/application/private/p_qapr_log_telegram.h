@@ -10,7 +10,7 @@ class LogTelegram : public QThread
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE explicit LogTelegram(QObject *parent = nullptr):QThread(nullptr){
+    Q_INVOKABLE explicit LogTelegram(QObject *parent = nullptr):QThread{nullptr}{
         Q_UNUSED(parent)
     }
     ~LogTelegram()

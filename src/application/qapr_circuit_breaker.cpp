@@ -5,7 +5,7 @@ auto&p = *reinterpret_cast<CircuitBreakerPvt*>(this->p)
 
 namespace QApr {
 
-CircuitBreaker::CircuitBreaker(QObject *parent):QObject(parent)
+CircuitBreaker::CircuitBreaker(QObject *parent):QObject{parent}
 {
     this->p=new CircuitBreakerPvt();
 }

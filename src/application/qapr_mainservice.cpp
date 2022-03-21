@@ -8,7 +8,7 @@
 
 namespace QApr {
 
-MainService::MainService(QObject *parent):QObject(parent)
+MainService::MainService(QObject *parent):QObject{parent}
 {
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }

@@ -1,10 +1,9 @@
 #include "./qapr_interface.h"
+#include "../../../qorm/src/qorm_transaction.h"
 #include "../application/qapr_application.h"
 #include "../sessions/qapr_session.h"
-#include "../../../qorm/src/qorm_transaction.h"
 
 namespace QApr {
-
 
 #define dPvt() auto &p = *reinterpret_cast<InterfaceDatabasePvt *>(this->p)
 
@@ -24,20 +23,15 @@ public:
         this->parent = parent;
     }
 
-    virtual ~InterfaceDatabasePvt()
-    {
-        transaction.rollback();
-    }
+    virtual ~InterfaceDatabasePvt() { transaction.rollback(); }
 
-    auto &credentials()
-    {
-        return this->session.credential();
-    }
+    auto &credentials() { return this->session.credential(); }
 };
 
-Interface::Interface(QObject *parent) : QRpc::Controller(parent), QAprPrivate::NotationsExtended(this)
+Interface::Interface(QObject *parent)
+    : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
 {
-    this->p = new InterfaceDatabasePvt(this);
+    this->p = new InterfaceDatabasePvt{this};
 }
 
 Interface::~Interface()
@@ -99,44 +93,42 @@ bool Interface::requestBeforeInvoke()
     if (rq.isMethodOptions())
         return true;
 
-    const auto &notations=this->notation();
+    const auto &notations = this->notation();
 
     auto dbConnection = !notations.contains(this->dbNoConnection);
-    if(!dbConnection)//if no connection return true
+    if (!dbConnection) //if no connection return true
         return true;
 
     auto dbReadOnly = notations.contains(this->dbReadOnly);
     auto dbTransaction = !notations.contains(this->dbNoTransaction);
-
 
     dPvt();
     auto &pool = p.pool;
 
     QSqlDatabase connection;
 
-    auto connectionCreate=[this, &p, &dbTransaction, &dbReadOnly, &pool, &connection](){
+    auto connectionCreate = [this, &p, &dbTransaction, &dbReadOnly, &pool, &connection]() {
+        auto dbSuccess = dbReadOnly ? (pool.getReadOnly(connection)) : (pool.get(connection));
 
-        auto dbSuccess=dbReadOnly?(pool.getReadOnly(connection)):(pool.get(connection));
-
-        if (!dbSuccess)//normal connection
+        if (!dbSuccess) //normal connection
             return false;
 
-        if(dbReadOnly)
+        if (dbReadOnly)
             return true;
 
-        if(!dbTransaction)
+        if (!dbTransaction)
             return true;
 
         if (!this->setConnection(connection))
             return false;
 
-        if(!p.transaction.transaction())//transation
+        if (!p.transaction.transaction()) //transation
             return false;
 
         return true;
     };
 
-    if(!connectionCreate()){
+    if (!connectionCreate()) {
         pool.finish(connection);
         this->connectionClear();
         return {};
@@ -155,13 +147,12 @@ bool Interface::requestAfterInvoke()
     if (!connection.isValid())
         return {};
 
-    auto finish=[&p, this]()
-    {
-        if (p.transactionRollbackForce){
+    auto finish = [&p, this]() {
+        if (p.transactionRollbackForce) {
             p.transaction.rollback(); //rollback obrigatorio
             return;
         }
-        if (this->rq().co().isOK()){
+        if (this->rq().co().isOK()) {
             p.transaction.commit();
             return;
         }
@@ -201,4 +192,4 @@ Interface &Interface::setTransactionRollbackForce(bool value)
     return *this;
 }
 
-}
+} // namespace QApr

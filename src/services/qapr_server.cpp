@@ -22,7 +22,7 @@ public:
 
 Server::Server(QObject *parent) : QRpc::Server(Application::instance().settings_SERVER(), parent)
 {
-    this->p=new ServerPvt(this);
+    this->p=new ServerPvt{this};
 }
 
 Server::~Server()

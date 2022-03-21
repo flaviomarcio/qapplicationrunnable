@@ -22,7 +22,7 @@ public:
 
     QOrm::ConnectionNotify connectionNotify;
 
-    explicit NotifyPvt(Notify*parent) : QObject(parent), notify(parent)
+    explicit NotifyPvt(Notify*parent) : QObject{parent}, notify(parent)
     {
         QObject::connect(&connectionNotify, &QOrm::ConnectionNotify::notification, this, &NotifyPvt::taskReceived);
 
@@ -125,10 +125,10 @@ public:
     }
 };
 
-Notify::Notify(QObject*parent):QThread(nullptr)
+Notify::Notify(QObject*parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
-    this->p = new NotifyPvt(this);
+    this->p = new NotifyPvt{this};
 }
 
 Notify::~Notify()

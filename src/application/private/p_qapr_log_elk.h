@@ -10,7 +10,7 @@ class LogELK : public QThread
 {
     Q_OBJECT
 public:
-    explicit LogELK(QObject *parent = nullptr):QThread(nullptr)
+    explicit LogELK(QObject *parent = nullptr):QThread{nullptr}
     {
         Q_UNUSED(parent)
     }

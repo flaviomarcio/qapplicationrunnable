@@ -22,7 +22,7 @@ static void init()
 
 Q_COREAPP_STARTUP_FUNCTION(init)
 
-Log::Log(QObject *parent) : QObject(parent)
+Log::Log(QObject *parent) : QObject{parent}
 {
 
 }

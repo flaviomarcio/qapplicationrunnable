@@ -1,17 +1,17 @@
 #pragma once
 
+#include "../../../qstm/src/qstm_macro.h"
+#include "../application/qapr_global.h"
 #include <QObject>
 #include <QVariant>
 #include <QVariantHash>
-#include "../../../qstm/src/qstm_macro.h"
-#include "../application/qapr_global.h"
 
 namespace QApr {
 
 //!
 //! \brief The MenuObject class
 //!
-class Q_APR_EXPORT MenuObject:public QObject
+class Q_APR_EXPORT MenuObject : public QObject
 {
     Q_OBJECT
 public:
@@ -19,14 +19,14 @@ public:
     //! \brief MenuObject
     //! \param parent
     //!
-    Q_INVOKABLE explicit MenuObject(QObject *parent=nullptr);
+    Q_INVOKABLE explicit MenuObject(QObject *parent = nullptr);
 
     //!
     //! \brief MenuObject
     //! \param v
     //! \param parent
     //!
-    Q_INVOKABLE explicit MenuObject(const QVariant &v, QObject *parent=nullptr);
+    Q_INVOKABLE explicit MenuObject(const QVariant &v, QObject *parent = nullptr);
 
     //!
     //! \brief ~MenuObject
@@ -162,7 +162,7 @@ public:
     virtual bool isValid() const;
 
 private:
-    void*p=nullptr;
+    void *p = nullptr;
 };
 
-}
+} // namespace QApr

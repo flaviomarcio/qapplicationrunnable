@@ -15,32 +15,33 @@ class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
     QRPC_DECLARE_MODULE(qsl_fy(QApr))
     QRPC_DECLARE_DESCRIPTION(qsl_fy(QApr::BackOffice))
 
-    Q_API_DOC_INFO(){
-        document->
-            host(qsl("localhost")).
-            basePath(this->basePath()).
-            consumes(qsl("application/json")).
-            produces(qsl("application/json")).
-            schemes(stpsHttp);
+    Q_API_DOC_INFO()
+    {
+        document->host(qsl("localhost"))
+            .basePath(this->basePath())
+            .consumes(qsl("application/json"))
+            .produces(qsl("application/json"))
+            .schemes(stpsHttp);
 
         document->info()
             .title(qsl("QApr API for back office service"))
             .version(qsl("1.0.0"))
             .termsOfService(qsl("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-            .description(qsl("Inherited from QApr:Interface, this is class for constructor interface for gui applications"))
-            ;
+            .description(qsl("Inherited from QApr:Interface, this is class for constructor "
+                             "interface for gui applications"));
 
-        document->info().contact()
+        document->info()
+            .contact()
             .name(qsl("Flavio Portela"))
             .email(qsl("fmspx@hotmail.com"))
-            .url(qsl("https://github.com/flaviomarcio/qtreforce-sdk"))
-            ;
+            .url(qsl("https://github.com/flaviomarcio/qtreforce-sdk"));
 
-        document->info().license()
+        document->info()
+            .license()
             .name(qsl("Apache License - Version 2.0, January 2004"))
-            .url(qsl("http://www.apache.org/licenses/LICENSE-2.0"))
-            ;
+            .url(qsl("http://www.apache.org/licenses/LICENSE-2.0"));
     }
+
 public:
     //!
     //! \brief InterfaceBackOffice
@@ -59,16 +60,12 @@ public:
     //!objeto principal com toda a informacao
     Q_NOTATION(rootObject, {opGet})
     Q_INVOKABLE virtual const QVariant rootObject();
-    Q_API_DOC_PATH(rootObject){
-        path->
-            operation(sptoGet)
-                .operationId(qsl_null)
-                .description(qsl("Full object to currenty session"))
-                .responses(
-                    QApiResponse().
-                    statusCode(200).
-                    examples(qvh{{qsl("response"), qsl_null}})
-                    );
+    Q_API_DOC_PATH(rootObject)
+    {
+        path->operation(sptoGet)
+            .operationId(qsl_null)
+            .description(qsl("Full object to currenty session"))
+            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
     }
 
     //!
@@ -77,16 +74,12 @@ public:
     //!objeto com a informacao da sessao e conta relacionada ao request
     Q_NOTATION(sessionAccount, {opGet})
     Q_INVOKABLE virtual const QVariant sessionAccount();
-    Q_API_DOC_PATH(sessionAccount){
-        path->
-            operation(sptoGet)
-                .operationId(qsl_null)
-                .description(qsl("Session of account information"))
-                .responses(
-                    QApiResponse().
-                    statusCode(200).
-                    examples(qvh{{qsl("response"), qsl_null}})
-                    );
+    Q_API_DOC_PATH(sessionAccount)
+    {
+        path->operation(sptoGet)
+            .operationId(qsl_null)
+            .description(qsl("Session of account information"))
+            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
     }
 
     //!
@@ -95,16 +88,13 @@ public:
     //!variaveis de ambiente para ajustes no front
     Q_NOTATION(enviroment, {opGet})
     Q_INVOKABLE virtual const QVariant enviroment();
-    Q_API_DOC_PATH(enviroment){
-        path->
-            operation(sptoGet)
-                .operationId(qsl_null)
-                .description(qsl("Menus for currenty API"))
-                .responses(
-                    QApiResponse().
-                    statusCode(200).
-                    examples(qvh{{qsl("response"), this->enviroment()}})
-                    );
+    Q_API_DOC_PATH(enviroment)
+    {
+        path->operation(sptoGet)
+            .operationId(qsl_null)
+            .description(qsl("Menus for currenty API"))
+            .responses(QApiResponse().statusCode(200).examples(
+                qvh{{qsl("response"), this->enviroment()}}));
     }
 
     //!
@@ -113,16 +103,13 @@ public:
     //!menu principal com todos as opcoes
     Q_NOTATION(menu, {opGet})
     Q_INVOKABLE virtual const QVariant menu();
-    Q_API_DOC_PATH(menu){
-        path->
-            operation(sptoGet)
-                .operationId(qsl_null)
-                .description(qsl("Menus for currenty API"))
-                .responses(
-                    QApiResponse().
-                    statusCode(200).
-                    examples(qvh{{qsl("response"), this->menu()}})
-                    );
+    Q_API_DOC_PATH(menu)
+    {
+        path->operation(sptoGet)
+            .operationId(qsl_null)
+            .description(qsl("Menus for currenty API"))
+            .responses(
+                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menu()}}));
     }
 
     //!
@@ -131,20 +118,17 @@ public:
     //!requisita da dos de um menu especifico
     Q_INVOKABLE virtual const QVariant menuInfo();
     Q_NOTATION(menuInfo, {opGet})
-    Q_API_DOC_PATH(menuInfo){
-        path->
-            operation(sptoGet)
-                .operationId(qsl_null)
-                .description(qsl("Menus information"))
-                .responses(
-                    QApiResponse().
-                    statusCode(200).
-                    examples(qvh{{qsl("response"), this->menuInfo()}})
-                    );
+    Q_API_DOC_PATH(menuInfo)
+    {
+        path->operation(sptoGet)
+            .operationId(qsl_null)
+            .description(qsl("Menus information"))
+            .responses(
+                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menuInfo()}}));
     }
 
 private:
     void *p = nullptr;
 };
 
-}
+} // namespace QApr

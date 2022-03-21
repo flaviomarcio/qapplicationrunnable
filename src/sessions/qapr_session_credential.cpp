@@ -18,9 +18,9 @@ namespace QApr {
     };
 
 
-    SessionCredential::SessionCredential(QObject *parent) : QObject(parent)
+    SessionCredential::SessionCredential(QObject *parent) : QObject{parent}
     {
-        this->p=new CredentialsPvt(this);
+        this->p=new CredentialsPvt{this};
     }
 
     SessionCredential::~SessionCredential()

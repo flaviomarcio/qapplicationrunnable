@@ -8,7 +8,7 @@ namespace QApr {
         return*QCoreApplication::instance();
     }
 
-    Runnable::Runnable(QObject *parent):QObject(parent)
+    Runnable::Runnable(QObject *parent):QObject{parent}
     {
     }
 

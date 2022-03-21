@@ -2,7 +2,7 @@
 
 namespace QApr {
 
-CircuitBreakerPvt::CircuitBreakerPvt(QObject *parent):QObject(parent)
+CircuitBreakerPvt::CircuitBreakerPvt(QObject *parent):QObject{parent}
 {
 }
 

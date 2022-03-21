@@ -42,12 +42,12 @@ public:
 
 Controller::Controller(QObject *parent) : QOrm::Controller(parent)
 {
-    this->p=new ControllerPvt(this);
+    this->p=new ControllerPvt{this};
 }
 
 Controller::Controller(const QSqlDatabase &connection, QObject *parent) : QOrm::Controller(connection, parent)
 {
-    this->p=new ControllerPvt(this);
+    this->p=new ControllerPvt{this};
 }
 
 Controller::~Controller()

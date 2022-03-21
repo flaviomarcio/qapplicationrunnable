@@ -58,9 +58,9 @@ static void init()
 
 Q_COREAPP_STARTUP_FUNCTION(init)
 
-Application::Application(QObject *parent) : QObject(parent)
+Application::Application(QObject *parent) : QObject{parent}
 {
-    this->p=new ApplicationPvt(this);
+    this->p=new ApplicationPvt{this};
 }
 
 Application::~Application()

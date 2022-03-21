@@ -3,15 +3,11 @@
 
 namespace QApr {
 
-InterfaceMaintence::InterfaceMaintence(QObject *parent) : QRpc::Controller(parent), QAprPrivate::NotationsExtended(this)
-{
+InterfaceMaintence::InterfaceMaintence(QObject *parent)
+    : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
+{}
 
-}
-
-InterfaceMaintence::~InterfaceMaintence()
-{
-
-}
+InterfaceMaintence::~InterfaceMaintence() {}
 
 QVariant InterfaceMaintence::serverStart()
 {
@@ -51,4 +47,4 @@ QVariant InterfaceMaintence::applicationQuit()
     return {};
 }
 
-} // namespace QRpc
+} // namespace QApr
