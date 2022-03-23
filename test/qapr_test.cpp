@@ -9,7 +9,10 @@ SDKGoogleTest::SDKGoogleTest()
 
 Server &SDKGoogleTest::service()
 {
-    return QApr::Server::instance();
+    auto&service=QApr::Server::instance();
+    auto &http = service.colletions().protocol(QRpc::Http);
+    http.setPort(9999);
+    return service;
 }
 
 bool SDKGoogleTest::clear()

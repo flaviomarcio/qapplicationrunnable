@@ -11,6 +11,10 @@ LIBS += -L/usr/local/lib -lgtest
 Q_APR_RUNNABLE_TEST=true
 QMAKE_CXXFLAGS += -DQ_APR_RUNNABLE_TEST=\\\"$$Q_APR_RUNNABLE_TEST\\\"
 
+
+HEADERS += \
+    $$PWD/includes/QApr
+
 HEADERS += \
     $$PWD/qapr_test.h \
     $$PWD/qapr_test_integration.h \
