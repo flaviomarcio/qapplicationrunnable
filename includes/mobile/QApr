@@ -1,0 +1,4 @@
+//applications
+#include "../../src/application-mobile/qapr_runnable.h"
+#include "../../src/application-mobile/qapr_main_start.h"
+#include "../../src/application-mobile/qapr_application.h"

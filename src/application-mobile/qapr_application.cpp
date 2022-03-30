@@ -14,31 +14,11 @@ public:
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QMutex, ____mutex);
 
-struct ConstsApplicationBase{
-    QRpc::ServiceSetting circuit_breaker;
-    void init()
-    {
-        auto&manager=staticInstance->manager();
-        circuit_breaker=manager.setting(qsl("circuit-breaker"));
-        if(!circuit_breaker.isValid())
-            circuit_breaker=manager.setting(qsl("circuit_breaker"));
-    }
-};
-
-Q_GLOBAL_STATIC(ConstsApplicationBase, constsApplicationBase)
-
 static void initApp(Application&i)
 {
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif
-    auto settingFile=i.settings_SERVER();
-    auto&manager=i.manager();
-    manager.load(settingFile);
-    constsApplicationBase->init();
-    auto&cnn=i.connectionManager();
-    if(!cnn.isLoaded())
-        sWarning()<<qtr("Connection manager is not loaded");
 }
 
 static bool initCheck=false;
@@ -84,10 +64,6 @@ QRpc::ServiceManager &Application::manager()
 
 int Application::exec(QCoreApplication&a)
 {
-    dPvt();
-    p.circuitBreaker.setSettings(constsApplicationBase->circuit_breaker.toHash());
-    if(p.circuitBreaker.start())
-        p.circuitBreaker.print();
     return a.exec();
 }
 
@@ -101,36 +77,6 @@ Application &Application::instance()
 Application &Application::i()
 {
     return Application::instance();
-}
-
-qlonglong Application::memoryUsage()
-{
-    QProcess process;
-    process.start(qsl("cat"), qvsl{qsl("/proc/%1/status").arg(qApp->applicationPid())});
-
-    if(!process.waitForStarted(1000)){
-        return 0;
-    }
-
-    if(!process.waitForFinished(1000)){
-        process.terminate();
-        return 0;
-    }
-
-    QString bytes=process.readAllStandardOutput().toLower();
-    bytes=bytes.replace(qsl("\t"), qsl_null);
-    while(bytes.contains(qsl("  ")))
-        bytes=bytes.replace(qsl("  "), qsl_space);
-
-    auto vList=bytes.split(qsl("\n"));
-    for(auto&s:vList){
-        if(!s.contains(qsl_fy(vmpeak)))
-            continue;
-
-        auto vmRSS=s.split(qsl(":")).last().trimmed().replace(qsl("kb"),qsl_null).trimmed();
-        return vmRSS.toLongLong();
-    }
-    return 0;
 }
 
 const QUuid &Application::instanceUuid()

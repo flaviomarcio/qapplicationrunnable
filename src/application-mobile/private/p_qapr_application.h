@@ -17,13 +17,12 @@ Q_GLOBAL_STATIC(QString, applicationSettingDir)
 class ApplicationPvt:public QObject{
     Q_OBJECT
 public:
-    QApr::CircuitBreaker circuitBreaker;
     QVariant _settings_SERVER;
     QVariantHash __arguments;
     QRpc::ServiceManager manager;
     Application*application=nullptr;
 
-    explicit ApplicationPvt(Application*parent=nullptr):QObject{parent},circuitBreaker(parent)
+    explicit ApplicationPvt(Application*parent=nullptr):QObject{parent}
     {
         if(applicationSettingDir->isEmpty())
             *applicationSettingDir=qsl("%1/%2").arg(settings_HOME_DIR, qApp->applicationName().toLower());
