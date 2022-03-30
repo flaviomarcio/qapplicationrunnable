@@ -10,7 +10,7 @@ static void init(){
 
 Q_COREAPP_STARTUP_FUNCTION(init);
 
-MainStart::MainStart(QObject *parent):QObject(parent)
+MainStart::MainStart(QObject *parent):QObject{parent}
 {
 
 }
