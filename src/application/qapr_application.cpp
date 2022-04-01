@@ -169,6 +169,5 @@ QApr::CircuitBreaker &Application::circuitBreaker()
     dPvt();
     return p.circuitBreaker;
 }
--
 
 }
