@@ -9,6 +9,7 @@ HEADERS += \
     $$PWD/private/p_qapr_log.h \
     $$PWD/private/p_qapr_log_telegram.h \
     $$PWD/private/p_qapr_log_elk.h \
+    $$PWD/qapr.h \
     $$PWD/qapr_consts.h \
     $$PWD/qapr_global.h \
     $$PWD/qapr_log.h \

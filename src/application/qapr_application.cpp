@@ -164,4 +164,11 @@ Application &Application::resourceExtract()
     return*this;
 }
 
+QApr::CircuitBreaker &Application::circuitBreaker()
+{
+    dPvt();
+    return p.circuitBreaker;
+}
+-
+
 }
