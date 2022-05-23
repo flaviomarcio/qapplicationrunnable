@@ -14,8 +14,9 @@ public:
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QMutex, ____mutex);
 
-static void initApp(Application&i)
+static void initApp(Application &i)
 {
+    Q_UNUSED(i)
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif
