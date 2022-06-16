@@ -10,7 +10,7 @@
 namespace QApr {
 
 #define dPvt()\
-    auto&p =*reinterpret_cast<NotifyPvt*>(this->p)
+    auto &p =*reinterpret_cast<NotifyPvt*>(this->p)
 
 class NotifyPvt: public QObject{
 public:
@@ -85,7 +85,7 @@ public:
 
     void taskFinish()
     {
-        for(auto&v:tasks){
+        for(auto &v:tasks){
             v->quit();
             if(v->wait(1000))
                 delete v;

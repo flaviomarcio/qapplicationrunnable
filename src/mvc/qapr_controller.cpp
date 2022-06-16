@@ -6,7 +6,7 @@
 namespace QApr {
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<ControllerPvt*>(this->p)
+    auto &p = *reinterpret_cast<ControllerPvt*>(this->p)
 
 class ControllerPvt{
 public:
@@ -65,7 +65,7 @@ const QVariant Controller::resultInfo()
     if(interface==nullptr)
         return this->lr().resultVariantInfo();
 
-    auto&rq=interface->rq();
+    auto &rq=interface->rq();
     if(this->lr().isNotOk())
         rq.co(this->lr().sc());
     return this->lr().resultVariantInfo();

@@ -19,25 +19,25 @@ int MainService::exec(QCoreApplication &a)
     bool RETURN=false;
 
 
-    auto&appInstance=Application::instance();
+    auto &appInstance=Application::instance();
 
 
-    const auto&arguments = appInstance.arguments();
+    const auto &arguments = appInstance.arguments();
 
     if(arguments.contains(qsl("ws"))){
-        auto&service = Server::instance();
+        auto &service = Server::instance();
         service.start();
         RETURN = service.isRunning() || RETURN;
     }
 
     if(arguments.contains(qsl("agent"))){
-        auto&service = Agent::instance();
+        auto &service = Agent::instance();
         service.start();
         RETURN = service.isRunning() || RETURN;
     }
 
     if(arguments.contains(qsl("notify"))){
-        auto&service = Notify::instance();
+        auto &service = Notify::instance();
         service.start();
         RETURN = service.isRunning() || RETURN;
     }

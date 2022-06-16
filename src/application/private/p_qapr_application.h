@@ -12,7 +12,7 @@ namespace QApr {
 Q_GLOBAL_STATIC(QString, applicationSettingDir)
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<ApplicationPvt*>(this->p)
+    auto &p = *reinterpret_cast<ApplicationPvt*>(this->p)
 
 class ApplicationPvt:public QObject{
     Q_OBJECT
@@ -63,7 +63,7 @@ public:
 
         QDir dir(qsl(":"));
         dir.setNameFilters(QStringList{qsl("*.json")});
-        for(auto&info:dir.entryInfoList()){
+        for(auto &info:dir.entryInfoList()){
             QFile fileSrc(info.filePath());
             QFile fileDst(qsl("%1/%2").arg(*applicationSettingDir,info.fileName()));
             if(fileDst.exists())
@@ -95,7 +95,7 @@ public:
         if(!__arguments.isEmpty())
             return __arguments;
 
-        for(auto&v:qApp->arguments()){
+        for(auto &v:qApp->arguments()){
             auto l=v.split(qsl("="));
             if(l.isEmpty())
                 continue;

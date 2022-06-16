@@ -7,11 +7,11 @@ namespace QApr {
 QVector<QApr::Interface*> makeInterfaces(QObject*parent)
 {
     QVector<QApr::Interface*> __return;
-    auto&staticApiList=QRpc::Controller::staticApiList();
-    for(auto&v:staticApiList){
+    auto &staticApiList=QRpc::Controller::staticApiList();
+    for(auto &v:staticApiList){
         if(QApr::Interface::staticMetaObject.inherits(v))
             continue;
-        auto&metaObject=*v;
+        auto &metaObject=*v;
         auto object=metaObject.newInstance(Q_ARG(QObject*, parent));
         if(object==nullptr)
             continue;
@@ -31,12 +31,12 @@ static QVariantList&menuMaker(ControllerBackOffice*parent)
     if(rootMenuMaked.isEmpty()){
         QHash<QString,QVariant> cacheMenu;
         auto makedInterfaces = makeInterfaces(parent);
-        for(auto&v:makedInterfaces){
+        for(auto &v:makedInterfaces){
             auto vMenuList=v->backOfficeMenu();
             if(vMenuList.isEmpty())
                 continue;
 
-            for(auto&v:vMenuList){
+            for(auto &v:vMenuList){
                 MenuObject menu(v);
                 auto name=menu.text();
                 if(menu.isEmpty())
@@ -48,7 +48,7 @@ static QVariantList&menuMaker(ControllerBackOffice*parent)
                 }
 
                 MenuObject menuRoot(cacheMenu[name]);
-                for(auto&v:menu.menu()){
+                for(auto &v:menu.menu()){
                     MenuObject menuItem(v);
                     auto vMenu=v.toMap();
                     if(vMenu.isEmpty())
@@ -61,7 +61,7 @@ static QVariantList&menuMaker(ControllerBackOffice*parent)
         qDeleteAll(makedInterfaces);
         auto keys=cacheMenu.keys();
         keys.sort();
-        for(auto&k:keys){
+        for(auto &k:keys){
             MenuObject menu(cacheMenu[k]);
             rootMenuMaked<<menu.build();
         }
@@ -80,7 +80,7 @@ ControllerBackOffice::~ControllerBackOffice()
 
 ResultValue &ControllerBackOffice::sessionAccount()
 {
-    auto&credential=this->irq()->sessionObject().credential();
+    auto &credential=this->irq()->sessionObject().credential();
     auto vHash=credential.toVariant();
     return this->lr(vHash);
 }

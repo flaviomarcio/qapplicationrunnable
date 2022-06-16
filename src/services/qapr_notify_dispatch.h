@@ -76,5 +76,5 @@ private:
     void*p=nullptr;
 };
 
-//static auto&NotifyApp=Notify::instance();
+//static auto &NotifyApp=Notify::instance();
 }

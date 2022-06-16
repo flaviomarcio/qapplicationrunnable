@@ -1,7 +1,7 @@
 #include "./private/p_qapr_circuit_breaker.h"
 
 #define dPvt()\
-auto&p = *reinterpret_cast<CircuitBreakerPvt*>(this->p)
+auto &p = *reinterpret_cast<CircuitBreakerPvt*>(this->p)
 
 namespace QApr {
 

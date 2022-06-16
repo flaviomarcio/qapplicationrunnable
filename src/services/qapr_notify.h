@@ -73,11 +73,11 @@ public:
     //! \param payload
     //! \return
     //!
-    virtual bool notify(const QString&channel, const QVariant&payload);
+    virtual bool notify(const QString &channel, const QVariant&payload);
 
 private:
     void*p=nullptr;
 };
 
-//static auto&NotifyApp=Notify::instance();
+//static auto &NotifyApp=Notify::instance();
 }

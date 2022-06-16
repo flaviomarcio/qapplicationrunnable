@@ -73,7 +73,7 @@ private slots:
     //! \param channel
     //! \param payload
     //!
-    virtual void onNotifyReceived(const QString&channel, const QVariant &payload);
+    virtual void onNotifyReceived(const QString &channel, const QVariant &payload);
 signals:
 
     //!
@@ -81,7 +81,7 @@ signals:
     //! \param channel
     //! \param payload
     //!
-    void notifyReceived(const QString&channel, const QVariant&payload);
+    void notifyReceived(const QString &channel, const QVariant&payload);
 private:
     void*p=nullptr;
 };

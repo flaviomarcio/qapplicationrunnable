@@ -7,7 +7,7 @@
 namespace QApr {
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<ServerPvt*>(this->p)
+    auto &p = *reinterpret_cast<ServerPvt*>(this->p)
 
 class ServerPvt{
 public:

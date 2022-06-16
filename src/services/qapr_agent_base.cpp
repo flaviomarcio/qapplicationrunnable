@@ -10,7 +10,7 @@
 namespace QApr{
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<AgentBasePvt*>(this->p)
+    auto &p = *reinterpret_cast<AgentBasePvt*>(this->p)
 
 class AgentBasePvt:public QObject{
 public:
@@ -30,15 +30,15 @@ public slots:
         sWarning()<<this->parent->agentName()<<tr(": started");
 #endif
         QMutexLOCKER locker(&serviceStartLock);
-        auto&pp=*this->parent;
+        auto &pp=*this->parent;
 #if QAPR_LOG_SUPER_VERBOSE
         sInfo()<<"run "<<pp.agentName();
 #endif
         this->runner_date=QDateTime::currentDateTime();
-        auto&cnMng=Application::instance().connectionManager();
+        auto &cnMng=Application::instance().connectionManager();
         auto manager=QOrm::ConnectionManager(cnMng, this);
-        auto&pool=manager.pool();
-        const auto&agentSetting=pp.agentSetting();
+        auto &pool=manager.pool();
+        const auto &agentSetting=pp.agentSetting();
         Q_UNUSED(agentSetting)
         QSqlDatabase db;
 #if QAPR_LOG_VERBOSE
@@ -69,7 +69,7 @@ public slots:
 #if QAPR_LOG_VERBOSE
         aDebugMethodStart();
 #endif
-        auto&pp=*this->parent;
+        auto &pp=*this->parent;
         auto agentName=pp.agentName();
         auto metaObject=pp.metaObject();
         auto methodName=agentName;
@@ -108,7 +108,7 @@ public slots:
 
     QDateTime makeNewDateRun()
     {
-        auto&agentSetting=this->parent->agentSetting();
+        auto &agentSetting=this->parent->agentSetting();
         auto interval = agentSetting.activityInterval();
         auto next=QDateTime::currentDateTime();
         next=next.addMSecs(interval);
@@ -118,9 +118,9 @@ public slots:
 
     bool runCheck()
     {
-        auto&p=*this;
+        auto &p=*this;
         auto service=this->parent->agentName();
-        auto&agentSetting=this->parent->agentSetting();
+        auto &agentSetting=this->parent->agentSetting();
         if(!agentSetting.enabled()){
 #if QAPR_LOG_VERBOSE
             sInfo()<<service<<qsl(" disabled");
@@ -172,9 +172,9 @@ AgentBase::~AgentBase()
 
 QRpc::ServiceSetting &AgentBase::agentSetting()
 {
-    auto&manager=Application::instance().manager();
+    auto &manager=Application::instance().manager();
     auto agentName=this->agentName();
-    auto&setting=manager.setting(agentName);
+    auto &setting=manager.setting(agentName);
     if(!setting.enabled()){
         static QRpc::ServiceSetting __default;
         return __default;

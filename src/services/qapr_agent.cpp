@@ -8,7 +8,7 @@
 namespace QApr {
 
 #define dPvt()\
-    auto&p =*reinterpret_cast<AgentPvt*>(this->p)
+    auto &p =*reinterpret_cast<AgentPvt*>(this->p)
 
 class AgentPvt: public QObject{
 public:
@@ -84,7 +84,7 @@ public slots:
         if(task==nullptr)
             return;
 
-        auto&settings=task->agentSetting();
+        auto &settings=task->agentSetting();
         if(settings.enabled()){
             task->start();
             task->runCheck();
@@ -97,7 +97,7 @@ public slots:
         QHashIterator<QByteArray, const QMetaObject*> i(this->services);
         while (i.hasNext()) {
             i.next();
-            auto&service=i.key();
+            auto &service=i.key();
             this->taskRun(service);
         }
     }
@@ -106,12 +106,12 @@ public slots:
     {
         static auto chars=QStringList{qsl(";"),qsl("|"),qsl(","),qsl("  ")};
         QString service=methodNames;
-        for(auto&c:chars){
+        for(auto &c:chars){
             while(service.contains(c))
                 service=service.replace(c,qsl_space);
         }
         auto listMethod=methodNames.split(' ');
-        for(auto&service:listMethod){
+        for(auto &service:listMethod){
             services.insert(service.trimmed(), &metaObject);
         }
         return true;
@@ -125,7 +125,7 @@ private slots:
             this->agent->notifySettingsChanged(payload);
         }
     }
-    void taskFinished(const QVariant&v)
+    void taskFinished(const QVariant &v)
     {
         auto service = v.toByteArray();
         auto task = this->tasks.value(service);

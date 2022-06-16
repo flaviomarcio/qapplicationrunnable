@@ -5,7 +5,7 @@
 namespace QApr {
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<NotifyDispatchPvt*>(this->p)
+    auto &p = *reinterpret_cast<NotifyDispatchPvt*>(this->p)
 
 class NotifyDispatchPvt//:public QObject
 {

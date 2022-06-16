@@ -18,7 +18,7 @@ struct ConstsApplicationBase{
     QRpc::ServiceSetting circuit_breaker;
     void init()
     {
-        auto&manager=staticInstance->manager();
+        auto &manager=staticInstance->manager();
         circuit_breaker=manager.setting(qsl("circuit-breaker"));
         if(!circuit_breaker.isValid())
             circuit_breaker=manager.setting(qsl("circuit_breaker"));
@@ -33,10 +33,10 @@ static void initApp(Application&i)
     i.resourceExtract();
 #endif
     auto settingFile=i.settings_SERVER();
-    auto&manager=i.manager();
+    auto &manager=i.manager();
     manager.load(settingFile);
     constsApplicationBase->init();
-    auto&cnn=i.connectionManager();
+    auto &cnn=i.connectionManager();
     if(!cnn.isLoaded())
         sWarning()<<qtr("Connection manager is not loaded");
 }
@@ -123,7 +123,7 @@ qlonglong Application::memoryUsage()
         bytes=bytes.replace(qsl("  "), qsl_space);
 
     auto vList=bytes.split(qsl("\n"));
-    for(auto&s:vList){
+    for(auto &s:vList){
         if(!s.contains(qsl_fy(vmpeak)))
             continue;
 

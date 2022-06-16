@@ -23,7 +23,7 @@ public:
         this->exec();
     }
 public slots:
-    void recebeMessage(const QVariant&v){
+    void recebeMessage(const QVariant &v){
         auto msg=QJsonDocument::fromVariant(v).toJson(QJsonDocument::Indented);
     }
 };

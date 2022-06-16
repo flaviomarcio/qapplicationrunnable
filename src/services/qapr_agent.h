@@ -91,8 +91,8 @@ signals:
     //! \param topic
     //! \param v
     //!
-    void settingChanged(const QString&topic, const QVariant&v);
+    void settingChanged(const QString &topic, const QVariant &v);
 };
 
-//static auto&agentApp=Agent::instance();
+//static auto &agentApp=Agent::instance();
 }

@@ -139,7 +139,7 @@ public:
     //! \param value
     //! \return
     //!
-    virtual SessionCredential&setProfile(const QVariant&value);
+    virtual SessionCredential&setProfile(const QVariant &value);
 
     //!
     //! \brief session
@@ -152,7 +152,7 @@ public:
     //! \param value
     //! \return
     //!
-    virtual SessionCredential&setSession(const QVariant&value);
+    virtual SessionCredential&setSession(const QVariant &value);
 
     //!
     //! \brief token
@@ -165,7 +165,7 @@ public:
     //! \param value
     //! \return
     //!set token payload
-    virtual SessionCredential&setToken(const QVariant&value);
+    virtual SessionCredential&setToken(const QVariant &value);
 
 private:
     void*p=nullptr;

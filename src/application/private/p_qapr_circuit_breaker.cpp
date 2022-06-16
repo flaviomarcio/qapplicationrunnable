@@ -58,7 +58,7 @@ void CircuitBreakerPvt::onCheck()
     }
 
     const auto memoryUsage=Application::memoryUsage();
-    const auto&memoryLimitKB=this->memoryLimitKB;
+    const auto &memoryLimitKB=this->memoryLimitKB;
 
     if(memoryLimitKB>0 && (memoryUsage > memoryLimitKB)){
         sWarning()<<qsl("break application by memory limit(limitMem: %1 KB, curMen==%2 KB)").arg(memoryUsage, memoryLimitKB);

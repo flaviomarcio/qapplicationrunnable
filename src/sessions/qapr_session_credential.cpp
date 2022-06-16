@@ -2,7 +2,7 @@
 #include "../../../qstm/src/qstm_util_variant.h"
 
 #define dPvt()\
-        auto&p = *reinterpret_cast<CredentialsPvt*>(this->p)
+        auto &p = *reinterpret_cast<CredentialsPvt*>(this->p)
 
 namespace QApr {
 
@@ -42,7 +42,7 @@ namespace QApr {
 
     bool SessionCredential::isValid() const
     {
-        auto&credentials=*this;
+        auto &credentials=*this;
         if(!credentials.service_uuid().isNull())
             return true;
 

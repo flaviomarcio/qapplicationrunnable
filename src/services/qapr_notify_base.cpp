@@ -10,7 +10,7 @@
 namespace QApr{
 
 #define dPvt()\
-    auto&p = *reinterpret_cast<NotifyBasePvt*>(this->p)
+    auto &p = *reinterpret_cast<NotifyBasePvt*>(this->p)
 
 class NotifyBasePvt:public QObject{
 public:
@@ -38,9 +38,9 @@ NotifyBase::~NotifyBase()
 
 QRpc::ServiceSetting &NotifyBase::notifySetting()
 {
-    auto&manager=Application::instance().manager();
+    auto &manager=Application::instance().manager();
     auto notifyName=this->notifyName();
-    auto&setting=manager.setting(notifyName);
+    auto &setting=manager.setting(notifyName);
     if(!setting.enabled()){
         static QRpc::ServiceSetting __default;
         return __default;
@@ -116,7 +116,7 @@ void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payloa
         auto argChannel=QGenericArgument(qbl("QVariant"), &channel);
         auto arcPayload=QGenericArgument(qbl("QVariant"), &vPayload);
         QOrm::ConnectionManager manager(Application::instance().connectionManager(), this);
-        auto&pool=manager.pool();
+        auto &pool=manager.pool();
         QSqlDatabase db;
         if(!pool.get(db)){
             pool.finish(db);
