@@ -51,10 +51,9 @@ equals(QAPR_INTERFACES,true)   {message("      +QAPR_INTERFACES......... accepte
 equals(QAPR_MVC,true)          {message("      +QAPR_MVC................ accepted") } else { message("      +QAPR_MVC................ ignored") }
 equals(QAPR_UTIL,true)         {message("      +QAPR_UTIL............... accepted") } else { message("      +QAPR_UTIL............... ignored") }
 message("   -SOURCES")
-equals(QAPR_APPLICATION,true):  message("      +QRPC_BASE............... "$$QAPR_APPLICATION_SOURCE)
-equals(QAPR_SERVICES,true):     message("      +QRPC_BASE............... "$$QAPR_SERVICES_SOURCE)
-equals(QAPR_SESSIONS,true):     message("      +QRPC_TOKEN.............. "$$QAPR_SESSIONS_SOURCE)
-equals(QAPR_INTERFACES,true):   message("      +QRPC_CLIENT............. "$$QAPR_INTERFACES_SOURCE)
-equals(QAPR_MVC,true):          message("      +QRPC_SERVER............. "$$QAPR_MVC_SOURCE)
-equals(QAPR_UTIL,true):         message("      +QRPC_INTERFACES......... "$$QAPR_UTIL_SOURCE)
-
+equals(QAPR_APPLICATION,true):  message("      +QAPR_APPLICATION........" $$QAPR_APPLICATION_SOURCE)
+equals(QAPR_SERVICES,true):     message("      +QAPR_SERVICES..........." $$QAPR_SERVICES_SOURCE)
+equals(QAPR_SESSIONS,true):     message("      +QAPR_SESSIONS..........." $$QAPR_SESSIONS_SOURCE)
+equals(QAPR_INTERFACES,true):   message("      +QAPR_INTERFACES........." $$QAPR_INTERFACES_SOURCE)
+equals(QAPR_MVC,true):          message("      +QAPR_MVC................" $$QAPR_MVC_SOURCE)
+equals(QAPR_UTIL,true):         message("      +QAPR_UTIL..............." $$QAPR_UTIL_SOURCE)
