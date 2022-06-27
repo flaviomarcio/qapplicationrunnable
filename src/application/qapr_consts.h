@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "../../qstm/src/qstm_macro.h"
 #include "./qapr_global.h"
 #include <QCoreApplication>
 #include <QObject>
@@ -9,15 +8,15 @@
 #include <QDir>
 #include <QThread>
 
-static const auto appInstanceUuid=QUuid::createUuidV5(QUuid::createUuid(),QUuid::createUuid().toString());
-static const auto settings_HOME_DIR=QStringLiteral("%1/qtreforce.files").arg(QDir::homePath());
+
+#define settings_HOME_DIR qsl("%1/qtreforce.files").arg(QDir::homePath())
 
 #ifdef Q_APR_TEST
-static const auto settings_SERVER_FILE=QStringLiteral("settings.test.json");
+#define settings_SERVER_FILE qsl("settings.test.json")
 #elif QT_NO_DEBUG
-static const auto settings_SERVER_FILE=QStringLiteral("settings.release.json");
+#define settings_SERVER_FILE qsl("settings.release.json")
 #else
-static const auto settings_SERVER_FILE=QStringLiteral("settings.debug.json");
+#define settings_SERVER_FILE qsl("settings.debug.json")
 #endif
 
 #define CORE_OBJECT_INSTANCE(staticType)\

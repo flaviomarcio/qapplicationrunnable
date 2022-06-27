@@ -135,6 +135,7 @@ qlonglong Application::memoryUsage()
 
 const QUuid &Application::instanceUuid()
 {
+    static const auto appInstanceUuid=QUuid::createUuidV5(QUuid::createUuid(),QUuid::createUuid().toString());
     return appInstanceUuid;
 }
 
