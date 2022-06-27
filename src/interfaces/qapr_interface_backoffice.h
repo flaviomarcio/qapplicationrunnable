@@ -3,7 +3,7 @@
 #include "./qapr_interface.h"
 
 namespace QApr {
-
+class InterfaceBackOfficePvt;
 //!
 //! \brief The InterfaceBackOffice class
 //!
@@ -51,81 +51,96 @@ public:
     //!
     ~InterfaceBackOffice();
 
-    //!
-    //! \brief rootObject
-    //! \return
-    //!objeto principal com toda a informacao
-    Q_NOTATION(rootObject, {opGet})
-    Q_INVOKABLE virtual const QVariant rootObject();
-    Q_API_DOC_PATH(rootObject)
-    {
-        path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Full object to currenty session"))
-            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
-    }
+#ifdef QTREFORCE_QMFE
 
     //!
-    //! \brief sessionAccount
+    //! \brief qmfeAccess
     //! \return
-    //!objeto com a informacao da sessao e conta relacionada ao request
-    Q_NOTATION(sessionAccount, {opGet})
-    Q_INVOKABLE virtual const QVariant sessionAccount();
-    Q_API_DOC_PATH(sessionAccount)
-    {
-        path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Session of account information"))
-            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
-    }
+    //!
+    virtual QMfe::Access &qmfeAccess();
 
     //!
-    //! \brief enviroment
+    //! \brief modules
     //! \return
-    //!variaveis de ambiente para ajustes no front
-    Q_NOTATION(enviroment, {opGet})
-    Q_INVOKABLE virtual const QVariant enviroment();
-    Q_API_DOC_PATH(enviroment)
-    {
-        path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Menus for currenty API"))
-            .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), this->enviroment()}}));
-    }
-
     //!
-    //! \brief menu
-    //! \return
-    //!menu principal com todos as opcoes
-    Q_NOTATION(menu, {opGet})
-    Q_INVOKABLE virtual const QVariant menu();
-    Q_API_DOC_PATH(menu)
-    {
-        path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Menus for currenty API"))
-            .responses(
-                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menu()}}));
-    }
+    Q_INVOKABLE QVariant modules();
+#endif
 
-    //!
-    //! \brief menuInfo
-    //! \return
-    //!requisita da dos de um menu especifico
-    Q_INVOKABLE virtual const QVariant menuInfo();
-    Q_NOTATION(menuInfo, {opGet})
-    Q_API_DOC_PATH(menuInfo)
-    {
-        path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Menus information"))
-            .responses(
-                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menuInfo()}}));
-    }
+//    //!
+//    //! \brief rootObject
+//    //! \return
+//    //!objeto principal com toda a informacao
+//    Q_NOTATION(rootObject, {opGet})
+//    Q_INVOKABLE virtual const QVariant rootObject();
+//    Q_API_DOC_PATH(rootObject)
+//    {
+//        path->operation(sptoGet)
+//            .operationId(qsl_null)
+//            .description(qsl("Full object to currenty session"))
+//            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
+//    }
+
+//    //!
+//    //! \brief sessionAccount
+//    //! \return
+//    //!objeto com a informacao da sessao e conta relacionada ao request
+//    Q_NOTATION(sessionAccount, {opGet})
+//    Q_INVOKABLE virtual const QVariant sessionAccount();
+//    Q_API_DOC_PATH(sessionAccount)
+//    {
+//        path->operation(sptoGet)
+//            .operationId(qsl_null)
+//            .description(qsl("Session of account information"))
+//            .responses(QApiResponse().statusCode(200).examples(qvh{{qsl("response"), qsl_null}}));
+//    }
+
+//    //!
+//    //! \brief enviroment
+//    //! \return
+//    //!variaveis de ambiente para ajustes no front
+//    Q_NOTATION(enviroment, {opGet})
+//    Q_INVOKABLE virtual const QVariant enviroment();
+//    Q_API_DOC_PATH(enviroment)
+//    {
+//        path->operation(sptoGet)
+//            .operationId(qsl_null)
+//            .description(qsl("Menus for currenty API"))
+//            .responses(QApiResponse().statusCode(200).examples(
+//                qvh{{qsl("response"), this->enviroment()}}));
+//    }
+
+//    //!
+//    //! \brief menu
+//    //! \return
+//    //!menu principal com todos as opcoes
+//    Q_NOTATION(menu, {opGet})
+//    Q_INVOKABLE virtual const QVariant menu();
+//    Q_API_DOC_PATH(menu)
+//    {
+//        path->operation(sptoGet)
+//            .operationId(qsl_null)
+//            .description(qsl("Menus for currenty API"))
+//            .responses(
+//                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menu()}}));
+//    }
+
+//    //!
+//    //! \brief menuInfo
+//    //! \return
+//    //!requisita da dos de um menu especifico
+//    Q_INVOKABLE virtual const QVariant menuInfo();
+//    Q_NOTATION(menuInfo, {opGet})
+//    Q_API_DOC_PATH(menuInfo)
+//    {
+//        path->operation(sptoGet)
+//            .operationId(qsl_null)
+//            .description(qsl("Menus information"))
+//            .responses(
+//                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->menuInfo()}}));
+//    }
 
 private:
-    void *p = nullptr;
+    InterfaceBackOfficePvt *p = nullptr;
 };
 
 } // namespace QApr

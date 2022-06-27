@@ -8,6 +8,7 @@
 #include "./qapr_menu_object.h"
 #include <QtReforce/QApiDoc>
 #include <QtSql/QSqlDatabase>
+#include <QtReforce/QMfe>
 
 namespace QApr {
 

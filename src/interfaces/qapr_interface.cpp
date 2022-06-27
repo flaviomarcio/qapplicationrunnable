@@ -16,9 +16,10 @@ public:
     QOrm::ConnectionPool pool;
     QRpc::Controller *parent = nullptr;
     Session session;
-
     explicit InterfaceDatabasePvt(QRpc::Controller *parent)
-        : transaction{parent}, pool{QApr::Application::i().pool()}, session{parent}
+        : transaction{parent},
+          pool{QApr::Application::i().pool()},
+          session{parent}
     {
         this->parent = parent;
     }
