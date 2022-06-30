@@ -135,17 +135,17 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 groups.insert(info.group.toLower(),group);
             }
 
-            api.path(
-                        QMfe::Path{}
-                        .methods(info.methods)
-                        .path(info.path)
-                     );
+            auto &path=QMfe::Path{}
+            .methods(info.methods)
+            .path(info.path);
+
+            api.path(path);
             group->option(
                         QMfe::Option{}
                         .display(info.name)
                         .description(info.description)
-                        .apiUuid(api)
-                        .path(info.name)
+                        .apiUuid(path.apiUuid())
+                        .pathUuid(path.uuid())
                         );
         }
         QHashIterator<QByteArray, QMfe::Group*> i(groups);
