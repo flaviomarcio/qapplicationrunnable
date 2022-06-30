@@ -62,7 +62,7 @@ public:
     //! \brief instanceUuid
     //! \return
     //!application instance
-    virtual const QUuid &instanceUuid();
+    static const QUuid &instanceUuid();
 
     //!
     //! \brief arguments

@@ -6,7 +6,29 @@
 
 namespace QApr {
 
-#define dPvt() auto &p = *reinterpret_cast<InterfaceBackOfficePvt *>(this->p)
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL,(getenv("QAPR_SERVER_PROTOCOL")));
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOST,(getenv("QAPR_SERVER_HOST")));
+static int QAPR_SERVER_PORT=0;
+
+
+static void init()
+{
+    if(QAPR_SERVER_PROTOCOL->isEmpty())
+        *QAPR_SERVER_PROTOCOL="http";
+
+    if(QAPR_SERVER_HOST->isEmpty())
+        *QAPR_SERVER_HOST="localhost";
+
+    QAPR_SERVER_PORT=QByteArray{getenv("QAPR_SERVER_PORT")}.toInt();
+    if(QAPR_SERVER_PORT<=0)
+#ifdef QT_DEBUG
+        QAPR_SERVER_PORT=8084;
+#else
+        QAPR_SERVER_PORT=8080;
+#endif
+}
+
+Q_COREAPP_STARTUP_FUNCTION(init);
 
 class InterfaceBackOfficePvt
 {
@@ -57,6 +79,8 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         mutexInfo.lock();
         if(infoCache.isEmpty()){
             for(auto &m:metaControllers){
+                if(this->staticMetaObject.className()==m->className())
+                    continue;
                 QScopedPointer<QObject> sp(m->newInstance(Q_ARG(QObject*, nullptr )));
                 if(!sp.data())
                     continue;
@@ -83,7 +107,6 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         mutexInfo.unlock();
     }
 
-
     for(auto&controller: infoCache){
         QMfe::Api api;
         QMfe::Module module;
@@ -94,38 +117,36 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 .description(controller.description)
                 .host(
                     QMfe::Host{}
-                    .protocol(this->request().requestProtocol())
-                    .headers(this->request().requestHeader())
-                    .hostName(qsl("${HOST}"))
+                    .protocol(*QAPR_SERVER_PROTOCOL)
+                    .hostName(*QAPR_SERVER_HOST)
                     .port(this->request().requestPort())
+                    .headers(this->request().authorizationHeaders())
                     );
-
+        module.display(controller.display);
         QHash<QByteArray, QMfe::Group *> groups;
         for(auto &info:controller.invokableMethod){
-            for(auto &method: info.methods){
+            if(info.group.isEmpty())
+                continue;
 
-                if(info.group.isEmpty())
-                    continue;
-
-                auto group=groups.value(info.group.toLower());
-                if(!group){
-                    group=new QMfe::Group{};
-                    group->display(info.group).description(info.group);
-                }
-
-                api.path(
-                            QMfe::Path{}
-                            .method(method)
-                            .path(info.path)
-                         );
-                group->option(
-                            QMfe::Option{}
-                            .display(info.name)
-                            .description(info.description)
-                            .apiUuid(api)
-                            .path(info.name)
-                            );
+            auto group=groups.value(info.group.toLower());
+            if(!group){
+                group=new QMfe::Group{this};
+                group->display(info.group).description(info.group);
+                groups.insert(info.group.toLower(),group);
             }
+
+            api.path(
+                        QMfe::Path{}
+                        .methods(info.methods)
+                        .path(info.path)
+                     );
+            group->option(
+                        QMfe::Option{}
+                        .display(info.name)
+                        .description(info.description)
+                        .apiUuid(api)
+                        .path(info.name)
+                        );
         }
         QHashIterator<QByteArray, QMfe::Group*> i(groups);
         while(i.hasNext()){
@@ -135,6 +156,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
             module.group(*v);
             delete v;
         }
+        p->access.api(api).module(module);
     }
     return p->access;
 }

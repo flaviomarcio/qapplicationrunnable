@@ -9,6 +9,38 @@ CONFIG += silent
 QTREFORCE_QAPR=true
 DEFINES+=QTREFORCE_QAPR
 
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###VARIABLES##VARIABLES##VARIABLES##VARIABLES##VARIABLES##VARIABLES##VARIABLES##VARIABLES##VARIABLES
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+
+#equals(QAPR_SERVER_PROTOCOL,)QAPR_SERVER_PROTOCOL="http"
+#equals(QAPR_SERVER_HOST,): QAPR_SERVER_HOST="localhost"
+#equals(QAPR_SERVER_PORT,): QAPR_SERVER_PORT=8084
+
+#message(" ")
+#message(-QTREFORCE QERP-MODULES-VARIABLES)
+#message("   -VARIABLES")
+#message("      +QAPR_SERVER_PROTOCOL............ "$$QAPR_SERVER_PROTOCOL)
+#message("      +QAPR_SERVER_HOST................. "$$QAPR_SERVER_HOST)
+#message("      +QAPR_SERVER_PORT................ "$$QAPR_SERVER_PORT)
+
+#QMAKE_CXXFLAGS += -DQAPR_SERVER_PROTOCOL=\\\"$$QAPR_SERVER_PROTOCOL\\\"
+#QMAKE_CXXFLAGS += -DQAPR_SERVER_HOST=\\\"$$QAPR_SERVER_HOST\\\"
+#QMAKE_CXXFLAGS += -DQAPR_SERVER_PORT=\\\"$$QAPR_SERVER_PORT\\\"
+
+#message("QAPR_SERVER_PROTOCOL" $$QAPR_SERVER_PROTOCOL)
+#message("QAPR_SERVER_HOST" $$QAPR_SERVER_HOST)
+#message("QAPR_SERVER_PORT" $$QAPR_SERVER_PORT)
+
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###MODULES##MODULES##MODULES##MODULES##MODULES##MODULES##MODULES##MODULES##MODULES##MODULES##MODULES
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+###====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====+====##
+
+
 #SOURCES
 QAPR_APPLICATION_SOURCE=$$PWD/src/application/qapr-application.pri
 QAPR_SERVICES_SOURCE=$$PWD/src/services/qapr-services.pri
