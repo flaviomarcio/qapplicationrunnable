@@ -135,9 +135,10 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 groups.insert(info.group.toLower(),group);
             }
 
-            auto &path=QMfe::Path{}
-            .methods(info.methods)
-            .path(info.path);
+            QMfe::Path path;
+            path
+                    .methods(info.methods)
+                    .path(info.path);
 
             api.path(path);
             group->option(
