@@ -6,18 +6,23 @@
 
 namespace QApr {
 
-Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL,(getenv("QAPR_SERVER_PROTOCOL")));
-Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOST,(getenv("QAPR_SERVER_HOST")));
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL, ());
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOSTNAME, (getenv("QAPR_SERVER_HOSTNAME")));
+Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, QAPR_SERVER_HEADERS, ());
 static int QAPR_SERVER_PORT=0;
-
 
 static void init()
 {
+    Q_DECLARE_VU;
+    *QAPR_SERVER_PROTOCOL=getenv("QAPR_SERVER_PROTOCOL");
     if(QAPR_SERVER_PROTOCOL->isEmpty())
         *QAPR_SERVER_PROTOCOL="http";
 
-    if(QAPR_SERVER_HOST->isEmpty())
-        *QAPR_SERVER_HOST="localhost";
+    *QAPR_SERVER_HOSTNAME=getenv("QAPR_SERVER_PROTOCOL");
+    if(QAPR_SERVER_HOSTNAME->isEmpty())
+        *QAPR_SERVER_HOSTNAME="localhost";
+
+    *QAPR_SERVER_HEADERS=vu.toHash(getenv("QAPR_SERVER_HEADERS"));
 
     QAPR_SERVER_PORT=QByteArray{getenv("QAPR_SERVER_PORT")}.toInt();
     if(QAPR_SERVER_PORT<=0)
@@ -111,16 +116,32 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;
+
+        const auto &host=QApr::Application::i().settings().host();
+
+        auto LOCAL_QAPR_SERVER_PROTOCOL=QAPR_SERVER_PROTOCOL->isEmpty()?host->protocol():(*QAPR_SERVER_PROTOCOL);
+        auto LOCAL_QAPR_SERVER_HOSTNAME=QAPR_SERVER_HOSTNAME->isEmpty()?host->hostName():(*QAPR_SERVER_HOSTNAME);
+        auto LOCAL_QAPR_SERVER_PORT=QAPR_SERVER_PORT<=0?host->port():(QAPR_SERVER_PORT);
+        auto LOCAL_QAPR_SERVER_HEADERS=(*QAPR_SERVER_HEADERS);
+        if(!this->request().authorizationHeaders().isEmpty()){
+            LOCAL_QAPR_SERVER_HEADERS.clear();
+            QHashIterator<QString, QVariant> i(this->request().authorizationHeaders());
+            while(i.hasNext()){
+                i.next();
+                LOCAL_QAPR_SERVER_HEADERS.insert(i.key(), i.value());
+            }
+        }
+
         api
                 .basePath(controller.basePath)
                 .display(controller.display)
                 .description(controller.description)
                 .host(
                     QMfe::Host{}
-                    .protocol(*QAPR_SERVER_PROTOCOL)
-                    .hostName(*QAPR_SERVER_HOST)
-                    .port(this->request().requestPort())
-                    .headers(this->request().authorizationHeaders())
+                    .protocol(LOCAL_QAPR_SERVER_PROTOCOL)
+                    .hostName(LOCAL_QAPR_SERVER_HOSTNAME)
+                    .headers(LOCAL_QAPR_SERVER_HEADERS)
+                    .port(LOCAL_QAPR_SERVER_PORT)
                     );
         module.display(controller.display);
         QHash<QByteArray, QMfe::Group *> groups;
@@ -167,61 +188,5 @@ QVariant InterfaceBackOffice::modules()
     return QVariantHash{{QStringLiteral("console"), qmfeAccess().toHash()}};
 }
 #endif
-
-//const QVariant InterfaceBackOffice::sessionAccount()
-//{
-//    QRPC_METHOD_CHECK_GET();
-//    ControllerBackOffice controller(this);
-//    if (!controller.sessionAccount())
-//        this->rq().co(controller.lr().sc());
-//    else
-//        return controller.lr().resultVariant();
-//    QRPC_RETURN_VARIANT();
-//}
-
-//const QVariant InterfaceBackOffice::enviroment()
-//{
-//    QRPC_METHOD_CHECK_GET();
-//    ControllerBackOffice controller(this);
-//    if (!controller.enviroment())
-//        this->rq().co(controller.lr().sc());
-//    else
-//        return controller.lr().resultVariant();
-//    QRPC_RETURN_VARIANT();
-//}
-
-//const QVariant InterfaceBackOffice::menu()
-//{
-//    QRPC_METHOD_CHECK_GET();
-//    ControllerBackOffice controller(this);
-//    if (!controller.rootObject())
-//        this->rq().co(controller.lr().sc());
-//    else
-//        return controller.lr().resultVariant();
-//    QRPC_RETURN_VARIANT();
-//}
-
-//const QVariant InterfaceBackOffice::menuInfo()
-//{
-//    QRPC_METHOD_CHECK_GET();
-//    QRPC_V_SET_BODY_HASH(body);
-//    ControllerBackOffice controller(this);
-//    if (!controller.menuInfo(body))
-//        this->rq().co(controller.lr().sc());
-//    else
-//        return controller.lr().resultVariant();
-//    QRPC_RETURN_VARIANT();
-//}
-
-//const QVariant InterfaceBackOffice::rootObject()
-//{
-//    QRPC_METHOD_CHECK_GET();
-//    ControllerBackOffice controller(this);
-//    if (!controller.rootObject())
-//        this->rq().co(controller.lr().sc());
-//    else
-//        return controller.lr().resultVariant();
-//    QRPC_RETURN_VARIANT();
-//}
 
 } // namespace QApr
