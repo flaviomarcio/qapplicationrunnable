@@ -12,18 +12,22 @@ HEADERS += \
     $$PWD/qapr.h \
     $$PWD/qapr_consts.h \
     $$PWD/qapr_global.h \
+    $$PWD/qapr_host.h \
     $$PWD/qapr_log.h \
     $$PWD/qapr_circuit_breaker.h \
     $$PWD/qapr_macro.h \
     $$PWD/qapr_runnable.h \
     $$PWD/qapr_mainservice.h \
     $$PWD/qapr_application.h \
+    $$PWD/qapr_settings.h
 
 
 SOURCES += \
     $$PWD/private/p_qapr_circuit_breaker.cpp \
+    $$PWD/qapr_host.cpp \
     $$PWD/qapr_log.cpp \
     $$PWD/qapr_circuit_breaker.cpp \
     $$PWD/qapr_runnable.cpp \
     $$PWD/qapr_mainservice.cpp \
     $$PWD/qapr_application.cpp \
+    $$PWD/qapr_settings.cpp

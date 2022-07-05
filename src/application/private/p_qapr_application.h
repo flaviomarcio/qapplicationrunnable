@@ -11,9 +11,6 @@ namespace QApr {
 
 Q_GLOBAL_STATIC(QString, applicationSettingDir)
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<ApplicationPvt*>(this->p)
-
 class ApplicationPvt:public QObject{
     Q_OBJECT
 public:
@@ -22,8 +19,12 @@ public:
     QVariantHash __arguments;
     QRpc::ServiceManager manager;
     Application*application=nullptr;
+    Settings settings;
 
-    explicit ApplicationPvt(Application*parent=nullptr):QObject{parent},circuitBreaker(parent)
+    explicit ApplicationPvt(Application*parent=nullptr)
+        :
+          QObject{parent},
+          circuitBreaker{parent}
     {
         if(applicationSettingDir->isEmpty())
             *applicationSettingDir=qsl("%1/%2").arg(settings_HOME_DIR, qApp->applicationName().toLower());
@@ -38,16 +39,16 @@ public:
         {
             auto settingsFile=qsl("%1.json").arg(qApp->applicationFilePath());
             if(!QFile::exists(settingsFile))
-                settingsFile=qsl("%1/%2").arg(*applicationSettingDir,settings_SERVER_FILE);
+                settingsFile=qsl("%1/%2").arg(*applicationSettingDir, settings_SERVER_FILE);
 
             if(QFile::exists(settingsFile))
-                vList<<settingsFile;
+                vList.append(settingsFile);
         }
 
         {
-            auto settingsFile=qsl("%1/%2/%3.json").arg(settings_HOME_DIR,qAppName(),settings_SERVER_FILE);
+            auto settingsFile=qsl("%1/%2/%3.json").arg(settings_HOME_DIR, qAppName(), settings_SERVER_FILE);
             if(QFile::exists(settingsFile))
-                vList<<settingsFile;
+                vList.append(settingsFile);
         }
         return (this->_settings_SERVER=vList);
     }

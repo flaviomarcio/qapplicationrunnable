@@ -14,7 +14,8 @@ public:
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QMutex, ____mutex);
 
-struct ConstsApplicationBase{
+struct ConstsApplicationBase
+{
     QRpc::ServiceSetting circuit_breaker;
     void init()
     {
@@ -25,9 +26,9 @@ struct ConstsApplicationBase{
     }
 };
 
-Q_GLOBAL_STATIC(ConstsApplicationBase, constsApplicationBase)
+Q_GLOBAL_STATIC(ConstsApplicationBase, staticApplicationBase)
 
-static void initApp(Application&i)
+static void initApp(Application &i)
 {
 #ifdef QT_DEBUG
     i.resourceExtract();
@@ -35,10 +36,12 @@ static void initApp(Application&i)
     auto settingFile=i.settings_SERVER();
     auto &manager=i.manager();
     manager.load(settingFile);
-    constsApplicationBase->init();
+    staticApplicationBase->init();
     auto &cnn=i.connectionManager();
     if(!cnn.isLoaded())
         sWarning()<<qtr("Connection manager is not loaded");
+
+    i.settings().setValues(settingFile);
 }
 
 static bool initCheck=false;
@@ -63,31 +66,22 @@ Application::Application(QObject *parent) : QObject{parent}
     this->p=new ApplicationPvt{this};
 }
 
-Application::~Application()
-{
-    dPvt();
-    delete&p;
-}
-
 QVariant Application::settings_SERVER()const
 {
-    dPvt();
-    auto vList=p.settings_SERVER();
+    auto vList=p->settings_SERVER();
     return vList;
 }
 
 QRpc::ServiceManager &Application::manager()
 {
-    dPvt();
-    return p.manager;
+    return p->manager;
 }
 
 int Application::exec(QCoreApplication&a)
 {
-    dPvt();
-    p.circuitBreaker.setSettings(constsApplicationBase->circuit_breaker.toHash());
-    if(p.circuitBreaker.start())
-        p.circuitBreaker.print();
+    p->circuitBreaker.setSettings(staticApplicationBase->circuit_breaker.toHash());
+    if(p->circuitBreaker.start())
+        p->circuitBreaker.print();
     return a.exec();
 }
 
@@ -141,15 +135,13 @@ const QUuid &Application::instanceUuid()
 
 QVariantHash &Application::arguments()const
 {
-    dPvt();
-    return p.arguments();
+    return p->arguments();
 }
 
 Application&Application::printArguments()
 {
 #if QAPR_LOG
-    dPvt();
-    QHashIterator<QString, QVariant> i(p.__arguments);
+    QHashIterator<QString, QVariant> i(p->__arguments);
     while (i.hasNext()) {
         i.next();
         sInfo()<<qsl("%1 : %2").arg(i.key(), i.value().toString());
@@ -160,15 +152,18 @@ Application&Application::printArguments()
 
 Application &Application::resourceExtract()
 {
-    dPvt();
-    p.resourceExtract();
+    p->resourceExtract();
     return*this;
 }
 
-QApr::CircuitBreaker &Application::circuitBreaker()
+CircuitBreaker &Application::circuitBreaker()
 {
-    dPvt();
-    return p.circuitBreaker;
+    return p->circuitBreaker;
+}
+
+Settings &Application::settings()
+{
+    return p->settings;
 }
 
 }

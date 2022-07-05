@@ -7,9 +7,10 @@
 #include "./qapr_global.h"
 #include "./qapr_consts.h"
 #include "./qapr_circuit_breaker.h"
+#include "./qapr_settings.h"
 
 namespace QApr {
-
+class ApplicationPvt;
 //!
 //! \brief The Application class
 //!
@@ -19,7 +20,6 @@ class Q_APR_EXPORT Application : public QObject
     QORM_SERVER_CONNECTION_MANAGER_SUPPORT(Application)
 public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
-    ~Application();
 
     //!
     //! \brief settings_SERVER
@@ -31,7 +31,7 @@ public:
     //! \brief manager
     //! \return
     //!configuracoes para servicos
-    virtual QRpc::ServiceManager&manager();
+    virtual QRpc::ServiceManager &manager();
 
     //!
     //! \brief exec
@@ -44,13 +44,13 @@ public:
     //! \brief instance
     //! \return
     //!
-    static Application&instance();
+    static Application &instance();
 
     //!
     //! \brief i
     //! \return
     //!
-    static Application&i();
+    static Application &i();
 
     //!
     //! \brief memoryUsage
@@ -86,10 +86,16 @@ public:
     //! \brief circuitBreaker
     //! \return
     //!
-    virtual QApr::CircuitBreaker&circuitBreaker();
+    virtual CircuitBreaker &circuitBreaker();
+
+    //!
+    //! \brief settings
+    //! \return
+    //!
+    virtual Settings &settings();
 
 private:
-    void*p=nullptr;
+    ApplicationPvt *p=nullptr;
 };
 
 }
