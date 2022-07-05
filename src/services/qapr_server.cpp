@@ -1,8 +1,5 @@
 #include "./qapr_server.h"
 #include "../application/qapr_application.h"
-#include <QCoreApplication>
-#include <QFile>
-#include <QMutex>
 
 namespace QApr {
 

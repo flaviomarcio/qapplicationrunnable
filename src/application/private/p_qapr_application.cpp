@@ -21,13 +21,12 @@ static void startSettings()
     for(auto&settingFile: settingFiles){
         if(manager.load(settingFile)){
             i.settings().setValues(settingFile);
+            i.connectionManager().load(settingFile);
+            if(!i.connectionManager().isLoaded())
+                sWarning()<<qtr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
             break;
         }
     }
-
-    if(!i.connectionManager().isLoaded())
-        sWarning()<<qtr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
-
 }
 
 static void startUp(Application &i)
