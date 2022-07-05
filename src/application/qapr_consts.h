@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./qapr_global.h"
+#include "./qapr_macro.h"
 #include <QCoreApplication>
 #include <QObject>
 #include <QString>

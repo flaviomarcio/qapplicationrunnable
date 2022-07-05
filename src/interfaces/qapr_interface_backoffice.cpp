@@ -1,4 +1,5 @@
 #include "./qapr_interface_backoffice.h"
+#include "../application/qapr_startup.h"
 #include "../../../qorm/src/qorm_transaction.h"
 #include "../application/qapr_application.h"
 #include "../mvc/qapr_controller_backoffice.h"
@@ -33,7 +34,7 @@ static void init()
 #endif
 }
 
-Q_COREAPP_STARTUP_FUNCTION(init);
+Q_APR_STARTUP_FUNCTION(init)
 
 class InterfaceBackOfficePvt
 {

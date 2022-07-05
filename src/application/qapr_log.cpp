@@ -1,5 +1,7 @@
 #include "./private/p_qapr_log.h"
 #include "./qapr_log.h"
+#include "./qapr_startup.h"
+#include "./qapr_application.h"
 
 namespace QApr {
 
@@ -20,7 +22,7 @@ static void init()
     QApr::Log::enabled();
 }
 
-Q_COREAPP_STARTUP_FUNCTION(init)
+Q_APR_STARTUP_FUNCTION(init)
 
 Log::Log(QObject *parent) : QObject{parent}
 {

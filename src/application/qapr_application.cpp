@@ -1,4 +1,5 @@
 #include "./qapr_application.h"
+#include "./qapr_startup.h"
 #include "./private/p_qapr_application.h"
 #include <QProcess>
 #include <QJsonDocument>
@@ -6,15 +7,11 @@
 
 namespace QApr {
 
-struct PSInfo{
-public:
-    QVariant USER,PID,CPU_percent, MEM_percent, VSZ, RSS , TTY , STAT, START;
-};
 
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QMutex, ____mutex);
 
-struct ConstsApplicationBase
+struct StructApplicationBase
 {
     QRpc::ServiceSetting circuit_breaker;
     void init()
@@ -26,22 +23,23 @@ struct ConstsApplicationBase
     }
 };
 
-Q_GLOBAL_STATIC(ConstsApplicationBase, staticApplicationBase)
+Q_GLOBAL_STATIC(StructApplicationBase, staticApplicationBase)
 
-static void initApp(Application &i)
-{
+static void startUp(Application &i)
+{   
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif
-    auto settingFile=i.settings_SERVER();
+    auto settingFiles=i.settings_SERVER();
     auto &manager=i.manager();
-    manager.load(settingFile);
-    staticApplicationBase->init();
-    auto &cnn=i.connectionManager();
-    if(!cnn.isLoaded())
-        sWarning()<<qtr("Connection manager is not loaded");
-
-    i.settings().setValues(settingFile);
+    for(auto&settingFile: settingFiles){
+        manager.load(settingFile);
+        staticApplicationBase->init();
+        auto &cnn=i.connectionManager();
+        if(!cnn.isLoaded())
+            sWarning()<<qtr("Connection manager is not loaded for %1").arg(settingFile);
+        i.settings().setValues(settingFile);
+    }
 }
 
 static bool initCheck=false;
@@ -55,21 +53,20 @@ static void init()
     if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
         return;
 
-    initApp(*staticInstance);
+    startUp(*staticInstance);
     initCheck=true;
 }
 
-Q_COREAPP_STARTUP_FUNCTION(init)
+Q_APR_STARTUP_FUNCTION(init)
 
 Application::Application(QObject *parent) : QObject{parent}
 {
     this->p=new ApplicationPvt{this};
 }
 
-QVariant Application::settings_SERVER()const
+QStringList &Application::settings_SERVER()const
 {
-    auto vList=p->settings_SERVER();
-    return vList;
+    return p->settings_SERVER();
 }
 
 QRpc::ServiceManager &Application::manager()
@@ -77,7 +74,7 @@ QRpc::ServiceManager &Application::manager()
     return p->manager;
 }
 
-int Application::exec(QCoreApplication&a)
+int Application::exec(QCoreApplication &a)
 {
     p->circuitBreaker.setSettings(staticApplicationBase->circuit_breaker.toHash());
     if(p->circuitBreaker.start())

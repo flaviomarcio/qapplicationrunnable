@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QObject>
+#include "../../../qstm/src/qstm_startup.h"
 #include "../../../qrpc/src/qrpc_service_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_global.h"
@@ -11,6 +12,7 @@
 
 namespace QApr {
 class ApplicationPvt;
+
 //!
 //! \brief The Application class
 //!
@@ -25,7 +27,7 @@ public:
     //! \brief settings_SERVER
     //! \return
     //!
-    Q_INVOKABLE virtual QVariant settings_SERVER() const;
+    Q_INVOKABLE virtual QStringList &settings_SERVER() const;
 
     //!
     //! \brief manager

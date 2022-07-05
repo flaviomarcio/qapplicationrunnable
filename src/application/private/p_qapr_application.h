@@ -15,7 +15,7 @@ class ApplicationPvt:public QObject{
     Q_OBJECT
 public:
     QApr::CircuitBreaker circuitBreaker;
-    QVariant _settings_SERVER;
+    QStringList _settings_SERVER;
     QVariantHash __arguments;
     QRpc::ServiceManager manager;
     Application*application=nullptr;
@@ -31,9 +31,9 @@ public:
         this->application=parent;
     }
 
-    QVariant settings_SERVER()
+    QStringList &settings_SERVER()
     {
-        if(!_settings_SERVER.isNull())
+        if(!_settings_SERVER.isEmpty())
             return this->_settings_SERVER;
         QStringList vList;
         {
