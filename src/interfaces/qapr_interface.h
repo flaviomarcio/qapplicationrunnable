@@ -100,11 +100,6 @@ public:
     Q_INVOKABLE explicit Interface(QObject *parent = nullptr);
 
     //!
-    //! \brief ~InterfaceDatabase
-    //!
-    ~Interface();
-
-    //!
     //! \brief backOfficeMenu
     //! \return
     //!
