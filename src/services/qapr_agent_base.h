@@ -81,10 +81,10 @@ public:
     virtual QVariantHash &stats();
 
     //!
-    //! \brief settings_SERVER
+    //! \brief resourceSettings
     //! \return
     //!server setting file
-    Q_INVOKABLE static const QVariant settings_SERVER();
+    Q_INVOKABLE static const QVariant resourceSettings();
 
 signals:
 

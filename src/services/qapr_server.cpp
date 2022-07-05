@@ -20,7 +20,7 @@ public:
     }
 };
 
-Server::Server(QObject *parent) : QRpc::Server(Application::instance().settings_SERVER(), parent)
+Server::Server(QObject *parent) : QRpc::Server(Application::instance().resourceSettings(), parent)
 {
     this->p=new ServerPvt{this};
 }
@@ -31,9 +31,9 @@ Server::~Server()
     delete&p;
 }
 
-const QVariant Server::settings_SERVER()
+const QVariant Server::resourceSettings()
 {
-    return QApr::Application::instance().settings_SERVER();
+    return QApr::Application::instance().resourceSettings();
 }
 
 }

@@ -13,11 +13,11 @@
 #define settings_HOME_DIR qsl("%1/qtreforce.files").arg(QDir::homePath())
 
 #ifdef Q_APR_TEST
-#define settings_SERVER_FILE qsl("settings.test.json")
+#define resourceSettings_FILE qsl("settings.test.json")
 #elif QT_NO_DEBUG
-#define settings_SERVER_FILE qsl("settings.release.json")
+#define resourceSettings_FILE qsl("settings.release.json")
 #else
-#define settings_SERVER_FILE qsl("settings.debug.json")
+#define resourceSettings_FILE qsl("settings.debug.json")
 #endif
 
 #define CORE_OBJECT_INSTANCE(staticType)\

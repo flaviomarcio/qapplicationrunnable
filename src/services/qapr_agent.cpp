@@ -148,9 +148,9 @@ Agent::~Agent()
     delete&p;
 }
 
-const QVariant Agent::settings_SERVER()
+const QVariant Agent::resourceSettings()
 {
-    return QApr::Application::instance().settings_SERVER();
+    return QApr::Application::instance().resourceSettings();
 }
 
 void Agent::run()

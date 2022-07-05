@@ -238,9 +238,9 @@ QVariantHash &AgentBase::stats()
     return p.stats;
 }
 
-const QVariant AgentBase::settings_SERVER()
+const QVariant AgentBase::resourceSettings()
 {
-    return QApr::Application::instance().settings_SERVER();
+    return QApr::Application::instance().resourceSettings();
 }
 
 

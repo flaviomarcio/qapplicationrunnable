@@ -24,10 +24,10 @@ public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
 
     //!
-    //! \brief settings_SERVER
+    //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE virtual QStringList &settings_SERVER() const;
+    Q_INVOKABLE virtual QVariant resourceSettings() const;
 
     //!
     //! \brief manager

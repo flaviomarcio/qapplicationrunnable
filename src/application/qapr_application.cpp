@@ -9,52 +9,43 @@ namespace QApr {
 
 
 Q_GLOBAL_STATIC(Application, staticInstance);
-Q_GLOBAL_STATIC(QMutex, ____mutex);
+Q_GLOBAL_STATIC(QRpc::ServiceSetting, circuitBreakerSettings)
 
-struct StructApplicationBase
+static void startCircuitBreaker()
 {
-    QRpc::ServiceSetting circuit_breaker;
-    void init()
-    {
-        auto &manager=staticInstance->manager();
-        circuit_breaker=manager.setting(qsl("circuit-breaker"));
-        if(!circuit_breaker.isValid())
-            circuit_breaker=manager.setting(qsl("circuit_breaker"));
-    }
-};
+    auto &manager=staticInstance->manager();
+    *circuitBreakerSettings=manager.setting(qsl("circuit-breaker"));
+}
 
-Q_GLOBAL_STATIC(StructApplicationBase, staticApplicationBase)
+static void startSettings()
+{
+    auto&i=*staticInstance;
+    auto settingFiles=i.resourceSettings().toStringList();
+    auto &manager=i.manager();
+    for(auto&settingFile: settingFiles){
+        if(manager.load(settingFile)){
+            i.settings().setValues(settingFile);
+            break;
+        }
+    }
+    auto &cnn=i.connectionManager();
+    if(!cnn.isLoaded())
+        sWarning()<<qtr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
+
+}
 
 static void startUp(Application &i)
 {   
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif
-    auto settingFiles=i.settings_SERVER();
-    auto &manager=i.manager();
-    for(auto&settingFile: settingFiles){
-        manager.load(settingFile);
-        staticApplicationBase->init();
-        auto &cnn=i.connectionManager();
-        if(!cnn.isLoaded())
-            sWarning()<<qtr("Connection manager is not loaded for %1").arg(settingFile);
-        i.settings().setValues(settingFile);
-    }
+    startSettings();
+    startCircuitBreaker();
 }
 
-static bool initCheck=false;
 static void init()
 {
-    if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
-        return;
-
-    QMutexLOCKER locker(____mutex);//em caso de chamada direta do instance ele vai controlar o acesso
-
-    if(initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
-        return;
-
     startUp(*staticInstance);
-    initCheck=true;
 }
 
 Q_APR_STARTUP_FUNCTION(init)
@@ -64,9 +55,9 @@ Application::Application(QObject *parent) : QObject{parent}
     this->p=new ApplicationPvt{this};
 }
 
-QStringList &Application::settings_SERVER()const
+QVariant Application::resourceSettings()const
 {
-    return p->settings_SERVER();
+    return p->resourceSettings();
 }
 
 QRpc::ServiceManager &Application::manager()
@@ -76,7 +67,7 @@ QRpc::ServiceManager &Application::manager()
 
 int Application::exec(QCoreApplication &a)
 {
-    p->circuitBreaker.setSettings(staticApplicationBase->circuit_breaker.toHash());
+    p->circuitBreaker.setSettings(circuitBreakerSettings->toHash());
     if(p->circuitBreaker.start())
         p->circuitBreaker.print();
     return a.exec();
@@ -84,8 +75,6 @@ int Application::exec(QCoreApplication &a)
 
 Application &Application::instance()
 {
-    if(!initCheck)//em caso de chamada direta do instance ele vai controlar o acesso
-        init();
     return*staticInstance;
 }
 
@@ -138,7 +127,7 @@ QVariantHash &Application::arguments()const
 Application&Application::printArguments()
 {
 #if QAPR_LOG
-    QHashIterator<QString, QVariant> i(p->__arguments);
+    QHashIterator<QString, QVariant> i(p->_arguments);
     while (i.hasNext()) {
         i.next();
         sInfo()<<qsl("%1 : %2").arg(i.key(), i.value().toString());

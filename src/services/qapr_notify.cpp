@@ -137,9 +137,9 @@ Notify::~Notify()
     delete&p;
 }
 
-const QVariant Notify::settings_SERVER()
+const QVariant Notify::resourceSettings()
 {
-    return QApr::Application::instance().settings_SERVER();
+    return QApr::Application::instance().resourceSettings();
 }
 
 void Notify::run()

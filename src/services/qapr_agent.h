@@ -34,10 +34,10 @@ public:
     ~Agent();
 
     //!
-    //! \brief settings_SERVER
+    //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE static const QVariant settings_SERVER();
+    Q_INVOKABLE static const QVariant resourceSettings();
 
     //!
     //! \brief run

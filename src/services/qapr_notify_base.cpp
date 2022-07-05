@@ -80,9 +80,9 @@ void NotifyBase::setNotifyName(const QVariant &v)
     this->setObjectName(objectName);
 }
 
-const QVariant NotifyBase::settings_SERVER()
+const QVariant NotifyBase::resourceSettings()
 {
-    return QApr::Application::instance().settings_SERVER();
+    return QApr::Application::instance().resourceSettings();
 }
 
 void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payload){

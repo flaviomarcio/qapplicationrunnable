@@ -26,10 +26,10 @@ public:
     ~Server();
 
     //!
-    //! \brief settings_SERVER
+    //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE const QVariant settings_SERVER();
+    Q_INVOKABLE const QVariant resourceSettings();
 private:
     void*p=nullptr;
 };

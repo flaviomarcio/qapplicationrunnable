@@ -14,16 +14,18 @@ Q_GLOBAL_STATIC(QString, applicationSettingDir)
 class ApplicationPvt:public QObject{
     Q_OBJECT
 public:
-    QApr::CircuitBreaker circuitBreaker;
-    QStringList _settings_SERVER;
-    QVariantHash __arguments;
-    QRpc::ServiceManager manager;
     Application*application=nullptr;
+    QStringList _resourceSettings;
+    QVariantHash _arguments;
+    QRpc::ServiceManager manager;
     Settings settings;
+    QApr::CircuitBreaker circuitBreaker;
 
     explicit ApplicationPvt(Application*parent=nullptr)
         :
           QObject{parent},
+          manager{parent},
+          settings{parent},
           circuitBreaker{parent}
     {
         if(applicationSettingDir->isEmpty())
@@ -31,26 +33,27 @@ public:
         this->application=parent;
     }
 
-    QStringList &settings_SERVER()
+    QStringList &resourceSettings()
     {
-        if(!_settings_SERVER.isEmpty())
-            return this->_settings_SERVER;
+        if(!_resourceSettings.isEmpty())
+            return this->_resourceSettings;
+
         QStringList vList;
         {
             auto settingsFile=qsl("%1.json").arg(qApp->applicationFilePath());
             if(!QFile::exists(settingsFile))
-                settingsFile=qsl("%1/%2").arg(*applicationSettingDir, settings_SERVER_FILE);
+                settingsFile=qsl("%1/%2").arg(*applicationSettingDir, resourceSettings_FILE);
 
             if(QFile::exists(settingsFile))
                 vList.append(settingsFile);
         }
 
         {
-            auto settingsFile=qsl("%1/%2/%3.json").arg(settings_HOME_DIR, qAppName(), settings_SERVER_FILE);
+            auto settingsFile=qsl("%1/%2/%3.json").arg(settings_HOME_DIR, qAppName(), resourceSettings_FILE);
             if(QFile::exists(settingsFile))
                 vList.append(settingsFile);
         }
-        return (this->_settings_SERVER=vList);
+        return (this->_resourceSettings=vList);
     }
 
     static void resourceExtract()
@@ -91,10 +94,10 @@ public:
         }
     }
 
-    QVariantHash&arguments()
+    QVariantHash &arguments()
     {
-        if(!__arguments.isEmpty())
-            return __arguments;
+        if(!_arguments.isEmpty())
+            return _arguments;
 
         for(auto &v:qApp->arguments()){
             auto l=v.split(qsl("="));
@@ -104,21 +107,21 @@ public:
             if(l.size()==1){
                 auto key=l.first();
                 auto value=l.last();
-                __arguments[key]=value;
+                _arguments[key]=value;
                 continue;
             }
 
             auto key=l.first().toLower();
             auto value=l.last();
-            __arguments[key]=value;
+            _arguments[key]=value;
         }
 
         QHashIterator<QString, QVariant> i(manager.arguments());
         while (i.hasNext()) {
             i.next();
-            __arguments[i.key()]=i.value();
+            _arguments[i.key()]=i.value();
         }
-        return __arguments;
+        return _arguments;
     }
 };
 
