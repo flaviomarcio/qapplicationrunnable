@@ -142,12 +142,6 @@ Agent::Agent(QObject*parent):QThread{nullptr}
     this->p = new AgentPvt{this};
 }
 
-Agent::~Agent()
-{
-    dPvt();
-    delete&p;
-}
-
 const QVariant Agent::resourceSettings()
 {
     return QApr::Application::instance().resourceSettings();

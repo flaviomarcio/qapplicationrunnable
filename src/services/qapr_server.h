@@ -5,7 +5,7 @@
 #include "../application/qapr_global.h"
 
 namespace QApr {
-
+class ServerPvt;
 //!
 //! \brief The Server class
 //!
@@ -21,16 +21,11 @@ public:
     Q_INVOKABLE explicit Server(QObject *parent = nullptr);
 
     //!
-    //! \brief ~Server
-    //!
-    ~Server();
-
-    //!
     //! \brief resourceSettings
     //! \return
     //!
     Q_INVOKABLE const QVariant resourceSettings();
 private:
-    void*p=nullptr;
+    ServerPvt *p=nullptr;
 };
 }

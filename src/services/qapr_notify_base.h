@@ -10,7 +10,7 @@
 #include "../../../qorm/src/qorm_connection_manager.h"
 
 namespace QApr {
-
+class NotifyBasePvt;
 class Notify;
 
 //!
@@ -83,6 +83,6 @@ signals:
     //!
     void notifyReceived(const QString &channel, const QVariant&payload);
 private:
-    void*p=nullptr;
+    NotifyBasePvt *p=nullptr;
 };
 }

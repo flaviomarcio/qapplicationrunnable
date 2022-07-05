@@ -13,7 +13,7 @@
 namespace QApr {
 
 class Agent;
-
+class AgentBasePvt;
 //!
 //! \brief The AgentBase class
 //!
@@ -27,11 +27,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit AgentBase(QObject*parent=nullptr);
-
-    //!
-    //! \brief ~AgentBase
-    //!
-    ~AgentBase();
 
     //!
     //! \brief agentSetting
@@ -99,6 +94,6 @@ signals:
 
     void taskResume();
 private:
-    void*p=nullptr;
+    AgentBasePvt *p=nullptr;
 };
 }

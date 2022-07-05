@@ -164,11 +164,6 @@ AgentBase::AgentBase(QObject *parent):QThread{nullptr}
     QObject::connect(this, &AgentBase::serviceStart, &p, &AgentBasePvt::onServiceRun);
 }
 
-AgentBase::~AgentBase()
-{
-    dPvt();
-    delete&p;
-}
 
 QRpc::ServiceSetting &AgentBase::agentSetting()
 {

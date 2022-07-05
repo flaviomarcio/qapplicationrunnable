@@ -13,7 +13,7 @@
 const auto agentRegistered##AgentClass = QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, QByteArrayLiteral(#methodName));
 
 namespace QApr{
-
+class AgentPvt;
 //!
 //! \brief The Agent class
 //!
@@ -27,11 +27,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit Agent(QObject*parent=nullptr);
-
-    //!
-    //! \brief ~Agent
-    //!
-    ~Agent();
 
     //!
     //! \brief resourceSettings
@@ -84,7 +79,7 @@ public:
     //!
     virtual bool notifySettingsChanged(const QVariant &payload);
 private:
-    void*p=nullptr;
+    AgentPvt *p=nullptr;
 signals:
     //!
     //! \brief settingChanged

@@ -13,6 +13,7 @@
 static QApr::NotifyDispatch&methodName##_dispatch = QApr::Notify::instance().dispatcherRegister(NotifyClass::staticMetaObject, QByteArrayLiteral(#methodName));
 
 namespace QApr{
+class NotifyPvt;
 //!
 //! \brief The Notify class
 //!
@@ -76,7 +77,7 @@ public:
     virtual bool notify(const QString &channel, const QVariant&payload);
 
 private:
-    void*p=nullptr;
+    NotifyPvt *p=nullptr;
 };
 
 //static auto &NotifyApp=Notify::instance();

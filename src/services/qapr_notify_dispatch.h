@@ -4,11 +4,11 @@
 #include "../application/qapr_global.h"
 
 namespace QApr{
-
+class NotifyDispatchPvt;
 //!
 //! \brief The NotifyDispatch class
 //!
-class Q_APR_EXPORT NotifyDispatch// : public QObject
+class Q_APR_EXPORT NotifyDispatch : public QObject
 {
 public:
     //!
@@ -24,11 +24,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit NotifyDispatch(const QByteArray&name, const QByteArray&md5, QObject*parent=nullptr);
-
-    //!
-    //! \brief ~NotifyDispatch
-    //!
-    ~NotifyDispatch();
 
     //!
     //! \brief clear
@@ -73,7 +68,7 @@ public:
     static void notify(const QString &channel, const QVariant&payload);
 
 private:
-    void*p=nullptr;
+    NotifyDispatchPvt *p=nullptr;
 };
 
 //static auto &NotifyApp=Notify::instance();

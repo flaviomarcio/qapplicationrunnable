@@ -7,26 +7,26 @@ namespace QApr {
 #define dPvt()\
     auto &p = *reinterpret_cast<NotifyDispatchPvt*>(this->p)
 
-class NotifyDispatchPvt//:public QObject
+class NotifyDispatchPvt:public QObject
 {
 public:
     QByteArray channel;
     QByteArray md5;
     NotifyDispatch*parent=nullptr;
     VariantUtil vu;
-    explicit NotifyDispatchPvt(NotifyDispatch*parent=nullptr)//:QObject(parent)
+    explicit NotifyDispatchPvt(NotifyDispatch*parent=nullptr):QObject{parent}
     {
         this->parent=parent;
     }
 };
 
-NotifyDispatch::NotifyDispatch(QObject *parent)//:QObject(parent)
+NotifyDispatch::NotifyDispatch(QObject *parent):QObject{parent}
 {
     Q_UNUSED(parent)
     this->p= new NotifyDispatchPvt{this};
 }
 
-NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QObject *parent)//QObject(parent)
+NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QObject *parent):QObject{parent}
 {
     Q_UNUSED(parent)
     this->p= new NotifyDispatchPvt{this};
@@ -35,10 +35,6 @@ NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QO
     p.md5=md5;
 }
 
-NotifyDispatch::~NotifyDispatch(){
-    dPvt();
-    delete&p;
-}
 
 void NotifyDispatch::clear()
 {

@@ -6,29 +6,17 @@
 
 namespace QApr {
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<ServerPvt*>(this->p)
-
-class ServerPvt{
+class ServerPvt:public QObject{
 public:
-    explicit ServerPvt(Server*parent=nullptr)
+    explicit ServerPvt(Server*parent=nullptr):QObject{parent}
     {
         Q_UNUSED(parent)
     }
-    virtual ~ServerPvt()
-    {
-    }
 };
 
-Server::Server(QObject *parent) : QRpc::Server(Application::instance().resourceSettings(), parent)
+Server::Server(QObject *parent) : QRpc::Server{Application::instance().resourceSettings(), parent}
 {
     this->p=new ServerPvt{this};
-}
-
-Server::~Server()
-{
-    dPvt();
-    delete&p;
 }
 
 const QVariant Server::resourceSettings()
