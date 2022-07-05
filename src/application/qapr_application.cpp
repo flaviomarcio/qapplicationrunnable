@@ -67,9 +67,12 @@ QRpc::ServiceManager &Application::manager()
 
 int Application::exec(QCoreApplication &a)
 {
-    p->circuitBreaker.setSettings(circuitBreakerSettings->toHash());
-    if(p->circuitBreaker.start())
-        p->circuitBreaker.print();
+    if(circuitBreakerSettings->enabled()){
+        p->circuitBreaker=new CircuitBreaker{this};
+        p->circuitBreaker->setSettings(circuitBreakerSettings->toHash());
+        if(p->circuitBreaker->start())
+            p->circuitBreaker->print();
+    }
     return a.exec();
 }
 
@@ -124,7 +127,7 @@ QVariantHash &Application::arguments()const
     return p->arguments();
 }
 
-Application&Application::printArguments()
+Application &Application::printArguments()
 {
 #if QAPR_LOG
     QHashIterator<QString, QVariant> i(p->_arguments);
@@ -144,7 +147,7 @@ Application &Application::resourceExtract()
 
 CircuitBreaker &Application::circuitBreaker()
 {
-    return p->circuitBreaker;
+    return *p->circuitBreaker;
 }
 
 Settings &Application::settings()
