@@ -58,14 +58,14 @@ public:
     //! \brief notify
     //! \param payload
     //!
-    void notify(const QVariant&payload);
+    void notify(const QVariant &payload);
 
     //!
     //! \brief notify
     //! \param channel
     //! \param payload
     //!
-    static void notify(const QString &channel, const QVariant&payload);
+    static void notify(const QString &channel, const QVariant &payload);
 
 private:
     NotifyDispatchPvt *p=nullptr;

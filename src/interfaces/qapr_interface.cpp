@@ -5,26 +5,28 @@
 
 namespace QApr {
 
-#define dPvt() auto &p = *reinterpret_cast<InterfaceDatabasePvt *>(this->p)
-
-class InterfaceDatabasePvt
+class InterfacePvt:public QObject
 {
 public:
-    bool connectionDb = true;
-    bool transactionRollbackForce = false;
+    QRpc::Controller *parent = nullptr;
     QOrm::Transaction transaction;
     QOrm::ConnectionPool pool;
-    QRpc::Controller *parent = nullptr;
     Session session;
-    explicit InterfaceDatabasePvt(QRpc::Controller *parent)
-        : transaction{parent},
+    bool connectionDb = true;
+    bool transactionRollbackForce = false;
+    explicit InterfacePvt(QRpc::Controller *parent)
+        : QObject{parent},
+          transaction{parent},
           pool{QApr::Application::i().pool()},
           session{parent}
     {
         this->parent = parent;
     }
 
-    virtual ~InterfaceDatabasePvt() { transaction.rollback(); }
+    virtual ~InterfacePvt()
+    {
+        transaction.rollback();
+    }
 
     auto &credentials() { return this->session.credential(); }
 };
@@ -32,14 +34,9 @@ public:
 Interface::Interface(QObject *parent)
     : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
 {
-    this->p = new InterfaceDatabasePvt{this};
+    this->p = new InterfacePvt{this};
 }
 
-Interface::~Interface()
-{
-    dPvt();
-    delete &p;
-}
 
 QVariantList Interface::backOfficeMenu() const
 {
@@ -78,14 +75,13 @@ QVariant Interface::businessCheck()
 
 Session &Interface::sessionObject()
 {
-    dPvt();
-    return p.session;
+    return p->session;
 }
 
 const SessionCredential &Interface::credential()
 {
-    dPvt();
-    return p.credentials();
+
+    return p->credentials();
 }
 
 bool Interface::requestBeforeInvoke()
@@ -103,12 +99,12 @@ bool Interface::requestBeforeInvoke()
     auto dbReadOnly = notations.contains(this->dbReadOnly);
     auto dbTransaction = !notations.contains(this->dbNoTransaction);
 
-    dPvt();
-    auto &pool = p.pool;
+
+    auto &pool = p->pool;
 
     QSqlDatabase connection;
 
-    auto connectionCreate = [this, &p, &dbTransaction, &dbReadOnly, &pool, &connection]() {
+    auto connectionCreate = [this, &dbTransaction, &dbReadOnly, &pool, &connection]() {
         auto dbSuccess = dbReadOnly ? (pool.getReadOnly(connection)) : (pool.get(connection));
 
         if (!dbSuccess) //normal connection
@@ -123,7 +119,7 @@ bool Interface::requestBeforeInvoke()
         if (!this->setConnection(connection))
             return false;
 
-        if (!p.transaction.transaction()) //transation
+        if (!p->transaction.transaction()) //transation
             return false;
 
         return true;
@@ -143,53 +139,48 @@ bool Interface::requestAfterInvoke()
     if (!QRpc::Controller::requestAfterInvoke())
         return {};
 
-    dPvt();
     auto connection = this->connection();
     if (!connection.isValid())
         return {};
 
-    auto finish = [&p, this]() {
-        if (p.transactionRollbackForce) {
-            p.transaction.rollback(); //rollback obrigatorio
+    auto finish = [this]() {
+        if (p->transactionRollbackForce) {
+            p->transaction.rollback(); //rollback obrigatorio
             return;
         }
         if (this->rq().co().isOK()) {
-            p.transaction.commit();
+            p->transaction.commit();
             return;
         }
-        p.transaction.rollback();
+        p->transaction.rollback();
     };
 
     finish();
     connection.close();
-    p.pool.finish(connection);
+    p->pool.finish(connection);
 
     return true;
 }
 
 bool Interface::connectionDb() const
 {
-    dPvt();
-    return p.connectionDb;
+    return p->connectionDb;
 }
 
 Interface &Interface::setConnectionDb(bool value)
 {
-    dPvt();
-    p.connectionDb = value;
+    p->connectionDb = value;
     return *this;
 }
 
 bool Interface::transactionRollbackForce() const
 {
-    dPvt();
-    return p.transactionRollbackForce;
+    return p->transactionRollbackForce;
 }
 
 Interface &Interface::setTransactionRollbackForce(bool value)
 {
-    dPvt();
-    p.transactionRollbackForce = value;
+    p->transactionRollbackForce = value;
     return *this;
 }
 

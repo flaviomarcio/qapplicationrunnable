@@ -7,7 +7,7 @@
 #include <QVariantHash>
 
 namespace QApr {
-
+class MenuObjectPvt;
 //!
 //! \brief The MenuObject class
 //!
@@ -27,11 +27,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit MenuObject(const QVariant &v, QObject *parent = nullptr);
-
-    //!
-    //! \brief ~MenuObject
-    //!
-    ~MenuObject();
 
     //!
     //! \brief build
@@ -162,7 +157,7 @@ public:
     virtual bool isValid() const;
 
 private:
-    void *p = nullptr;
+    MenuObjectPvt *p = nullptr;
 };
 
 } // namespace QApr

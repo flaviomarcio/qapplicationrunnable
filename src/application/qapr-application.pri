@@ -23,6 +23,7 @@ HEADERS += \
 
 
 SOURCES += \
+    $$PWD/private/p_qapr_application.cpp \
     $$PWD/private/p_qapr_circuit_breaker.cpp \
     $$PWD/qapr_host.cpp \
     $$PWD/qapr_circuit_breaker.cpp \

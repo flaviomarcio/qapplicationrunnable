@@ -8,7 +8,7 @@
 #include <QUuid>
 
 namespace QApr {
-
+class ControllerPvt;
 class Interface;
 
 //!
@@ -30,11 +30,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit Controller(const QSqlDatabase&connection, QObject *parent = nullptr);
-
-    //!
-    //! \brief ~Controller
-    //!
-    ~Controller();
 
     //!
     //! \brief resultInfo
@@ -67,7 +62,7 @@ public:
     virtual void setTransactionRollbackForce(bool value);
 
 private:
-    void *p = nullptr;
+    ControllerPvt *p = nullptr;
 };
 
 }

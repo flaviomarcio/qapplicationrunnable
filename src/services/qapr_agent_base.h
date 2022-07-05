@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QMap>
 #include <QVariant>
-#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_consts.h"
@@ -86,7 +86,7 @@ signals:
     void serviceStart();
 
 
-    void taskError(const QByteArray&agentName, const QVariant&error);
+    void taskError(const QByteArray&agentName, const QVariant &error);
 
 
     void taskFinished(const QByteArray&agentName);

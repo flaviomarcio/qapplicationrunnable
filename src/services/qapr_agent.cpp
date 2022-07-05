@@ -144,7 +144,7 @@ Agent::Agent(QObject*parent):QThread{nullptr}
 
 const QVariant Agent::resourceSettings()
 {
-    return QApr::Application::instance().resourceSettings();
+    return QApr::Application::i().resourceSettings();
 }
 
 void Agent::run()
@@ -205,7 +205,7 @@ bool Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &serv
     return p.serviceRegister(metaObject, service);
 }
 
-bool Agent::notifySettingsChanged(const QVariant&payload)
+bool Agent::notifySettingsChanged(const QVariant &payload)
 {
     dPvt();
     return p.connectionNotify.notify_send(p.topicSetting, payload);

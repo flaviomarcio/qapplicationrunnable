@@ -8,35 +8,32 @@ namespace QApr {
 #define dPvt()\
     auto &p = *reinterpret_cast<ControllerPvt*>(this->p)
 
-class ControllerPvt{
+class ControllerPvt:public QObject{
 public:
     Controller*parent=nullptr;
-    Interface*request_=nullptr;
+    Interface*request=nullptr;
     QVariantHash accountModel;
 
-    explicit ControllerPvt(Controller*parent)
+    explicit ControllerPvt(Controller*parent):QObject{parent}
     {
         this->parent=parent;
     }
-
-    virtual ~ControllerPvt()
+    Interface *req()
     {
-    }
+        if(this->request==nullptr)
+            return this->request;
 
-    Interface*request()
-    {
-        if(this->request_==nullptr){
-            QObject*__parent=this->parent;
-            while(__parent!=nullptr){
-                if(__parent->metaObject()->inherits(&Interface::staticMetaObject)){
-                    request_=dynamic_cast<Interface*>(__parent);
-                    if(request_!=nullptr)
-                        break;
-                }
-                __parent=__parent->parent();
-            }
+        QObject*__parent=this->parent;
+        while(__parent!=nullptr){
+            if(!__parent->metaObject()->inherits(&Interface::staticMetaObject))
+                continue;
+
+            request=dynamic_cast<Interface*>(__parent);
+            if(request!=nullptr)
+                break;
+            __parent=__parent->parent();
         }
-        return this->request_;
+        return this->request;
     }
 };
 
@@ -48,12 +45,6 @@ Controller::Controller(QObject *parent) : QOrm::Controller(parent)
 Controller::Controller(const QSqlDatabase &connection, QObject *parent) : QOrm::Controller(connection, parent)
 {
     this->p=new ControllerPvt{this};
-}
-
-Controller::~Controller()
-{
-    dPvt();
-    delete&p;
 }
 
 const QVariant Controller::resultInfo()
@@ -73,34 +64,34 @@ const QVariant Controller::resultInfo()
 
 Interface *Controller::interfaceRequest()
 {
-    dPvt();
-    return p.request();
+
+    return p->req();
 }
 
 Interface *Controller::irq()
 {
-    dPvt();
-    return p.request();
+
+    return p->req();
 }
 
 bool Controller::transactionRollbackForce() const
 {
-    dPvt();
-    if(p.request()==nullptr){
+
+    if(p->req()==nullptr){
         sWarning()<<tr("Request não identificado");
         return false;
     }
-    return p.request()->transactionRollbackForce();
+    return p->req()->transactionRollbackForce();
 }
 
 void Controller::setTransactionRollbackForce(bool value)
 {
-    dPvt();
-    if(p.request()==nullptr){
+
+    if(p->req()==nullptr){
         sWarning()<<tr("Request não identificado");
         return;
     }
-    p.request()->setTransactionRollbackForce(value);
+    p->req()->setTransactionRollbackForce(value);
 }
 
 }

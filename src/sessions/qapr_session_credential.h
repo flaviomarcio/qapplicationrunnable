@@ -6,7 +6,7 @@
 #include "../../../qstm/src/qstm_object.h"
 
 namespace QApr {
-
+class CredentialsPvt;
 //!
 //! \brief The SessionCredential class
 //!
@@ -19,11 +19,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit SessionCredential(QObject *parent = nullptr);
-
-    //!
-    //! \brief ~SessionCredential
-    //!
-    ~SessionCredential();
 
     //!
     //! \brief toVariant
@@ -168,7 +163,7 @@ public:
     virtual SessionCredential&setToken(const QVariant &value);
 
 private:
-    void*p=nullptr;
+    CredentialsPvt *p=nullptr;
 };
 
 }

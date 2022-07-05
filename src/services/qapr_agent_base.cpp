@@ -35,7 +35,7 @@ public slots:
         sInfo()<<"run "<<pp.agentName();
 #endif
         this->runner_date=QDateTime::currentDateTime();
-        auto &cnMng=Application::instance().connectionManager();
+        auto &cnMng=Application::i().connectionManager();
         auto manager=QOrm::ConnectionManager(cnMng, this);
         auto &pool=manager.pool();
         const auto &agentSetting=pp.agentSetting();
@@ -167,7 +167,7 @@ AgentBase::AgentBase(QObject *parent):QThread{nullptr}
 
 QRpc::ServiceSetting &AgentBase::agentSetting()
 {
-    auto &manager=Application::instance().manager();
+    auto &manager=Application::i().manager();
     auto agentName=this->agentName();
     auto &setting=manager.setting(agentName);
     if(!setting.enabled()){
@@ -235,7 +235,7 @@ QVariantHash &AgentBase::stats()
 
 const QVariant AgentBase::resourceSettings()
 {
-    return QApr::Application::instance().resourceSettings();
+    return QApr::Application::i().resourceSettings();
 }
 
 

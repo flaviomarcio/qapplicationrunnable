@@ -14,14 +14,14 @@ public:
     }
 };
 
-Server::Server(QObject *parent) : QRpc::Server{Application::instance().resourceSettings(), parent}
+Server::Server(QObject *parent) : QRpc::Server{Application::i().resourceSettings(), parent}
 {
     this->p=new ServerPvt{this};
 }
 
 const QVariant Server::resourceSettings()
 {
-    return QApr::Application::instance().resourceSettings();
+    return QApr::Application::i().resourceSettings();
 }
 
 }

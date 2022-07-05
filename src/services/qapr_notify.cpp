@@ -9,9 +9,6 @@
 
 namespace QApr {
 
-#define dPvt()\
-    auto &p =*reinterpret_cast<NotifyPvt*>(this->p)
-
 class NotifyPvt: public QObject{
 public:
     QMutex mutexNotify;
@@ -27,11 +24,6 @@ public:
         QObject::connect(&connectionNotify, &QOrm::ConnectionNotify::notification, this, &NotifyPvt::taskReceived);
 
     }
-    virtual ~NotifyPvt()
-    {
-    }
-
-
     void taskRun(const QByteArray&service)
     {
         auto task = this->tasks.value(service);
@@ -131,23 +123,17 @@ Notify::Notify(QObject*parent):QThread{nullptr}
     this->p = new NotifyPvt{this};
 }
 
-Notify::~Notify()
-{
-    dPvt();
-    delete&p;
-}
-
 const QVariant Notify::resourceSettings()
 {
-    return QApr::Application::instance().resourceSettings();
+    return QApr::Application::i().resourceSettings();
 }
 
 void Notify::run()
 {
-    dPvt();
-    if(p.taskStart())
+
+    if(p->taskStart())
         this->exec();
-    p.taskFinish();
+    p->taskFinish();
 }
 
 bool Notify::start()
@@ -178,20 +164,18 @@ bool Notify::stop()
 
 void Notify::serviceStart(const QByteArray&service)
 {
-    dPvt();
-    p.taskRun(service);
+    p->taskRun(service);
 }
 
 NotifyDispatch&Notify::dispatcherRegister(const QMetaObject &metaObject, const QByteArray &name)
 {
-    dPvt();
-    return p.taskRegister(metaObject, name);
+    return p->taskRegister(metaObject, name);
 }
 
 bool Notify::notify(const QString &channel, const QVariant &payload)
 {
-    dPvt();
-    return !this->isRunning()?false:p.taskNotify(channel, payload);
+
+    return !this->isRunning()?false:p->taskNotify(channel, payload);
 }
 
 

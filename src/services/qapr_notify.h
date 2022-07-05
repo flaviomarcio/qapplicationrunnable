@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QThread>
-#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_consts.h"
@@ -28,11 +28,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit Notify(QObject*parent=nullptr);
-
-    //!
-    //! \brief ~Notify
-    //!
-    ~Notify();
 
     //!
     //! \brief resourceSettings
@@ -74,7 +69,7 @@ public:
     //! \param payload
     //! \return
     //!
-    virtual bool notify(const QString &channel, const QVariant&payload);
+    virtual bool notify(const QString &channel, const QVariant &payload);
 
 private:
     NotifyPvt *p=nullptr;

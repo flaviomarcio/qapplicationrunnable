@@ -57,13 +57,13 @@ void CircuitBreakerPvt::onCheck()
         this->onBreak();
     }
 
-    const auto memoryUsage=Application::memoryUsage();
-    const auto &memoryLimitKB=this->memoryLimitKB;
+//    const auto memoryUsage=Application::memoryUsage();
+//    const auto &memoryLimitKB=this->memoryLimitKB;
 
-    if(memoryLimitKB>0 && (memoryUsage > memoryLimitKB)){
-        sWarning()<<qsl("break application by memory limit(limitMem: %1 KB, curMen==%2 KB)").arg(memoryUsage, memoryLimitKB);
-        this->onBreak();
-    }
+//    if(memoryLimitKB>0 && (memoryUsage > memoryLimitKB)){
+//        sWarning()<<qsl("break application by memory limit(limitMem: %1 KB, curMen==%2 KB)").arg(memoryUsage, memoryLimitKB);
+//        this->onBreak();
+//    }
 }
 
 void CircuitBreakerPvt::onBreak()

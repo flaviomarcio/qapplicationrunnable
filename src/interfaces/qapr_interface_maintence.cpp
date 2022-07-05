@@ -7,8 +7,6 @@ InterfaceMaintence::InterfaceMaintence(QObject *parent)
     : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
 {}
 
-InterfaceMaintence::~InterfaceMaintence() {}
-
 QVariant InterfaceMaintence::serverStart()
 {
     this->server()->interfacesStart();

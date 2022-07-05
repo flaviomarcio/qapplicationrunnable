@@ -19,7 +19,7 @@ int MainService::exec(QCoreApplication &a)
     bool RETURN=false;
 
 
-    auto &appInstance=Application::instance();
+    auto &appInstance=Application::i();
 
 
     const auto &arguments = appInstance.arguments();

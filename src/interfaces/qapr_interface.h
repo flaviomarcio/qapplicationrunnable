@@ -10,8 +10,6 @@
 #include <QtSql/QSqlDatabase>
 #include <QtReforce/QMfe>
 
-namespace QApr {
-
 #define QAPR_DECLARE_IRQ() \
 public: \
     Interface *irq() \
@@ -54,6 +52,10 @@ private: \
 \
 public:
 
+
+namespace QApr {
+
+class InterfacePvt;
 //!
 //! \brief The InterfaceDatabase class
 //!
@@ -239,7 +241,7 @@ public:
     virtual Interface &setTransactionRollbackForce(bool value);
 
 private:
-    void *p = nullptr;
+    InterfacePvt *p = nullptr;
 };
 
 } // namespace QApr

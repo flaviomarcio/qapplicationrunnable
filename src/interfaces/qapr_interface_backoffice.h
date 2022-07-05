@@ -46,11 +46,6 @@ public:
     //!
     Q_INVOKABLE explicit InterfaceBackOffice(QObject *parent = nullptr);
 
-    //!
-    //! \brief ~InterfaceBackOffice
-    //!
-    ~InterfaceBackOffice();
-
 #ifdef QTREFORCE_QMFE
 
     //!

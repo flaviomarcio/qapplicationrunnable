@@ -36,7 +36,7 @@ static void init()
 
 Q_APR_STARTUP_FUNCTION(init)
 
-class InterfaceBackOfficePvt
+class InterfaceBackOfficePvt:public QObject
 {
 public:
     bool connectionDb = true;
@@ -46,24 +46,22 @@ public:
     QMfe::Access access;
 
     explicit InterfaceBackOfficePvt(QRpc::Controller *parent)
-        :
+        : QObject{parent},
           transaction{parent},
           access{parent}
     {
         this->parent = parent;
     }
 
-    virtual ~InterfaceBackOfficePvt() { transaction.rollback(); }
+    virtual ~InterfaceBackOfficePvt()
+    {
+        transaction.rollback();
+    }
 };
 
 InterfaceBackOffice::InterfaceBackOffice(QObject *parent) : QApr::Interface(parent)
 {
     this->p = new InterfaceBackOfficePvt{this};
-}
-
-InterfaceBackOffice::~InterfaceBackOffice()
-{
-    delete p;
 }
 
 #ifdef QTREFORCE_QMFE

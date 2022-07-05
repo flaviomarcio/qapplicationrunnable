@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QThread>
 #include "../application/qapr_global.h"
-#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "../application/qapr_consts.h"
 #include "../services/qapr_agent_base.h"

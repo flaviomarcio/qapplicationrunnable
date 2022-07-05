@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include <QObject>
 #include "../../../qstm/src/qstm_startup.h"
-#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_global.h"
 #include "./qapr_consts.h"
@@ -19,7 +19,6 @@ class ApplicationPvt;
 class Q_APR_EXPORT Application : public QObject
 {
     Q_OBJECT
-    QORM_SERVER_CONNECTION_MANAGER_SUPPORT(Application)
 public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
 
@@ -33,7 +32,19 @@ public:
     //! \brief manager
     //! \return
     //!configuracoes para servicos
-    virtual QRpc::ServiceManager &manager();
+    virtual QRpc::SettingManager &manager();
+
+    //!
+    //! \brief connectionManager
+    //! \return
+    //! configuracoes para conexoes com bancos de dados
+    virtual QOrm::ConnectionManager &connectionManager();
+
+    //!
+    //! \brief pool
+    //! \return
+    //!
+    virtual QOrm::ConnectionPool &pool();
 
     //!
     //! \brief exec
@@ -43,22 +54,10 @@ public:
     virtual int exec(QCoreApplication &a);
 
     //!
-    //! \brief instance
-    //! \return
-    //!
-    static Application &instance();
-
-    //!
     //! \brief i
     //! \return
     //!
     static Application &i();
-
-    //!
-    //! \brief memoryUsage
-    //! \return
-    //!
-    static qlonglong memoryUsage();
 
     //!
     //! \brief instanceUuid

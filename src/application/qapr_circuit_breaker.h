@@ -5,7 +5,7 @@
 #include "./qapr_global.h"
 
 namespace QApr {
-
+class CircuitBreakerPvt;
 //!
 //! \brief The CircuitBreaker class
 //!
@@ -18,11 +18,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit CircuitBreaker(QObject *parent = nullptr);
-
-    //!
-    //! \brief ~CircuitBreaker
-    //!
-    ~CircuitBreaker();
 
     //!
     //! \brief settings
@@ -67,7 +62,7 @@ public:
     //!
     virtual bool isRunning();
 private:
-    void*p=nullptr;
+    CircuitBreakerPvt *p=nullptr;
 };
 
 }

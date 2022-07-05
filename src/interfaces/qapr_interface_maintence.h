@@ -51,7 +51,6 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit InterfaceMaintence(QObject *parent = nullptr);
-    ~InterfaceMaintence();
 
     //!
     //! \brief serverStart

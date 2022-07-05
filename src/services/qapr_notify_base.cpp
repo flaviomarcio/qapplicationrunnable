@@ -9,13 +9,9 @@
 
 namespace QApr{
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<NotifyBasePvt*>(this->p)
-
 class NotifyBasePvt:public QObject{
 public:
     NotifyBase*parent=nullptr;
-    VariantUtil vu;
     explicit NotifyBasePvt(NotifyBase*parent=nullptr):QObject{parent}
     {
         this->parent=parent;
@@ -30,15 +26,9 @@ NotifyBase::NotifyBase(QObject *parent):QThread{nullptr}
     this->moveToThread(this);
 }
 
-NotifyBase::~NotifyBase()
-{
-    dPvt();
-    delete&p;
-}
-
 QRpc::ServiceSetting &NotifyBase::notifySetting()
 {
-    auto &manager=Application::instance().manager();
+    auto &manager=Application::i().manager();
     auto notifyName=this->notifyName();
     auto &setting=manager.setting(notifyName);
     if(!setting.enabled()){
@@ -82,11 +72,11 @@ void NotifyBase::setNotifyName(const QVariant &v)
 
 const QVariant NotifyBase::resourceSettings()
 {
-    return QApr::Application::instance().resourceSettings();
+    return QApr::Application::i().resourceSettings();
 }
 
 void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payload){
-    dPvt();
+
     Q_UNUSED(channel)
     auto metaObject=this->metaObject();
     auto methodName=this->notifyName();
@@ -110,12 +100,13 @@ void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payloa
         QVariant vPayload=payload;
         //se o tipo de parametro de entrar for um objeto tentaremos converter para compativilidade de objeto json/cbor
         if(pType==QMetaType_QVariantHash || pType==QMetaType_QVariantMap || pType==QMetaType_QVariantList || pType==QMetaType_QStringList){
-            vPayload=p.vu.toVariant(vPayload);
+            VariantUtil vu;
+            vPayload=vu.toVariant(vPayload);
         }
 
         auto argChannel=QGenericArgument(qbl("QVariant"), &channel);
         auto arcPayload=QGenericArgument(qbl("QVariant"), &vPayload);
-        QOrm::ConnectionManager manager(Application::instance().connectionManager(), this);
+        QOrm::ConnectionManager manager(Application::i().connectionManager(), this);
         auto &pool=manager.pool();
         QSqlDatabase db;
         if(!pool.get(db)){

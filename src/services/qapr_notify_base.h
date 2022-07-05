@@ -5,7 +5,7 @@
 #include <QMap>
 #include <QVariant>
 #include "../application/qapr_consts.h"
-#include "../../../qrpc/src/qrpc_service_manager.h"
+#include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qrpc/src/qrpc_service_setting.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 
@@ -27,10 +27,6 @@ public:
     //!
     Q_INVOKABLE explicit NotifyBase(QObject*parent=nullptr);
 
-    //!
-    //! \brief ~NotifyBase
-    //!
-    ~NotifyBase();
 
     //!
     //! \brief notifySetting
@@ -81,7 +77,7 @@ signals:
     //! \param channel
     //! \param payload
     //!
-    void notifyReceived(const QString &channel, const QVariant&payload);
+    void notifyReceived(const QString &channel, const QVariant &payload);
 private:
     NotifyBasePvt *p=nullptr;
 };
