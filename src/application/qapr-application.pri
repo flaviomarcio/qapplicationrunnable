@@ -6,7 +6,6 @@ QT += network
 HEADERS += \
     $$PWD/private/p_qapr_circuit_breaker.h \
     $$PWD/private/p_qapr_application.h \
-    $$PWD/private/p_qapr_log.h \
     $$PWD/private/p_qapr_log_telegram.h \
     $$PWD/private/p_qapr_log_elk.h \
     $$PWD/qapr.h \
@@ -26,7 +25,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/private/p_qapr_circuit_breaker.cpp \
     $$PWD/qapr_host.cpp \
-    $$PWD/qapr_log.cpp \
     $$PWD/qapr_circuit_breaker.cpp \
     $$PWD/qapr_runnable.cpp \
     $$PWD/qapr_mainservice.cpp \
