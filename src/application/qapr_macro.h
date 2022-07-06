@@ -39,4 +39,5 @@ Q_INVOKABLE virtual QVariant businessCheck() \
 #define QAPR_CRUD_BLOCK_MAKER(crudBlock)\
 QOrm::CRUDBlock crudBlock(this); \
 crudBlock.host(QApr::Application::i().settings().host()->toHash()); \
+crudBlock.host().addHeaders(irq()->request().authorizationHeaders());\
 QOrm::CRUDBlock::makeBlock(crudBlock, vBody)

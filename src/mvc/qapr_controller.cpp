@@ -11,7 +11,7 @@ namespace QApr {
 class ControllerPvt:public QObject{
 public:
     Controller*parent=nullptr;
-    Interface*request=nullptr;
+    Interface *request=nullptr;
     QVariantHash accountModel;
 
     explicit ControllerPvt(Controller*parent):QObject{parent}
@@ -20,16 +20,18 @@ public:
     }
     Interface *req()
     {
-        if(this->request==nullptr)
+        if(this->request)
             return this->request;
 
-        QObject*__parent=this->parent;
-        while(__parent!=nullptr){
-            if(!__parent->metaObject()->inherits(&Interface::staticMetaObject))
+        QObject *__parent=this->parent;
+        while(__parent){
+            if(!__parent->metaObject()->inherits(&Interface::staticMetaObject)){
+                __parent=__parent->parent();
                 continue;
+            }
 
             request=dynamic_cast<Interface*>(__parent);
-            if(request!=nullptr)
+            if(request)
                 break;
             __parent=__parent->parent();
         }
@@ -64,19 +66,16 @@ const QVariant Controller::resultInfo()
 
 Interface *Controller::interfaceRequest()
 {
-
     return p->req();
 }
 
 Interface *Controller::irq()
 {
-
     return p->req();
 }
 
 bool Controller::transactionRollbackForce() const
 {
-
     if(p->req()==nullptr){
         sWarning()<<tr("Request não identificado");
         return false;
@@ -86,7 +85,6 @@ bool Controller::transactionRollbackForce() const
 
 void Controller::setTransactionRollbackForce(bool value)
 {
-
     if(p->req()==nullptr){
         sWarning()<<tr("Request não identificado");
         return;
