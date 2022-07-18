@@ -2,39 +2,44 @@
 
 namespace QApr {
 
-static QHash<QThread*, QObject*> static_session_instance;
-static QMutex static_session_instance_mutex;
+typedef QHash<QThread*, QObject*> StaticSessionInstances;
 
-Session::Session(QObject *parent) : QStm::Object{parent}, p_credential(parent)
+Q_GLOBAL_STATIC(StaticSessionInstances, static_session_instance);
+Q_GLOBAL_STATIC(QMutex, static_session_instance_mutex)
+
+Session::Session(QObject *parent) : QStm::Object{parent}, p_credential{parent}
 {
     this->session_thread=QThread::currentThread();
 }
 
-Session::~Session(){
-}
-
-Session &Session::instance(){
+Session &Session::instance()
+{
     return*dynamic_cast<Session*>(this->session);
 }
 
-Session &Session::i(){
+Session &Session::i()
+{
     return*dynamic_cast<Session*>(this->session);
 }
 
-SessionCredential &Session::credential(){
+SessionCredential &Session::credential()
+{
     return this->p_credential;
 }
 
-void Session::init(){
-    auto session=dynamic_cast<Session*>(static_session_instance.value(this->session_thread));
-    if(this->session==nullptr){
-        QMutexLOCKER locker(&static_session_instance_mutex);
-        this->session=dynamic_cast<QStm::Object*>(static_session_instance.value(this->session_thread));
-        if(this->session==nullptr){
-            static_session_instance.insert(session_thread, session);
-            this->session=dynamic_cast<QStm::Object*>(static_session_instance.value(this->session_thread));
-        }
-    }
+void Session::init()
+{
+    auto session=dynamic_cast<Session*>(static_session_instance->value(this->session_thread));
+    if(this->session)
+        return;
+
+    QMutexLocker<QMutex> locker(static_session_instance_mutex);
+    this->session=dynamic_cast<QStm::Object*>(static_session_instance->value(this->session_thread));
+    if(this->session)
+        return;
+
+    static_session_instance->insert(session_thread, session);
+    this->session=dynamic_cast<QStm::Object*>(static_session_instance->value(this->session_thread));
 }
 
 }

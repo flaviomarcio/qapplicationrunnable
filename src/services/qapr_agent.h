@@ -2,12 +2,8 @@
 
 #include <QObject>
 #include <QThread>
+#include <QVariant>
 #include "../application/qapr_global.h"
-#include "../../../qrpc/src/qrpc_setting_manager.h"
-#include "../../../qorm/src/qorm_connection_manager.h"
-#include "../application/qapr_consts.h"
-#include "../services/qapr_agent_base.h"
-
 
 #define QAPR_AGENT_DECLARE_SCHEDULE(AgentClass, methodName)\
 const auto agentRegistered##AgentClass = QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, QByteArrayLiteral(#methodName));
@@ -20,7 +16,6 @@ class AgentPvt;
 class Q_APR_EXPORT Agent : public QThread
 {
     Q_OBJECT
-    QORM_DECLARE_INSTANCE(Agent)
 public:
     //!
     //! \brief Agent
@@ -33,6 +28,12 @@ public:
     //! \return
     //!
     Q_INVOKABLE static const QVariant resourceSettings();
+
+    //!
+    //! \brief instance
+    //! \return
+    //!
+    static Agent &instance();
 
     //!
     //! \brief run
@@ -89,5 +90,4 @@ signals:
     void settingChanged(const QString &topic, const QVariant &v);
 };
 
-//static auto &agentApp=Agent::instance();
 }

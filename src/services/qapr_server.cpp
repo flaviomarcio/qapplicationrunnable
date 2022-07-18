@@ -3,6 +3,8 @@
 
 namespace QApr {
 
+Q_GLOBAL_STATIC(Server, staticServer)
+
 class ServerPvt:public QObject{
 public:
     explicit ServerPvt(Server*parent=nullptr):QObject{parent}
@@ -14,6 +16,11 @@ public:
 Server::Server(QObject *parent) : QRpc::Server{Application::i().resourceSettings(), parent}
 {
     this->p=new ServerPvt{this};
+}
+
+Server &Server::instance()
+{
+    return *staticServer;
 }
 
 const QVariant Server::resourceSettings()

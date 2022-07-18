@@ -3,13 +3,12 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QCoreApplication>
-#include "../qapr_circuit_breaker.h"
-#include "../qapr_application.h"
 #include "../../../../qstm/src/qstm_setting_base.h"
 
 namespace QApr {
 
-class CircuitBreakerPvt:public QObject{
+class CircuitBreakerPvt:public QObject
+{
     Q_OBJECT
 public:
     QStm::SettingBase settingService;

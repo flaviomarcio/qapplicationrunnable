@@ -2,11 +2,9 @@
 
 #include <QCoreApplication>
 #include <QObject>
-#include "../../../qstm/src/qstm_startup.h"
 #include "../../../qrpc/src/qrpc_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "./qapr_global.h"
-#include "./qapr_consts.h"
 #include "./qapr_circuit_breaker.h"
 #include "./qapr_settings.h"
 

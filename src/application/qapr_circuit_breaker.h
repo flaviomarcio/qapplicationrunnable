@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QCoreApplication>
 #include "./qapr_global.h"
 
 namespace QApr {
@@ -30,14 +29,14 @@ public:
     //! \param v
     //! \return
     //!
-    CircuitBreaker&settings(const QVariantHash&v);
+    CircuitBreaker&settings(const QVariantHash &v);
 
     //!
     //! \brief setSettings
     //! \param v
     //! \return
     //!
-    CircuitBreaker&setSettings(const QVariantHash&v);
+    CircuitBreaker&setSettings(const QVariantHash &v);
 
     //!
     //! \brief start

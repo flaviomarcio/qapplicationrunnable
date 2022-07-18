@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../application/qapr_global.h"
-#include "./qapr_session_credential.h"
+
 #include <QMutex>
 #include <QThread>
 #include <QCoreApplication>
+#include "../../../qstm/src/qstm_object.h"
+#include "../application/qapr_global.h"
+#include "./qapr_session_credential.h"
 
 namespace QApr {
 
@@ -22,21 +24,16 @@ public:
     Q_INVOKABLE explicit Session(QObject *parent = nullptr);
 
     //!
-    //! \brief ~Session
-    //!
-    ~Session();
-
-    //!
     //! \brief instance
     //! \return
     //!
-    Session&instance();
+    Session &instance();
 
     //!
     //! \brief i
     //! \return
     //!
-    Session&i();
+    Session &i();
 
     //!
     //! \brief credential
@@ -44,6 +41,9 @@ public:
     //!
     virtual SessionCredential&credential();
 
+    //!
+    //! \brief init
+    //!
     void init();
 
 private:

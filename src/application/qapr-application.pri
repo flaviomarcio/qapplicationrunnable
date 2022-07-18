@@ -12,7 +12,6 @@ HEADERS += \
     $$PWD/qapr_consts.h \
     $$PWD/qapr_global.h \
     $$PWD/qapr_host.h \
-    $$PWD/qapr_log.h \
     $$PWD/qapr_circuit_breaker.h \
     $$PWD/qapr_macro.h \
     $$PWD/qapr_runnable.h \
@@ -25,6 +24,8 @@ HEADERS += \
 SOURCES += \
     $$PWD/private/p_qapr_application.cpp \
     $$PWD/private/p_qapr_circuit_breaker.cpp \
+    $$PWD/private/p_qapr_log_elk.cpp \
+    $$PWD/private/p_qapr_log_telegram.cpp \
     $$PWD/qapr_host.cpp \
     $$PWD/qapr_circuit_breaker.cpp \
     $$PWD/qapr_runnable.cpp \

@@ -4,10 +4,15 @@
 #include <QThread>
 #include <QMap>
 #include <QVariant>
-#include "../application/qapr_consts.h"
-#include "../../../qrpc/src/qrpc_setting_manager.h"
+#include <QSqlDatabase>
+#include "../../../qorm/src/qorm_macro.h"
+#include "../application/qapr_global.h"
 #include "../../../qrpc/src/qrpc_service_setting.h"
-#include "../../../qorm/src/qorm_connection_manager.h"
+//#include "../application/qapr_consts.h"
+//#include "../../../qrpc/src/qrpc_setting_manager.h"
+//#include "../../../qorm/src/qorm_connection_manager.h"
+
+#define QORM_DECLARE_TOPIC(v1) public: Q_INVOKABLE virtual QByteArray &topic()const{ static auto v=QByteArray{v1};return v; }
 
 namespace QApr {
 class NotifyBasePvt;
@@ -16,23 +21,24 @@ class Notify;
 //!
 //! \brief The NotifyBase class
 //!
-class Q_APR_EXPORT NotifyBase : public QThread{
+class Q_APR_EXPORT NotifyBase : public QThread
+{
     Q_OBJECT
     QORM_CONNECTION_SUPPORT()
-    QORM_DECLARE_TOPIC(qsl("nothing/null"))
+    QORM_DECLARE_TOPIC("nothing/null")
 public:
+
     //!
     //! \brief NotifyBase
     //! \param parent
     //!
     Q_INVOKABLE explicit NotifyBase(QObject*parent=nullptr);
 
-
     //!
     //! \brief notifySetting
     //! \return
     //!
-    virtual QRpc::ServiceSetting&notifySetting();
+    virtual QRpc::ServiceSetting &notifySetting();
 
     //!
     //! \brief run

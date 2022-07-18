@@ -23,7 +23,7 @@ bool Settings::setValues(const QVariant &v)
     default:
         break;
     }
-    for(auto&v:vList){
+    for(auto &v:vList){
         auto vHash=ObjectWrapper::parserVariant(v).toHash();
         if(vHash.contains(QStringLiteral("mfe")))
             vHash=vHash.value(QStringLiteral("mfe")).toHash();

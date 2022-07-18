@@ -1,9 +1,9 @@
 #include "./qapr_interface_backoffice.h"
-#include "../application/qapr_startup.h"
 #include "../../../qorm/src/qorm_transaction.h"
-#include "../application/qapr_application.h"
-#include "../mvc/qapr_controller_backoffice.h"
 #include "../../../qrpc/src/qrpc_server.h"
+#include "../application/qapr_startup.h"
+#include "../application/qapr_application.h"
+#include <QtReforce/QStm>
 
 namespace QApr {
 
@@ -111,7 +111,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         mutexInfo.unlock();
     }
 
-    for(auto&controller: infoCache){
+    for(auto &controller: infoCache){
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;

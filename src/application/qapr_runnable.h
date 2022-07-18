@@ -17,18 +17,13 @@ public:
     //! \brief a
     //! \return
     //!
-    static QCoreApplication&a();
+    static QCoreApplication &a();
 
     //!
     //! \brief Runnable
     //! \param parent
     //!
     Q_INVOKABLE explicit Runnable(QObject *parent = nullptr);
-
-    //!
-    //! \brief ~Runnable
-    //!
-    ~Runnable();
 
     //!
     //! \brief run

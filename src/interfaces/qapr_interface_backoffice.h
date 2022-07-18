@@ -11,32 +11,31 @@ class InterfaceBackOfficePvt;
 class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
 {
     Q_OBJECT
-    Q_DECLARE_OBJECT()
     Q_API_DOC_INFO()
     {
-        document->host(qsl("localhost"))
+        document->host(QStringLiteral("localhost"))
             .basePath(this->basePath())
-            .consumes(qsl("application/json"))
-            .produces(qsl("application/json"))
+            .consumes(QStringLiteral("application/json"))
+            .produces(QStringLiteral("application/json"))
             .schemes(stpsHttp);
 
         document->info()
-            .title(qsl("QApr API for back office service"))
-            .version(qsl("1.0.0"))
-            .termsOfService(qsl("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-            .description(qsl("Inherited from QApr:Interface, this is class for constructor "
+            .title(QStringLiteral("QApr API for back office service"))
+            .version(QStringLiteral("1.0.0"))
+            .termsOfService(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+            .description(QStringLiteral("Inherited from QApr:Interface, this is class for constructor "
                              "interface for gui applications"));
 
         document->info()
             .contact()
-            .name(qsl("Flavio Portela"))
-            .email(qsl("fmspx@hotmail.com"))
-            .url(qsl("https://github.com/flaviomarcio/qtreforce-sdk"));
+            .name(QStringLiteral("Flavio Portela"))
+            .email(QStringLiteral("fmspx@hotmail.com"))
+            .url(QStringLiteral("https://github.com/flaviomarcio/qtreforce-sdk"));
 
         document->info()
             .license()
-            .name(qsl("Apache License - Version 2.0, January 2004"))
-            .url(qsl("http://www.apache.org/licenses/LICENSE-2.0"));
+            .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
+            .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
 
 public:

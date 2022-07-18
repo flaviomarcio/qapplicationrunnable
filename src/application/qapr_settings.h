@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QStm>
+#include "../../qstm/src/qstm_object_wrapper.h"
 #include "./qapr_host.h"
 
 namespace QApr {

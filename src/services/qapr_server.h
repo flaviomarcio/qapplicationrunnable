@@ -12,13 +12,18 @@ class ServerPvt;
 class Q_APR_EXPORT Server : public QRpc::Server
 {
     Q_OBJECT
-    Q_DECLARE_INSTANCE(Server)
 public:
     //!
     //! \brief Server
     //! \param parent
     //!
     Q_INVOKABLE explicit Server(QObject *parent = nullptr);
+
+    //!
+    //! \brief instance
+    //! \return
+    //!
+    static Server &instance();
 
     //!
     //! \brief resourceSettings

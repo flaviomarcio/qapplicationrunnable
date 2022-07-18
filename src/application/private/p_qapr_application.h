@@ -34,8 +34,6 @@ public:
     static Application &i();
 
     void circuitBreakerStart();
-
-
 };
 
 }

@@ -7,6 +7,8 @@
 
 namespace QApr {
 
+Q_GLOBAL_STATIC(Agent, staticAgent);
+
 #define dPvt()\
     auto &p =*reinterpret_cast<AgentPvt*>(this->p)
 
@@ -48,19 +50,19 @@ public:
         return timer;
     }
 
-    AgentBase*taskInstance(const QByteArray&service)
+    AgentBase*taskInstance(const QByteArray &service)
     {
         return this->tasks.value(service);
     }
 
-    const QVariantHash taskStats(const QByteArray&service)
+    const QVariantHash taskStats(const QByteArray &service)
     {
-        QMutexLOCKER locker(&mutexAgent);
+        QMutexLocker<QMutex> locker(&mutexAgent);
         auto task=this->taskInstance(service);
         return (task==nullptr)?QVariantHash():task->stats();
     }
 public slots:
-    void taskRun(const QByteArray&service)
+    void taskRun(const QByteArray &service)
     {
         auto task = this->tasks.value(service);
         if(task==nullptr){
@@ -93,7 +95,7 @@ public slots:
 
     void taskCheck()
     {
-        QMutexLOCKER locker(&mutexAgent);
+        QMutexLocker<QMutex> locker(&mutexAgent);
         QHashIterator<QByteArray, const QMetaObject*> i(this->services);
         while (i.hasNext()) {
             i.next();
@@ -104,11 +106,11 @@ public slots:
 
     bool serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames)
     {
-        static auto chars=QStringList{qsl(";"),qsl("|"),qsl(","),qsl("  ")};
+        static auto chars=QStringList{QStringLiteral(";"),QStringLiteral("|"),QStringLiteral(","),QStringLiteral("  ")};
         QString service=methodNames;
         for(auto &c:chars){
             while(service.contains(c))
-                service=service.replace(c,qsl_space);
+                service=service.replace(c,QStringLiteral(" "));
         }
         auto listMethod=methodNames.split(' ');
         for(auto &service:listMethod){
@@ -147,16 +149,21 @@ const QVariant Agent::resourceSettings()
     return QApr::Application::i().resourceSettings();
 }
 
+Agent &Agent::instance()
+{
+    return *staticAgent;
+}
+
 void Agent::run()
 {
     dPvt();
-    p.topicSetting=qsl("agent:%1").arg(QT_STRINGIFY2(topicSetting)+qsl(":")+QString::fromUtf8(this->metaObject()->className()));
+    p.topicSetting=QStringLiteral("agent:%1").arg(QT_STRINGIFY2(topicSetting)+QStringLiteral(":")+QString::fromUtf8(this->metaObject()->className()));
 #ifdef QAPR_LOG_VERBOSE
-    sWarning()<<qsl("started");
+    oWarning()<<QStringLiteral("started");
 #endif
     p.timer=p.newTimer();
     p.timer->start();
-    sDebug()<<qsl("Agent: running");
+    oDebug()<<QStringLiteral("Agent: running");
     this->exec();
     p.freeTimer();
 }
@@ -164,15 +171,15 @@ void Agent::run()
 bool Agent::start()
 {
 #ifdef QAPR_LOG_VERBOSE
-    sWarning()<<qsl("started");
+    oWarning()<<QStringLiteral("started");
 #endif
     auto objectName=this->objectName().trimmed();
     if(objectName.isEmpty()){
         objectName=this->metaObject()->className();
-        while(objectName.contains(qsl(":")))
-            objectName=objectName.replace(qsl(":"),qsl("_"));
-        while(objectName.contains(qsl("__")))
-            objectName=objectName.replace(qsl("__"),qsl("_"));
+        while(objectName.contains(QStringLiteral(":")))
+            objectName=objectName.replace(QStringLiteral(":"),QStringLiteral("_"));
+        while(objectName.contains(QStringLiteral("__")))
+            objectName=objectName.replace(QStringLiteral("__"),QStringLiteral("_"));
     }
     this->setObjectName(objectName.left(60));
     QThread::start();
@@ -187,13 +194,13 @@ bool Agent::stop()
     return true;
 }
 
-void Agent::serviceStart(const QByteArray&service)
+void Agent::serviceStart(const QByteArray &service)
 {
     dPvt();
     p.taskRun(service);
 }
 
-QVariantHash Agent::serviceStats(const QByteArray&service)
+QVariantHash Agent::serviceStats(const QByteArray &service)
 {
     dPvt();
     return p.taskStats(service);

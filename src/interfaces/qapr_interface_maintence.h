@@ -1,10 +1,11 @@
 #pragma once
 
+#include <QtReforce/QApiDoc>
+#include "../../../qrpc/src/qrpc_macro.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_macro.h"
 #include "./qapr_interface_notations.h"
-#include <QtReforce/QApiDoc>
 
 namespace QApr {
 
@@ -16,33 +17,33 @@ class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller,
 {
     Q_OBJECT
     Q_APR_DECLARE_INTERFACE_METHOD_CHECK()
-    Q_NOTATION(InterfaceMaintence, qvl({apiBasePath("v1/maintence")}))
+    Q_ANNOTATION(InterfaceMaintence, QVariantList({apiBasePath("v1/maintence")}))
 
     Q_API_DOC_INFO()
     {
-        document->host(qsl("localhost"))
+        document->host(QStringLiteral("localhost"))
             .basePath(this->basePath())
-            .consumes(qsl("application/json"))
-            .produces(qsl("application/json"))
+            .consumes(QStringLiteral("application/json"))
+            .produces(QStringLiteral("application/json"))
             .schemes(stpsHttp);
 
         document->info()
-            .title(qsl("QApr API for custom maintenance"))
-            .version(qsl("1.0.0"))
-            .termsOfService(qsl("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-            .description(qsl("Inherited from QRpc::Controller, this is the class for builder "
+            .title(QStringLiteral("QApr API for custom maintenance"))
+            .version(QStringLiteral("1.0.0"))
+            .termsOfService(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+            .description(QStringLiteral("Inherited from QRpc::Controller, this is the class for builder "
                              "interface for maintenance"));
 
         document->info()
             .contact()
-            .name(qsl("Flavio Portela"))
-            .email(qsl("fmspx@hotmail.com"))
-            .url(qsl("https://github.com/flaviomarcio/qtreforce-sdk"));
+            .name(QStringLiteral("Flavio Portela"))
+            .email(QStringLiteral("fmspx@hotmail.com"))
+            .url(QStringLiteral("https://github.com/flaviomarcio/qtreforce-sdk"));
 
         document->info()
             .license()
-            .name(qsl("Apache License - Version 2.0, January 2004"))
-            .url(qsl("http://www.apache.org/licenses/LICENSE-2.0"));
+            .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
+            .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
 
 public:
@@ -56,75 +57,75 @@ public:
     //! \brief serverStart
     //! \return
     //!
-    Q_NOTATION(serverStart, qvl({opPost, opPut}))
+    Q_ANNOTATION(serverStart, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStart();
     Q_API_DOC_PATH(serverStart)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Start custom services"))
+            .operationId({})
+            .description(QStringLiteral("Start custom services"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), qsl("custom implementation")}}));
+                QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
 
     //!
     //! \brief serverStop
     //! \return
     //!
-    Q_NOTATION(serverStop, qvl({opPost, opPut}))
+    Q_ANNOTATION(serverStop, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStop();
     Q_API_DOC_PATH(serverStop)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Stop custom services"))
+            .operationId({})
+            .description(QStringLiteral("Stop custom services"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), qsl("custom implementation")}}));
+                QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
 
     //!
     //! \brief serverRestart
     //! \return
     //!
-    Q_NOTATION(serverRestart, qvl({opPost, opPut}))
+    Q_ANNOTATION(serverRestart, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverRestart();
     Q_API_DOC_PATH(serverRestart)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Restart custom services"))
+            .operationId({})
+            .description(QStringLiteral("Restart custom services"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), qsl("custom implementation")}}));
+                QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
 
     //!
     //! \brief servicesCheck
     //! \return
     //!
-    Q_NOTATION(servicesCheck, qvl({opPost, opPut}))
+    Q_ANNOTATION(servicesCheck, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant servicesCheck();
     Q_API_DOC_PATH(servicesCheck)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Check custom services"))
+            .operationId({})
+            .description(QStringLiteral("Check custom services"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), qsl("custom implementation")}}));
+                QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
 
     //!
     //! \brief applicationQuit
     //! \return
     //!
-    Q_NOTATION(applicationQuit, qvl({opPost, opPut}))
+    Q_ANNOTATION(applicationQuit, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant applicationQuit();
     Q_API_DOC_PATH(applicationQuit)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Quit application"))
+            .operationId({})
+            .description(QStringLiteral("Quit application"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), qsl("custom implementation")}}));
+                QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
 signals:
 };

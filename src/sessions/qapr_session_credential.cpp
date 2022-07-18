@@ -1,14 +1,11 @@
 #include "./qapr_session_credential.h"
 #include "../../../qstm/src/qstm_util_variant.h"
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<CredentialsPvt*>(this->p)
-
 namespace QApr {
 
 class CredentialsPvt:public QObject{
 public:
-    SessionCredential*parent=nullptr;
+    SessionCredential *parent=nullptr;
     QUuid uuid;
     QVariantHash permits;
     QVariantHash body;
@@ -27,11 +24,11 @@ SessionCredential::SessionCredential(QObject *parent) : QObject{parent}
 QVariantHash SessionCredential::toVariant() const
 {
     QVariantHash vHash;
-    vHash[qsl_fy(session_uuid)]=this->session_uuid();
-    vHash[qsl_fy(account_uuid)]=this->account_uuid();
-    vHash[qsl_fy(profile)]=this->profile();
-    vHash[qsl_fy(session)]=this->session();
-    vHash[qsl_fy(permits)]=this->permits();
+    vHash[QT_STRINGIFY(session_uuid)]=this->session_uuid();
+    vHash[QT_STRINGIFY(account_uuid)]=this->account_uuid();
+    vHash[QT_STRINGIFY(profile)]=this->profile();
+    vHash[QT_STRINGIFY(session)]=this->session();
+    vHash[QT_STRINGIFY(permits)]=this->permits();
     return vHash;
 }
 
@@ -47,7 +44,7 @@ bool SessionCredential::isValid() const
     return false;
 }
 
-QVariantHash&SessionCredential::permits()const
+QVariantHash &SessionCredential::permits()const
 {
     return p->permits;
 }
@@ -72,52 +69,52 @@ SessionCredential&SessionCredential::setUuid(const QUuid &value)
 QUuid SessionCredential::domain_uuid() const
 {
     Q_DECLARE_VU;
-    return p->body[qsl_fy(domain_uuid)].toUuid();
+    return p->body[QT_STRINGIFY(domain_uuid)].toUuid();
 }
 
 SessionCredential &SessionCredential::set_domain_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
-    p->body[qsl_fy(domain_uuid)]=vu.toUuid(uuid);
+    p->body[QT_STRINGIFY(domain_uuid)]=vu.toUuid(uuid);
     return*this;
 }
 
 QUuid SessionCredential::account_uuid() const
 {
     Q_DECLARE_VU;
-    return p->body.value(qsl_fy(account_uuid)).toUuid();
+    return p->body.value(QT_STRINGIFY(account_uuid)).toUuid();
 }
 
 SessionCredential &SessionCredential::set_account_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
-    p->body[qsl_fy(account_uuid)]=vu.toUuid(uuid);
+    p->body[QT_STRINGIFY(account_uuid)]=vu.toUuid(uuid);
     return*this;
 }
 
 QUuid SessionCredential::session_uuid() const
 {
     Q_DECLARE_VU;
-    return p->body.value(qsl_fy(session_uuid)).toUuid();
+    return p->body.value(QT_STRINGIFY(session_uuid)).toUuid();
 }
 
 SessionCredential &SessionCredential::set_session_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
-    p->body[qsl_fy(session_uuid)]=vu.toUuid(uuid);
+    p->body[QT_STRINGIFY(session_uuid)]=vu.toUuid(uuid);
     return*this;
 }
 
 QUuid SessionCredential::service_uuid() const
 {
     Q_DECLARE_VU;
-    return p->body.value(qsl_fy(service_uuid)).toUuid();
+    return p->body.value(QT_STRINGIFY(service_uuid)).toUuid();
 }
 
 SessionCredential &SessionCredential::set_service_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
-    p->body[qsl_fy(service_uuid)]=vu.toUuid(uuid);
+    p->body[QT_STRINGIFY(service_uuid)]=vu.toUuid(uuid);
     return*this;
 }
 
@@ -134,42 +131,35 @@ SessionCredential &SessionCredential::setBody(const QVariantHash &value)
 
 QVariant SessionCredential::profile() const
 {
-    return p->body.value(qsl_fy(profile));
+    return p->body.value(QT_STRINGIFY(profile));
 }
 
 SessionCredential &SessionCredential::setProfile(const QVariant &value)
 {
-    p->body[qsl_fy(profile)]=value;
+    p->body.insert(QT_STRINGIFY(profile), value);
     return*this;
 }
 
 QVariant SessionCredential::session() const
 {
-    return p->body.value(qsl_fy(session));
+    return p->body.value(QT_STRINGIFY(session));
 }
 
 SessionCredential &SessionCredential::setSession(const QVariant &value)
 {
-    p->body[qsl_fy(session)]=value;
+    p->body.insert(QT_STRINGIFY(session),value);
     return*this;
 }
 
 QVariant SessionCredential::token() const
 {
-    return p->body.value(qsl_fy(token));
+    return p->body.value(QT_STRINGIFY(token));
 }
 
 SessionCredential &SessionCredential::setToken(const QVariant &value)
 {
-    p->body[qsl_fy(token)]=value;
+    p->body.insert(QT_STRINGIFY(token), value);
     return*this;
 }
-
-
-
-
-
-
-
 
 }

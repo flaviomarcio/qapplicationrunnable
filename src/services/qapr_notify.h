@@ -2,12 +2,13 @@
 
 #include <QObject>
 #include <QThread>
-#include "../../../qrpc/src/qrpc_setting_manager.h"
-#include "../../../qorm/src/qorm_connection_manager.h"
+#include <QVariant>
 #include "../application/qapr_global.h"
-#include "../application/qapr_consts.h"
-#include "./qapr_notify_base.h"
 #include "./qapr_notify_dispatch.h"
+//#include "../../../qrpc/src/qrpc_setting_manager.h"
+//#include "../../../qorm/src/qorm_connection_manager.h"
+//#include "../application/qapr_consts.h"
+//#include "./qapr_notify_base.h"
 
 #define DECLARE_NOTIFY_DISPACHER(NotifyClass, methodName)\
 static QApr::NotifyDispatch&methodName##_dispatch = QApr::Notify::instance().dispatcherRegister(NotifyClass::staticMetaObject, QByteArrayLiteral(#methodName));
@@ -20,8 +21,9 @@ class NotifyPvt;
 class Q_APR_EXPORT Notify : public QThread
 {
     Q_OBJECT
-    QORM_DECLARE_INSTANCE(Notify)
 public:
+
+
 
     //!
     //! \brief Notify
@@ -34,6 +36,13 @@ public:
     //! \return
     //!
     Q_INVOKABLE static const QVariant resourceSettings();
+
+    //!
+    //! \brief instance
+    //! \return
+    //!
+    static Notify &instance();
+
 
     void run() override;
 

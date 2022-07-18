@@ -1,7 +1,7 @@
-    #include "./qapr_controller.h"
+#include "./qapr_controller.h"
 #include "../interfaces/qapr_interface.h"
-#include "../application/qapr_application.h"
 #include "../../../qrpc/src/qrpc_controller.h"
+#include "../../qorm/src/qorm_macro.h"
 
 namespace QApr {
 
@@ -77,7 +77,7 @@ Interface *Controller::irq()
 bool Controller::transactionRollbackForce() const
 {
     if(p->req()==nullptr){
-        sWarning()<<tr("Request não identificado");
+        oWarning()<<tr("Request não identificado");
         return false;
     }
     return p->req()->transactionRollbackForce();
@@ -86,7 +86,7 @@ bool Controller::transactionRollbackForce() const
 void Controller::setTransactionRollbackForce(bool value)
 {
     if(p->req()==nullptr){
-        sWarning()<<tr("Request não identificado");
+        oWarning()<<tr("Request não identificado");
         return;
     }
     p->req()->setTransactionRollbackForce(value);

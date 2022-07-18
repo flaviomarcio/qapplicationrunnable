@@ -1,11 +1,7 @@
 #include "./qapr_notify_base.h"
-#include "./qapr_notify.h"
 #include "../application/qapr_application.h"
-#include <QTimer>
-#include <QCryptographicHash>
+#include "../../qstm/src/qstm_util_variant.h"
 #include <QVariant>
-#include <QMutex>
-#include <QMetaProperty>
 
 namespace QApr{
 
@@ -58,15 +54,15 @@ void NotifyBase::start()
 
 QString NotifyBase::notifyName() const
 {
-    auto v=this->property(qbl("notifyName")).toString();
+    auto v=this->property(QByteArrayLiteral("notifyName")).toString();
     return v;
 }
 
 void NotifyBase::setNotifyName(const QVariant &v)
 {
-    this->setProperty(qbl("notifyName"),v);
-    auto objectName=qsl("%1::%2").arg(QString(this->metaObject()->className()), QString(this->notifyName()));
-    objectName=objectName.replace(qsl(":"),qsl("_")).replace(qsl("__"),qsl("_"));
+    this->setProperty(QByteArrayLiteral("notifyName"),v);
+    auto objectName=QStringLiteral("%1::%2").arg(QString(this->metaObject()->className()), QString(this->notifyName()));
+    objectName=objectName.replace(QStringLiteral(":"),QStringLiteral("_")).replace(QStringLiteral("__"),QStringLiteral("_"));
     this->setObjectName(objectName);
 }
 
@@ -89,7 +85,7 @@ void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payloa
         if(method.name().toLower() != methodName)
             continue;
 
-        auto pType=QMetaType_UnknownType;
+        int pType=QMetaType::UnknownType;
         if(method.parameterCount()==1){
             pType=method.parameterType(0);
         }
@@ -99,13 +95,13 @@ void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payloa
 
         QVariant vPayload=payload;
         //se o tipo de parametro de entrar for um objeto tentaremos converter para compativilidade de objeto json/cbor
-        if(pType==QMetaType_QVariantHash || pType==QMetaType_QVariantMap || pType==QMetaType_QVariantList || pType==QMetaType_QStringList){
+        if(pType==QMetaType::QVariantHash || pType==QMetaType::QVariantMap || pType==QMetaType::QVariantList || pType==QMetaType::QStringList){
             VariantUtil vu;
             vPayload=vu.toVariant(vPayload);
         }
 
-        auto argChannel=QGenericArgument(qbl("QVariant"), &channel);
-        auto arcPayload=QGenericArgument(qbl("QVariant"), &vPayload);
+        auto argChannel=QGenericArgument(QByteArrayLiteral("QVariant"), &channel);
+        auto arcPayload=QGenericArgument(QByteArrayLiteral("QVariant"), &vPayload);
         QOrm::ConnectionManager manager(Application::i().connectionManager(), this);
         auto &pool=manager.pool();
         QSqlDatabase db;
@@ -118,25 +114,25 @@ void NotifyBase::onNotifyReceived(const QString &channel, const QVariant &payloa
         else{
             if(method.parameterCount()==0 && !method.invoke(this, Qt::DirectConnection)){
                 message=tr("Method not called");
-#if QAPR_LOG_VERBOSE
-                sDebug()<<tr("invoke method: error==")<<message;
+#if Q_APR_LOG_VERBOSE
+                oDebug()<<tr("invoke method: error==")<<message;
 #endif
             }
             else if(method.parameterCount()==1 && !method.invoke(this, Qt::DirectConnection, arcPayload)){
                 message=tr("Method not called");
-#if QAPR_LOG_VERBOSE
-                sDebug()<<tr("invoke method: error==")<<message;
+#if Q_APR_LOG_VERBOSE
+                oDebug()<<tr("invoke method: error==")<<message;
 #endif
             }
             else if(method.parameterCount()==2 && !method.invoke(this, Qt::DirectConnection, argChannel, arcPayload)){
                 message=tr("Method not called");
-#if QAPR_LOG_VERBOSE
-                sDebug()<<tr("invoke method: error==")<<message;
+#if Q_APR_LOG_VERBOSE
+                oDebug()<<tr("invoke method: error==")<<message;
 #endif
             }
             else{
-#if QAPR_LOG_VERBOSE
-                sDebug()<<tr("invoke method:")<<method.name();
+#if Q_APR_LOG_VERBOSE
+                oDebug()<<tr("invoke method:")<<method.name();
 #endif
                 pool.finish(db);
                 break;

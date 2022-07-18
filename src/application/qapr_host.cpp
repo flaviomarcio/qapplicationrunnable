@@ -1,4 +1,5 @@
 #include "./qapr_host.h"
+#include "../../qstm/src/qstm_network_types.h"
 
 namespace QApr {
 

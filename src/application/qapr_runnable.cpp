@@ -5,14 +5,10 @@ namespace QApr {
 
 QCoreApplication &Runnable::a()
 {
-    return*QCoreApplication::instance();
+    return *QCoreApplication::instance();
 }
 
 Runnable::Runnable(QObject *parent):QObject{parent}
-{
-}
-
-Runnable::~Runnable()
 {
 }
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../qstm/src/qstm_macro.h"
-
 #ifndef QT_STATIC
 #  if defined(QT_BUILD_SQL_LIB)
 #    define Q_APR_EXPORT Q_DECL_EXPORT

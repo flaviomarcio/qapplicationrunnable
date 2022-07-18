@@ -1,13 +1,16 @@
 #include "./qapr_notify.h"
+#include "./qapr_notify_base.h"
 #include "../../../qorm/src/qorm_connection_notify.h"
 #include "../application/qapr_application.h"
-#include "./qapr_notify_base.h"
 #include <QCryptographicHash>
 #include <QMultiHash>
 #include <QMutex>
 #include <QTimer>
 
 namespace QApr {
+
+
+Q_GLOBAL_STATIC(Notify, staticNotify)
 
 class NotifyPvt: public QObject{
 public:
@@ -24,7 +27,7 @@ public:
         QObject::connect(&connectionNotify, &QOrm::ConnectionNotify::notification, this, &NotifyPvt::taskReceived);
 
     }
-    void taskRun(const QByteArray&service)
+    void taskRun(const QByteArray &service)
     {
         auto task = this->tasks.value(service);
         if(task==nullptr){
@@ -47,12 +50,12 @@ public:
                     task->quit();
                     task->wait(1000);
                 }
-#if QAPR_LOG_SUPER_VERBOSE
+#if Q_APR_LOG_SUPER_VERBOSE
                 qInfo()<<"Job is disabled: service name=="<<service<<", NotifySetting.name()=="<<NotifySetting.name();
 #endif
             }
             else{
-#if QAPR_LOG_SUPER_VERBOSE
+#if Q_APR_LOG_SUPER_VERBOSE
                 qInfo()<<"Job is enabled: "<<NotifySetting.name();
 #endif
             }
@@ -63,7 +66,7 @@ public:
     bool taskStart()
     {
         if(this->connectionNotify.start()){
-            QMutexLOCKER locker(&mutexNotify);
+            QMutexLocker<QMutex> locker(&mutexNotify);
             QHashIterator<QByteArray, const QMetaObject*> i(this->services);
             while (i.hasNext()) {
                 i.next();
@@ -128,6 +131,11 @@ const QVariant Notify::resourceSettings()
     return QApr::Application::i().resourceSettings();
 }
 
+Notify &Notify::instance()
+{
+    return *staticNotify;
+}
+
 void Notify::run()
 {
 
@@ -139,15 +147,15 @@ void Notify::run()
 bool Notify::start()
 {
 #ifdef QAPR_LOG_VERBOSE
-    sWarning()<<tr("started");
+    oWarning()<<tr("started");
 #endif
     auto objectName=this->objectName().trimmed();
     if(objectName.isEmpty()){
         objectName=this->metaObject()->className();
-        while(objectName.contains(qsl(":")))
-            objectName=objectName.replace(qsl(":"), qsl("_"));
-        while(objectName.contains(qsl("__")))
-            objectName=objectName.replace(qsl("__"), qsl("_"));
+        while(objectName.contains(QStringLiteral(":")))
+            objectName=objectName.replace(QStringLiteral(":"), QStringLiteral("_"));
+        while(objectName.contains(QStringLiteral("__")))
+            objectName=objectName.replace(QStringLiteral("__"), QStringLiteral("_"));
     }
     this->setObjectName(objectName);
     QThread::start();
@@ -162,7 +170,7 @@ bool Notify::stop()
     return true;
 }
 
-void Notify::serviceStart(const QByteArray&service)
+void Notify::serviceStart(const QByteArray &service)
 {
     p->taskRun(service);
 }

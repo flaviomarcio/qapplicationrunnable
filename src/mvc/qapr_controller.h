@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../../qstm/src/qstm_macro.h"
-#include "../../../qorm/src/qorm_controller.h"
-#include "../../../qrpc/src/qrpc_listen_request.h"
-#include "../../../qrpc/src/qrpc_service_setting.h"
-#include "../application/qapr_global.h"
 #include <QUuid>
+#include "../application/qapr_global.h"
+#include "../../../qorm/src/qorm_controller.h"
+//#include "../../../qstm/src/qstm_macro.h"
+//#include "../../../qrpc/src/qrpc_listen_request.h"
+//#include "../../../qrpc/src/qrpc_service_setting.h"
 
 namespace QApr {
 class ControllerPvt;

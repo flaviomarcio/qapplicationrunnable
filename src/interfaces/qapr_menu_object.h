@@ -1,12 +1,14 @@
 #pragma once
 
-#include "../../../qstm/src/qstm_macro.h"
-#include "../application/qapr_global.h"
 #include <QObject>
 #include <QVariant>
 #include <QVariantHash>
+#include "../application/qapr_global.h"
 
 namespace QApr {
+
+#define vmo QApr::MenuObject()
+
 class MenuObjectPvt;
 //!
 //! \brief The MenuObject class

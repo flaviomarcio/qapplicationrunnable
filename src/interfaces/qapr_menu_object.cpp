@@ -12,12 +12,12 @@ public:
 
     explicit MenuObjectPvt(MenuObject *parent)
         : QObject{parent},
-          data({{qsl_fy(uuid), QUuid()},
-                {qsl_fy(text), qv_null},
-                {qsl_fy(route), qv_null},
-                {qsl_fy(routeLoad), qv_null},
-                {qsl_fy(routeLoader), qv_null},
-                {qsl_fy(menu), qv_null}})
+          data({{QT_STRINGIFY(uuid), QUuid{}},
+                {QT_STRINGIFY(text), {}},
+                {QT_STRINGIFY(route), {}},
+                {QT_STRINGIFY(routeLoad), {}},
+                {QT_STRINGIFY(routeLoader), {}},
+                {QT_STRINGIFY(menu), {}}})
     {
         this->parent = parent;
     }
@@ -27,16 +27,16 @@ public:
         Q_DECLARE_VU;
         auto route = this->parent->basePath();
         auto routeLoad = this->parent->routeLoad();
-        auto codeBase = route + qsl("/") + routeLoad;
-        this->data[qsl_fy(uuid)] = vu.toMd5Uuid(codeBase);
+        auto codeBase = route + QStringLiteral("/") + routeLoad;
+        this->data[QT_STRINGIFY(uuid)] = vu.toMd5Uuid(codeBase);
     }
 
     void permissionAdd(const QVariant &v)
     {
         if (v.isValid()) {
-            auto vMenu = this->data[qsl_fy(permission)].toList();
+            auto vMenu = this->data[QT_STRINGIFY(permission)].toList();
             vMenu.append(v);
-            this->data[qsl_fy(permission)] = vMenu;
+            this->data[QT_STRINGIFY(permission)] = vMenu;
         }
     }
 
@@ -54,18 +54,18 @@ public:
                 if (route.isEmpty())
                     route = routeBase;
                 else
-                    route = (routeBase + qsl_fy(/) + route);
+                    route = (routeBase + QT_STRINGIFY(/) + route);
             }
             auto vHash = menu.basePath(route).build();
             if (!vHash.isEmpty()) {
-                auto &vMenu = this->dataMenu[qsl_fy(menu)];
+                auto &vMenu = this->dataMenu[QT_STRINGIFY(menu)];
                 if (!vMenu.contains(menu.text())) {
                     vMenu.insert(menu.text(), vHash);
-                    this->dataMenu[qsl_fy(menu)] = vMenu;
+                    this->dataMenu[QT_STRINGIFY(menu)] = vMenu;
                     {
-                        auto vMenuList = this->data[qsl_fy(menu)].toList();
+                        auto vMenuList = this->data[QT_STRINGIFY(menu)].toList();
                         vMenuList.append(vHash);
-                        this->data[qsl_fy(menu)] = vMenuList;
+                        this->data[QT_STRINGIFY(menu)] = vMenuList;
                     }
                 }
             }
@@ -102,85 +102,85 @@ QUuid MenuObject::uuid() const
 {
 
     Q_DECLARE_VU;
-    return p->data.value(qsl_fy(uuid)).toUuid();
+    return p->data.value(QT_STRINGIFY(uuid)).toUuid();
 }
 
 const MenuObject &MenuObject::uuid(const QVariant &v)
 {
 
     Q_DECLARE_VU;
-    p->data[qsl_fy(uuid)] = vu.toUuid(v);
+    p->data[QT_STRINGIFY(uuid)] = vu.toUuid(v);
     return *this;
 }
 
 QString MenuObject::text() const
 {
 
-    auto __return = p->data.value(qsl_fy(text)).toString().trimmed();
+    auto __return = p->data.value(QT_STRINGIFY(text)).toString().trimmed();
     return __return;
 }
 
 MenuObject &MenuObject::text(const QVariant &v)
 {
 
-    p->data[qsl_fy(text)] = v;
+    p->data[QT_STRINGIFY(text)] = v;
     return *this;
 }
 
 QString MenuObject::basePath() const
 {
 
-    return p->data.value(qsl_fy(basePath)).toString().trimmed();
+    return p->data.value(QT_STRINGIFY(basePath)).toString().trimmed();
 }
 
 MenuObject &MenuObject::basePath(const QVariant &v)
 {
 
-    p->data[qsl_fy(basePath)] = v;
+    p->data[QT_STRINGIFY(basePath)] = v;
     return *this;
 }
 
 QString MenuObject::routeLoad() const
 {
 
-    return p->data.value(qsl_fy(routeLoad)).toString().trimmed();
+    return p->data.value(QT_STRINGIFY(routeLoad)).toString().trimmed();
 }
 
 MenuObject &MenuObject::routeLoad(const QVariant &v)
 {
 
-    p->data[qsl_fy(routeLoad)] = v;
+    p->data[QT_STRINGIFY(routeLoad)] = v;
     return *this;
 }
 
 QVariantHash MenuObject::routeLoader() const
 {
 
-    return p->data.value(qsl_fy(routeLoader)).toHash();
+    return p->data.value(QT_STRINGIFY(routeLoader)).toHash();
 }
 
 MenuObject &MenuObject::routeLoader(const QVariant &v)
 {
 
-    p->data[qsl_fy(routeLoader)] = v;
+    p->data[QT_STRINGIFY(routeLoader)] = v;
     return *this;
 }
 
 QVariantList MenuObject::menu() const
 {
 
-    auto menu = p->data.value(qsl_fy(menu)).toList();
+    auto menu = p->data.value(QT_STRINGIFY(menu)).toList();
     return menu;
 }
 
 MenuObject &MenuObject::menu(const QVariant &v)
 {
 
-    if (qTypeId(v) == QMetaType_QVariantList) {
+    if (v.typeId() == QMetaType::QVariantList) {
         for (auto &v : v.toList())
-            if (qTypeId(v) == QMetaType_QVariantMap || qTypeId(v) == QMetaType_QVariantHash)
+            if (v.typeId() == QMetaType::QVariantMap || v.typeId() == QMetaType::QVariantHash)
                 p->menuAdd(v.toMap());
-    } else if (qTypeId(v) == QMetaType_QVariantMap || qTypeId(v) == QMetaType_QVariantHash) {
+    } else if (v.typeId() == QMetaType::QVariantMap || v.typeId() == QMetaType::QVariantHash) {
         p->menuAdd(v.toMap());
     }
     return *this;
@@ -198,7 +198,7 @@ MenuObject &MenuObject::menu(const MenuObject &v)
 QVariantList MenuObject::permission() const
 {
 
-    auto menu = p->data.value(qsl_fy(permission)).toList();
+    auto menu = p->data.value(QT_STRINGIFY(permission)).toList();
     return menu;
 }
 
@@ -206,12 +206,12 @@ MenuObject &MenuObject::permission(const QVariant &v)
 {
     if (v.isValid()) {
 
-        if (qTypeId(v) == QMetaType_QVariantList) {
+        if (v.typeId() == QMetaType::QVariantList) {
             for (auto &v : v.toList()) {
-                if (qTypeId(v) == QMetaType_QVariantMap || qTypeId(v) == QMetaType_QVariantHash)
+                if (v.typeId() == QMetaType::QVariantMap || v.typeId() == QMetaType::QVariantHash)
                     this->menu(v);
             }
-        } else if (qTypeId(v) == QMetaType_QVariantMap || qTypeId(v) == QMetaType_QVariantHash) {
+        } else if (v.typeId() == QMetaType::QVariantMap || v.typeId() == QMetaType::QVariantHash) {
             p->permissionAdd(v);
         }
     }

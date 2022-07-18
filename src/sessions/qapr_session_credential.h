@@ -3,7 +3,6 @@
 #include <QUuid>
 #include <QVariantHash>
 #include "../application/qapr_global.h"
-#include "../../../qstm/src/qstm_object.h"
 
 namespace QApr {
 class CredentialsPvt;
@@ -69,7 +68,7 @@ public:
     //! \param uuid
     //! \return
     //!set domain
-    virtual SessionCredential&set_domain_uuid(const QVariant &uuid);
+    virtual SessionCredential &set_domain_uuid(const QVariant &uuid);
 
     //!
     //! \brief account_uuid
@@ -82,7 +81,7 @@ public:
     //! \param uuid
     //! \return
     //!
-    virtual SessionCredential&set_account_uuid(const QVariant &uuid);
+    virtual SessionCredential &set_account_uuid(const QVariant &uuid);
 
     //!
     //! \brief session_uuid
@@ -95,7 +94,7 @@ public:
     //! \param uuid
     //! \return
     //!
-    virtual SessionCredential&set_session_uuid(const QVariant &uuid);
+    virtual SessionCredential &set_session_uuid(const QVariant &uuid);
 
     //!
     //! \brief service_uuid
@@ -108,20 +107,20 @@ public:
     //! \param uuid
     //! \return
     //!
-    virtual SessionCredential&set_service_uuid(const QVariant &uuid);
+    virtual SessionCredential &set_service_uuid(const QVariant &uuid);
 
     //!
     //! \brief body
     //! \return
     //!full body of SessionCredential
-    virtual QVariantHash&body()const;
+    virtual QVariantHash &body()const;
 
     //!
     //! \brief setBody
     //! \param value
     //! \return
     //!
-    virtual SessionCredential&setBody(const QVariantHash&value);
+    virtual SessionCredential &setBody(const QVariantHash &value);
 
     //!
     //! \brief profile
@@ -134,7 +133,7 @@ public:
     //! \param value
     //! \return
     //!
-    virtual SessionCredential&setProfile(const QVariant &value);
+    virtual SessionCredential &setProfile(const QVariant &value);
 
     //!
     //! \brief session
@@ -147,7 +146,7 @@ public:
     //! \param value
     //! \return
     //!
-    virtual SessionCredential&setSession(const QVariant &value);
+    virtual SessionCredential &setSession(const QVariant &value);
 
     //!
     //! \brief token
@@ -160,7 +159,7 @@ public:
     //! \param value
     //! \return
     //!set token payload
-    virtual SessionCredential&setToken(const QVariant &value);
+    virtual SessionCredential &setToken(const QVariant &value);
 
 private:
     CredentialsPvt *p=nullptr;

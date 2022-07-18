@@ -35,6 +35,21 @@ Q_INVOKABLE virtual QVariant businessCheck() \
     return {}; \
 }
 
+#define ___a_party_1 QString::number(qlonglong(QThread::currentThreadId()))+QStringLiteral(":")
+
+#define ___a_party_2 QString(__PRETTY_FUNCTION__).replace(QStringLiteral("virtual"),QLatin1String("")).split(QStringLiteral("(")).first().trimmed()+QStringLiteral(":")
+
+#define aDebug()qDebug()<<___a_party_1<<___a_party_2
+
+#define aCritical()qCritical()<<___a_party_1<<___a_party_2
+
+#define aInfo()qInfo()<<___a_party_1<<___a_party_2
+
+#define aWarning()qWarning()<<___a_party_1<<___a_party_2
+
+#define aDebugMethodStart() qDebug()<<___a_party_1<<___a_party_2<<QStringLiteral(":start")
+
+#define aDebugMethodFinish()qDebug()<<___a_party_1<<___a_party_2<<QStringLiteral(":finish")
 
 #define QAPR_CRUD_BLOCK_MAKER(crudBlock)\
 QOrm::CRUDBlock crudBlock(this); \
@@ -42,3 +57,5 @@ crudBlock.host(QApr::Application::i().settings().host()->toHash()); \
 if(irq())\
 crudBlock.host().addHeaders(irq()->request().authorizationHeaders());\
 QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
+
+

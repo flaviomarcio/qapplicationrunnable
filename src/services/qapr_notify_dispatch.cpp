@@ -38,8 +38,8 @@ NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QO
 
 void NotifyDispatch::clear()
 {
-    this->setChannel(qbl_null);
-    this->setMd5(qbl_null);
+    this->setChannel({});
+    this->setMd5({});
 }
 
 QByteArray NotifyDispatch::channel() const

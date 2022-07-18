@@ -1,7 +1,5 @@
 #pragma once
 
-#include "./qapr_global.h"
-#include "./qapr_macro.h"
 #include <QCoreApplication>
 #include <QObject>
 #include <QString>
@@ -10,14 +8,14 @@
 #include <QThread>
 
 
-#define settings_HOME_DIR qsl("%1/qtreforce.files").arg(QDir::homePath())
+#define settings_HOME_DIR QStringLiteral("%1/qtreforce.files").arg(QDir::homePath())
 
 #ifdef Q_APR_TEST
-#define resourceSettings_FILE qsl("settings.test.json")
+#define resourceSettings_FILE QStringLiteral("settings.test.json")
 #elif QT_NO_DEBUG
-#define resourceSettings_FILE qsl("settings.release.json")
+#define resourceSettings_FILE QStringLiteral("settings.release.json")
 #else
-#define resourceSettings_FILE qsl("settings.debug.json")
+#define resourceSettings_FILE QStringLiteral("settings.debug.json")
 #endif
 
 #define CORE_OBJECT_INSTANCE(staticType)\
@@ -29,38 +27,38 @@ static staticType&instance(){\
 }
 
 
-#define QAPR_LOG true
-#define QAPR_LOG_VERBOSE false
-#define QAPR_LOG_SUPER_VERBOSE false
+#define Q_APR_LOG true
+#define Q_APR_LOG_VERBOSE false
+#define Q_APR_LOG_SUPER_VERBOSE false
 
-#if QAPR_LOG_VERBOSE
-#undef QAPR_LOG
-#define QAPR_LOG true
+#if Q_APR_LOG_VERBOSE
+#undef Q_APR_LOG
+#define Q_APR_LOG true
 #endif
 
-#if QAPR_LOG_SUPER_VERBOSE
-#undef QAPR_LOG
-#undef QAPR_LOG_VERBOSE
+#if Q_APR_LOG_SUPER_VERBOSE
+#undef Q_APR_LOG
+#undef Q_APR_LOG_VERBOSE
 
-#define QAPR_LOG true
-#define QAPR_LOG_VERBOSE true
+#define Q_APR_LOG true
+#define Q_APR_LOG_VERBOSE true
 #endif
 
 
-#if QAPR_LOG
+#if Q_APR_LOG
 #ifdef QT_DEBUG
-#define QAPR_LOG_DEBUG true
+#define Q_APR_LOG_DEBUG true
 #else
-#define QAPR_LOG_DEBUG false
+#define Q_APR_LOG_DEBUG false
 #endif
 
 #ifdef QT_RELEASE
-#define QAPR_LOG_RELEASE true
+#define Q_APR_LOG_RELEASE true
 #else
-#define QAPR_LOG_RELEASE false
+#define Q_APR_LOG_RELEASE false
 #endif
 #else
-#define QAPR_LOG_DEBUG false
-#define QAPR_LOG_RELEASE false
+#define Q_APR_LOG_DEBUG false
+#define Q_APR_LOG_RELEASE false
 #endif
 

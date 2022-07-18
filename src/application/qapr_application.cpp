@@ -1,5 +1,9 @@
 #include "./qapr_application.h"
 #include "./private/p_qapr_application.h"
+#include "./qapr_consts.h"
+#if Q_APR_LOG
+#include "./qapr_macro.h"
+#endif
 #include <QJsonDocument>
 #include <QJsonArray>
 
@@ -54,11 +58,11 @@ QVariantHash &Application::arguments()const
 
 Application &Application::printArguments()
 {
-#if QAPR_LOG
+#if Q_APR_LOG
     QHashIterator<QString, QVariant> i(p->_arguments);
     while (i.hasNext()) {
         i.next();
-        sInfo()<<qsl("%1 : %2").arg(i.key(), i.value().toString());
+        aInfo()<<QStringLiteral("%1 : %2").arg(i.key(), i.value().toString());
     }
 #endif
     return*this;

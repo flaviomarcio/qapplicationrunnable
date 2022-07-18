@@ -1,6 +1,7 @@
 #include "./qapr_controller_backoffice.h"
 #include "../interfaces/qapr_interface.h"
 #include "../../../qrpc/src/qrpc_controller.h"
+#include "./qapr_menu_object.h"
 
 namespace QApr {
 
@@ -88,9 +89,9 @@ ResultValue &ControllerBackOffice::sessionAccount()
 ResultValue &ControllerBackOffice::rootObject()
 {
     QVariantHash vHash;
-    vHash[qsl_fy(sessionAccount)]=this->sessionAccount().resultVariant();
-    vHash[qsl_fy(menu)]=menuMaker(this);
-    vHash[qsl_fy(enviroment)]=this->enviroment().resultVariant();
+    vHash[QT_STRINGIFY(sessionAccount)]=this->sessionAccount().resultVariant();
+    vHash[QT_STRINGIFY(menu)]=menuMaker(this);
+    vHash[QT_STRINGIFY(enviroment)]=this->enviroment().resultVariant();
     return this->lr(vHash);
 }
 
@@ -99,16 +100,16 @@ ResultValue &ControllerBackOffice::menuInfo(const QVariant &body)
     Q_UNUSED(body)
 //    Q_DECLARE_VU;
 //    auto vBody=vu.toHash(body);
-//    auto uuid=vu.toUuid(vBody[qsl_fy(uuid)]);
-//    auto name=vBody[qsl_fy(name)].toString();
+//    auto uuid=vu.toUuid(vBody[QT_STRINGIFY(uuid)]);
+//    auto name=vBody[QT_STRINGIFY(name)].toString();
 //    Q_UNUSED(uuid)
 //    Q_UNUSED(name)
-    return this->lr(qvh_null);
+    return this->lr(QVariantHash{});
 }
 
 ResultValue &ControllerBackOffice::enviroment()
 {
-    return this->lr(qvh{{qsl("version"), qsl("1.0.0")}});
+    return this->lr(QVariantHash{{QStringLiteral("version"), QStringLiteral("1.0.0")}});
 }
 
 }

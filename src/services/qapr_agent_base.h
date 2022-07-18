@@ -4,11 +4,10 @@
 #include <QThread>
 #include <QMap>
 #include <QVariant>
-#include "../../../qrpc/src/qrpc_setting_manager.h"
-#include "../../../qorm/src/qorm_connection_manager.h"
+#include <QSqlDatabase>
+#include "../../../qorm/src/qorm_macro.h"
+#include "../../../qrpc/src/qrpc_service_setting.h"
 #include "../application/qapr_global.h"
-#include "../application/qapr_consts.h"
-#include "../application/qapr_consts.h"
 
 namespace QApr {
 
@@ -17,7 +16,8 @@ class AgentBasePvt;
 //!
 //! \brief The AgentBase class
 //!
-class Q_APR_EXPORT AgentBase : public QThread{
+class Q_APR_EXPORT AgentBase : public QThread
+{
     Q_OBJECT
     QORM_CONNECTION_SUPPORT()
     friend class AgentBasePvt;
@@ -32,7 +32,7 @@ public:
     //! \brief agentSetting
     //! \return
     //!assiciate settings
-    virtual QRpc::ServiceSetting&agentSetting();
+    virtual QRpc::ServiceSetting &agentSetting();
 
     //!
     //! \brief run
@@ -86,10 +86,10 @@ signals:
     void serviceStart();
 
 
-    void taskError(const QByteArray&agentName, const QVariant &error);
+    void taskError(const QByteArray &agentName, const QVariant &error);
 
 
-    void taskFinished(const QByteArray&agentName);
+    void taskFinished(const QByteArray &agentName);
 
 
     void taskResume();

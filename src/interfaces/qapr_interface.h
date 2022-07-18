@@ -1,14 +1,15 @@
 #pragma once
 
-#include "../../../qorm/src/qorm_object_db.h"
+#include <QSqlDatabase>
+#include <QtReforce/QApiDoc>
+#include <QtReforce/QMfe>
 #include "../../../qrpc/src/qrpc_controller.h"
+#include "../../qorm/src/qorm_macro.h"
 #include "../application/qapr_global.h"
 #include "../sessions/qapr_session.h"
 #include "./qapr_interface_notations.h"
-#include "./qapr_menu_object.h"
-#include <QtReforce/QApiDoc>
-#include <QtSql/QSqlDatabase>
-#include <QtReforce/QMfe>
+//#include "../../../qorm/src/qorm_object_db.h"
+//#include "./qapr_menu_object.h"
 
 #define QAPR_DECLARE_IRQ() \
 public: \
@@ -31,7 +32,7 @@ public: \
     { \
         dPvt(); \
         if (this->irq() == nullptr) { \
-            sWarning() << tr("Request não identificado"); \
+            oWarning() << tr("Request não identificado"); \
             return false; \
         } \
         this->irq()->transactionRollbackForce(); \
@@ -41,7 +42,7 @@ public: \
     { \
         dPvt(); \
         if (this->irq() == nullptr) { \
-            sWarning() << tr("Request não identificado"); \
+            oWarning() << tr("Request não identificado"); \
             return; \
         } \
         this->irq()->setTransactionRollbackForce(value); \
@@ -63,33 +64,32 @@ class InterfacePvt;
 class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::InterfaceNotations
 {
     Q_OBJECT
-    Q_DECLARE_OBJECT()
     QORM_CONNECTION_SUPPORT()
 public:
     Q_API_DOC_INFO()
     {
-        document->host(qsl("localhost"))
+        document->host(QStringLiteral("localhost"))
             .basePath(this->basePath())
-            .consumes(qsl("application/json"))
-            .produces(qsl("application/json"))
+            .consumes(QStringLiteral("application/json"))
+            .produces(QStringLiteral("application/json"))
             .schemes(stpsHttp);
 
         document->info()
-            .title(qsl("QApr API Interface"))
-            .version(qsl("1.0.0"))
-            .termsOfService(qsl("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-            .description(qsl("Basic interface object for implementation in application"));
+            .title(QStringLiteral("QApr API Interface"))
+            .version(QStringLiteral("1.0.0"))
+            .termsOfService(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+            .description(QStringLiteral("Basic interface object for implementation in application"));
 
         document->info()
             .contact()
-            .name(qsl("Flavio Portela"))
-            .email(qsl("fmspx@hotmail.com"))
-            .url(qsl("https://github.com/flaviomarcio/qtreforce-sdk"));
+            .name(QStringLiteral("Flavio Portela"))
+            .email(QStringLiteral("fmspx@hotmail.com"))
+            .url(QStringLiteral("https://github.com/flaviomarcio/qtreforce-sdk"));
 
         document->info()
             .license()
-            .name(qsl("Apache License - Version 2.0, January 2004"))
-            .url(qsl("http://www.apache.org/licenses/LICENSE-2.0"));
+            .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
+            .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
 
 public:
@@ -107,23 +107,23 @@ public:
     Q_API_DOC_PATH(backOfficeMenu)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Menus for currenty API"))
+            .operationId({})
+            .description(QStringLiteral("Menus for currenty API"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), this->backOfficeMenu()}}));
+                QVariantHash{{QStringLiteral("response"), this->backOfficeMenu()}}));
     }
 
     //!
     //! \brief check
     //! \return
     //!
-    Q_NOTATION(check, qvl({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
+    Q_ANNOTATION(check, QVariantList({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
     Q_INVOKABLE virtual QVariant check();
     Q_API_DOC_PATH(check)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Simple check method for tests"))
+            .operationId({})
+            .description(QStringLiteral("Simple check method for tests"))
             .responses(QApiResponse().statusCode(200));
     }
 
@@ -132,59 +132,59 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariant ping();
-    Q_NOTATION(ping, qvl({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
+    Q_ANNOTATION(ping, QVariantList({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
     Q_API_DOC_PATH(ping)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Simple method check with response body"))
+            .operationId({})
+            .description(QStringLiteral("Simple method check with response body"))
             .responses(
-                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->ping()}}));
+                QApiResponse().statusCode(200).examples(QVariantHash{{QStringLiteral("response"), this->ping()}}));
     }
 
     //!
     //! \brief fullCheck
     //! \return
     //!
-    Q_NOTATION(fullCheck, {healtCheck})
+    Q_ANNOTATION(fullCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant fullCheck();
     Q_API_DOC_PATH(fullCheck)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Execute healt check"))
+            .operationId({})
+            .description(QStringLiteral("Execute healt check"))
             .responses(
-                QApiResponse().statusCode(200).examples(qvh{{qsl("response"), this->fullCheck()}}));
+                QApiResponse().statusCode(200).examples(QVariantHash{{QStringLiteral("response"), this->fullCheck()}}));
     }
 
     //!
     //! \brief connectionsCheck
     //! \return
     //!
-    Q_NOTATION(connectionsCheck, {healtCheck})
+    Q_ANNOTATION(connectionsCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant connectionsCheck();
     Q_API_DOC_PATH(connectionsCheck)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Implements connection database check"))
+            .operationId({})
+            .description(QStringLiteral("Implements connection database check"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), this->connectionsCheck()}}));
+                QVariantHash{{QStringLiteral("response"), this->connectionsCheck()}}));
     }
 
     //!
     //! \brief businessCheck
     //! \return
     //!
-    Q_NOTATION(businessCheck, {healtCheck})
+    Q_ANNOTATION(businessCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant businessCheck();
     Q_API_DOC_PATH(businessCheck)
     {
         path->operation(sptoGet)
-            .operationId(qsl_null)
-            .description(qsl("Implements business check"))
+            .operationId({})
+            .description(QStringLiteral("Implements business check"))
             .responses(QApiResponse().statusCode(200).examples(
-                qvh{{qsl("response"), this->businessCheck()}}));
+                QVariantHash{{QStringLiteral("response"), this->businessCheck()}}));
     }
 
     //!

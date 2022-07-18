@@ -1,6 +1,10 @@
 #include "./qapr_agent_base.h"
-#include "./qapr_agent.h"
 #include "../application/qapr_application.h"
+#include "../application/qapr_consts.h"
+#if Q_APR_LOG
+#include "../application/qapr_macro.h"
+#include <QSqlError>
+#endif
 #include <QTimer>
 #include <QCryptographicHash>
 #include <QVariant>
@@ -26,12 +30,12 @@ public:
 public slots:
     void onServiceRun()
     {
-#if QAPR_LOG_VERBOSE
-        sWarning()<<this->parent->agentName()<<tr(": started");
+#if Q_APR_LOG_VERBOSE
+        oWarning()<<this->parent->agentName()<<tr(": started");
 #endif
-        QMutexLOCKER locker(&serviceStartLock);
+        QMutexLocker<QMutex> locker(&serviceStartLock);
         auto &pp=*this->parent;
-#if QAPR_LOG_SUPER_VERBOSE
+#if Q_APR_LOG_SUPER_VERBOSE
         sInfo()<<"run "<<pp.agentName();
 #endif
         this->runner_date=QDateTime::currentDateTime();
@@ -41,32 +45,32 @@ public slots:
         const auto &agentSetting=pp.agentSetting();
         Q_UNUSED(agentSetting)
         QSqlDatabase db;
-#if QAPR_LOG_VERBOSE
+#if Q_APR_LOG_VERBOSE
         sInfo()<<this->agentName()<<", db connecting";
 #endif
         if(!pool.get(db)){
-#if QAPR_LOG
-            sInfo()<<qsl("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
+#if Q_APR_LOG
+            oInfo()<<QStringLiteral("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
 #endif
             return;
         }
 
         if(pp.setConnection(db)){
-#if QAPR_LOG_VERBOSE
+#if Q_APR_LOG_VERBOSE
             sInfo()<<this->agentName()<<", "<<agentSetting.name();
 #endif
             this->service_start();
             pool.finish(db);
             return;
         }
-#if QAPR_LOG_VERBOSE
-        sWarning()<<this->parent->agentName()<<tr(": finished");
+#if Q_APR_LOG_VERBOSE
+        oWarning()<<this->parent->agentName()<<tr(": finished");
 #endif
     }
 
     void service_start()
     {
-#if QAPR_LOG_VERBOSE
+#if Q_APR_LOG_VERBOSE
         aDebugMethodStart();
 #endif
         auto &pp=*this->parent;
@@ -84,23 +88,23 @@ public slots:
 
             if(!pp.canMethodExecute(method))
                 continue;
-#if QAPR_LOG_VERBOSE
-            sWarning()<<qsl("invoke method(%1)").arg(QString(method.name()));
+#if Q_APR_LOG_VERBOSE
+            oWarning()<<QStringLiteral("invoke method(%1)").arg(QString(method.name()));
 #endif
             if(!method.invoke(&pp, Qt::DirectConnection)){
                 message=tr("Method not called");
-#if QAPR_LOG
-                sWarning()<<qsl("invoke method(%1): error==%2").arg(method.name(), message);
+#if Q_APR_LOG
+                oWarning()<<QStringLiteral("invoke method(%1): error==%2").arg(method.name(), message);
 #endif
                 continue;
             }
-#if QAPR_LOG_VERBOSE
-            sDebug()<<"invoke method:"<<method.name();
+#if Q_APR_LOG_VERBOSE
+            oDebug()<<"invoke method:"<<method.name();
 #endif
             message.clear();
             break;
         }
-#if QAPR_LOG_VERBOSE
+#if Q_APR_LOG_VERBOSE
         aDebugMethodFinish();
 #endif
         this->runner_date=this->makeNewDateRun();
@@ -122,8 +126,8 @@ public slots:
         auto service=this->parent->agentName();
         auto &agentSetting=this->parent->agentSetting();
         if(!agentSetting.enabled()){
-#if QAPR_LOG_VERBOSE
-            sInfo()<<service<<qsl(" disabled");
+#if Q_APR_LOG_VERBOSE
+            sInfo()<<service<<QStringLiteral(" disabled");
 #endif
             return false;
         }
@@ -132,8 +136,8 @@ public slots:
             Q_UNUSED(service)
             this->runner_date=this->makeNewDateRun();
             if(!p.serviceStartLock.tryLock(10)){
-#if QAPR_LOG_VERBOSE
-                sInfo()<<service<<qsl(" skipped");
+#if Q_APR_LOG_VERBOSE
+                sInfo()<<service<<QStringLiteral(" skipped");
 #endif
                 return false;
             }
@@ -180,7 +184,7 @@ QRpc::ServiceSetting &AgentBase::agentSetting()
 
 void AgentBase::run()
 {
-#if QAPR_LOG_VERBOSE
+#if Q_APR_LOG_VERBOSE
     sInfo()<<tr("started");
 #endif
     this->exec();
@@ -213,17 +217,17 @@ void AgentBase::start()
 
 QByteArray AgentBase::agentName() const
 {
-    auto v=this->property(qbl("agentName")).toByteArray();
+    auto v=this->property(QByteArrayLiteral("agentName")).toByteArray();
     return v;
 }
 
 void AgentBase::setAgentName(const QVariant &v)
 {
-    this->setProperty(qbl("agentName"),v);
+    this->setProperty(QByteArrayLiteral("agentName"),v);
     auto c_name=QString(this->metaObject()->className());
     auto a_name=QString(this->agentName());
-    auto objectName=qsl("%1::%2").arg(c_name, a_name);
-    objectName=objectName.replace(qsl(":"),qsl("_")).replace(qsl("__"),qsl("_"));
+    auto objectName=QStringLiteral("%1::%2").arg(c_name, a_name);
+    objectName=objectName.replace(QStringLiteral(":"),QStringLiteral("_")).replace(QStringLiteral("__"),QStringLiteral("_"));
     this->setObjectName(objectName);
 }
 

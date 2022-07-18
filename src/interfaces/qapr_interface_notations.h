@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QNotation>
+#include <QAnnotation>
 #include <QObject>
 #include <QVariant>
 #include <QVariantHash>
@@ -26,36 +26,36 @@ public:
     //!
     //! \brief dbIgnore
     //!
-    Q_NOTATION_DECLARE(dbNoConnection, DataBase)
+    Q_ANNOTATION_DECLARE(dbNoConnection, DataBase)
 
     //!
     //! \brief dbNoTransaction
     //!
-    Q_NOTATION_DECLARE(dbNoTransaction, DataBase)
+    Q_ANNOTATION_DECLARE(dbNoTransaction, DataBase)
 
     //!
     //! \brief dbReadOnly
     //!
-    Q_NOTATION_DECLARE(dbReadOnly, DataBase)
+    Q_ANNOTATION_DECLARE(dbReadOnly, DataBase)
 
     //!
     //! \brief healtCheck
     //!
-    Q_NOTATION_DECLARE(healtCheck, Audit);
+    Q_ANNOTATION_DECLARE(healtCheck, Audit);
 
     //!
     //! \brief dbSetting
     //! \param setting
     //! \return
     //!
-    Q_NOTATION_DECLARE_FUNC(dbSetting, DataBase)
+    Q_ANNOTATION_DECLARE_FUNC(dbSetting, DataBase)
 
     //!
     //! \brief aclSetting
     //! \param setting
     //! \return
     //!
-    Q_NOTATION_DECLARE_FUNC(aclSetting, DataBase)
+    Q_ANNOTATION_DECLARE_FUNC(aclSetting, DataBase)
 private:
 };
 

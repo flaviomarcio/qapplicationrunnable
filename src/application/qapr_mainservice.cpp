@@ -16,33 +16,31 @@ MainService::MainService(QObject *parent):QObject{parent}
 int MainService::exec(QCoreApplication &a)
 {
     Q_UNUSED(a)
-    bool RETURN=false;
-
+    bool __return=false;
 
     auto &appInstance=Application::i();
 
-
     const auto &arguments = appInstance.arguments();
 
-    if(arguments.contains(qsl("ws"))){
+    if(arguments.contains(QStringLiteral("ws"))){
         auto &service = Server::instance();
         service.start();
-        RETURN = service.isRunning() || RETURN;
+        __return = service.isRunning() || __return;
     }
 
-    if(arguments.contains(qsl("agent"))){
+    if(arguments.contains(QStringLiteral("agent"))){
         auto &service = Agent::instance();
         service.start();
-        RETURN = service.isRunning() || RETURN;
+        __return = service.isRunning() || __return;
     }
 
-    if(arguments.contains(qsl("notify"))){
+    if(arguments.contains(QStringLiteral("notify"))){
         auto &service = Notify::instance();
         service.start();
-        RETURN = service.isRunning() || RETURN;
+        __return = service.isRunning() || __return;
     }
 
-    if(RETURN)
+    if(__return)
         return appInstance.exec(a);
 
     return QProcess::NormalExit;
