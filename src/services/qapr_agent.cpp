@@ -9,9 +9,6 @@ namespace QApr {
 
 Q_GLOBAL_STATIC(Agent, staticAgent);
 
-#define dPvt()\
-    auto &p =*reinterpret_cast<AgentPvt*>(this->p)
-
 class AgentPvt: public QObject{
 public:
     QString topicSetting;
@@ -156,16 +153,15 @@ Agent &Agent::instance()
 
 void Agent::run()
 {
-    dPvt();
-    p.topicSetting=QStringLiteral("agent:%1").arg(QT_STRINGIFY2(topicSetting)+QStringLiteral(":")+QString::fromUtf8(this->metaObject()->className()));
+    p->topicSetting=QStringLiteral("agent:%1").arg(QT_STRINGIFY2(topicSetting)+QStringLiteral(":")+QString::fromUtf8(this->metaObject()->className()));
 #ifdef QAPR_LOG_VERBOSE
     oWarning()<<QStringLiteral("started");
 #endif
-    p.timer=p.newTimer();
-    p.timer->start();
+    p->timer=p->newTimer();
+    p->timer->start();
     oDebug()<<QStringLiteral("Agent: running");
     this->exec();
-    p.freeTimer();
+    p->freeTimer();
 }
 
 bool Agent::start()
@@ -196,26 +192,22 @@ bool Agent::stop()
 
 void Agent::serviceStart(const QByteArray &service)
 {
-    dPvt();
-    p.taskRun(service);
+    p->taskRun(service);
 }
 
 QVariantHash Agent::serviceStats(const QByteArray &service)
 {
-    dPvt();
-    return p.taskStats(service);
+    return p->taskStats(service);
 }
 
 bool Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &service)
 {
-    dPvt();
-    return p.serviceRegister(metaObject, service);
+    return p->serviceRegister(metaObject, service);
 }
 
 bool Agent::notifySettingsChanged(const QVariant &payload)
 {
-    dPvt();
-    return p.connectionNotify.notify_send(p.topicSetting, payload);
+    return p->connectionNotify.notify_send(p->topicSetting, payload);
 }
 
 }

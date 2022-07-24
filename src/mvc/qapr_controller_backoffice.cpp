@@ -26,7 +26,7 @@ QVector<QApr::Interface*> makeInterfaces(QObject*parent)
     return __return;
 }
 
-static QVariantList&menuMaker(ControllerBackOffice*parent)
+static QVariantList &menuMaker(ControllerBackOffice*parent)
 {
     static QVariantList rootMenuMaked;
     if(rootMenuMaked.isEmpty()){
@@ -71,7 +71,7 @@ static QVariantList&menuMaker(ControllerBackOffice*parent)
 }
 
 
-ControllerBackOffice::ControllerBackOffice(QObject *parent) : QApr::Controller(parent)
+ControllerBackOffice::ControllerBackOffice(QObject *parent) : QApr::Controller{parent}
 {
 }
 

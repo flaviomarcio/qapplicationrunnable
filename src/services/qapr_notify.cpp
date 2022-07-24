@@ -9,13 +9,12 @@
 
 namespace QApr {
 
-
 Q_GLOBAL_STATIC(Notify, staticNotify)
 
 class NotifyPvt: public QObject{
 public:
     QMutex mutexNotify;
-    Notify*notify=nullptr;
+    Notify *notify=nullptr;
     QHash<QByteArray, const QMetaObject*> services;
     QHash<QByteArray, NotifyDispatch*> dispatchers;
     QHash<QByteArray, NotifyBase*> tasks;
@@ -138,7 +137,6 @@ Notify &Notify::instance()
 
 void Notify::run()
 {
-
     if(p->taskStart())
         this->exec();
     p->taskFinish();
@@ -182,7 +180,6 @@ NotifyDispatch&Notify::dispatcherRegister(const QMetaObject &metaObject, const Q
 
 bool Notify::notify(const QString &channel, const QVariant &payload)
 {
-
     return !this->isRunning()?false:p->taskNotify(channel, payload);
 }
 

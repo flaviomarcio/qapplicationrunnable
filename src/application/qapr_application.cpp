@@ -65,13 +65,13 @@ Application &Application::printArguments()
         aInfo()<<QStringLiteral("%1 : %2").arg(i.key(), i.value().toString());
     }
 #endif
-    return*this;
+    return *this;
 }
 
 Application &Application::resourceExtract()
 {
     p->resourceExtract();
-    return*this;
+    return *this;
 }
 
 CircuitBreaker &Application::circuitBreaker()

@@ -13,9 +13,6 @@
 
 namespace QApr{
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<AgentBasePvt*>(this->p)
-
 class AgentBasePvt:public QObject{
 public:
     QMutex serviceStartLock;
@@ -164,8 +161,7 @@ AgentBase::AgentBase(QObject *parent):QThread{nullptr}
     Q_UNUSED(parent)
     this->p = new AgentBasePvt{this};
     this->moveToThread(this);
-    dPvt();
-    QObject::connect(this, &AgentBase::serviceStart, &p, &AgentBasePvt::onServiceRun);
+    QObject::connect(this, &AgentBase::serviceStart, p, &AgentBasePvt::onServiceRun);
 }
 
 
@@ -198,8 +194,7 @@ bool AgentBase::canMethodExecute(const QMetaMethod &method)
 
 bool AgentBase::runCheck()
 {
-    dPvt();
-    return p.runCheck();
+    return p->runCheck();
 }
 
 void AgentBase::start()
@@ -233,8 +228,7 @@ void AgentBase::setAgentName(const QVariant &v)
 
 QVariantHash &AgentBase::stats()
 {
-    dPvt();
-    return p.stats;
+    return p->stats;
 }
 
 const QVariant AgentBase::resourceSettings()

@@ -31,9 +31,7 @@ QRpc::ServiceSetting &NotifyBase::notifySetting()
         static QRpc::ServiceSetting __default;
         return __default;
     }
-    else{
-        return setting;
-    }
+    return setting;
 }
 
 void NotifyBase::run()
@@ -54,8 +52,7 @@ void NotifyBase::start()
 
 QString NotifyBase::notifyName() const
 {
-    auto v=this->property(QByteArrayLiteral("notifyName")).toString();
-    return v;
+    return this->property(QByteArrayLiteral("notifyName")).toString();
 }
 
 void NotifyBase::setNotifyName(const QVariant &v)

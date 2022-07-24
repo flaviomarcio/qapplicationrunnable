@@ -4,9 +4,6 @@
 
 namespace QApr {
 
-#define dPvt()\
-    auto &p = *reinterpret_cast<NotifyDispatchPvt*>(this->p)
-
 class NotifyDispatchPvt:public QObject
 {
 public:
@@ -30,9 +27,8 @@ NotifyDispatch::NotifyDispatch(const QByteArray &name, const QByteArray &md5, QO
 {
     Q_UNUSED(parent)
     this->p= new NotifyDispatchPvt{this};
-    dPvt();
-    p.channel=name;
-    p.md5=md5;
+    p->channel=name;
+    p->md5=md5;
 }
 
 
@@ -44,26 +40,22 @@ void NotifyDispatch::clear()
 
 QByteArray NotifyDispatch::channel() const
 {
-    dPvt();
-    return p.channel;
+    return p->channel;
 }
 
 void NotifyDispatch::setChannel(const QByteArray &value)
 {
-    dPvt();
-    p.channel=value;
+    p->channel=value;
 }
 
 QByteArray NotifyDispatch::md5() const
 {
-    dPvt();
-    return p.md5;
+    return p->md5;
 }
 
 void NotifyDispatch::setMd5(const QByteArray &value)
 {
-    dPvt();
-    p.md5=value;
+    p->md5=value;
 }
 
 void NotifyDispatch::notify(const QVariant &payload)

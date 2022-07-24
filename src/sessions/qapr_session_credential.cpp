@@ -52,7 +52,7 @@ QVariantHash &SessionCredential::permits()const
 SessionCredential&SessionCredential::setPermits(const QVariantHash &permits)
 {
     p->permits = permits;
-    return*this;
+    return *this;
 }
 
 QUuid&SessionCredential::uuid() const
@@ -63,7 +63,7 @@ QUuid&SessionCredential::uuid() const
 SessionCredential&SessionCredential::setUuid(const QUuid &value)
 {
     p->uuid = value;
-    return*this;
+    return *this;
 }
 
 QUuid SessionCredential::domain_uuid() const
@@ -76,7 +76,7 @@ SessionCredential &SessionCredential::set_domain_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(domain_uuid)]=vu.toUuid(uuid);
-    return*this;
+    return *this;
 }
 
 QUuid SessionCredential::account_uuid() const
@@ -89,7 +89,7 @@ SessionCredential &SessionCredential::set_account_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(account_uuid)]=vu.toUuid(uuid);
-    return*this;
+    return *this;
 }
 
 QUuid SessionCredential::session_uuid() const
@@ -102,7 +102,7 @@ SessionCredential &SessionCredential::set_session_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(session_uuid)]=vu.toUuid(uuid);
-    return*this;
+    return *this;
 }
 
 QUuid SessionCredential::service_uuid() const
@@ -115,7 +115,7 @@ SessionCredential &SessionCredential::set_service_uuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(service_uuid)]=vu.toUuid(uuid);
-    return*this;
+    return *this;
 }
 
 QVariantHash &SessionCredential::body() const
@@ -126,7 +126,7 @@ QVariantHash &SessionCredential::body() const
 SessionCredential &SessionCredential::setBody(const QVariantHash &value)
 {
     p->body=value;
-    return*this;
+    return *this;
 }
 
 QVariant SessionCredential::profile() const
@@ -137,7 +137,7 @@ QVariant SessionCredential::profile() const
 SessionCredential &SessionCredential::setProfile(const QVariant &value)
 {
     p->body.insert(QT_STRINGIFY(profile), value);
-    return*this;
+    return *this;
 }
 
 QVariant SessionCredential::session() const
@@ -148,7 +148,7 @@ QVariant SessionCredential::session() const
 SessionCredential &SessionCredential::setSession(const QVariant &value)
 {
     p->body.insert(QT_STRINGIFY(session),value);
-    return*this;
+    return *this;
 }
 
 QVariant SessionCredential::token() const
@@ -159,7 +159,7 @@ QVariant SessionCredential::token() const
 SessionCredential &SessionCredential::setToken(const QVariant &value)
 {
     p->body.insert(QT_STRINGIFY(token), value);
-    return*this;
+    return *this;
 }
 
 }

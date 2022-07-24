@@ -22,13 +22,13 @@ QVariantHash CircuitBreaker::settings() const
 CircuitBreaker &CircuitBreaker::settings(const QVariantHash &v)
 {
     p->setting=v;
-    return*this;
+    return *this;
 }
 
 CircuitBreaker &CircuitBreaker::setSettings(const QVariantHash &v)
 {
     p->setting=v;
-    return*this;
+    return *this;
 }
 
 bool CircuitBreaker::start()
