@@ -3,7 +3,7 @@
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_startup.h"
 #include "../application/qapr_application.h"
-#include <QtReforce/QStm>
+#include <QStm>
 
 namespace QApr {
 

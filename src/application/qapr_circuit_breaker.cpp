@@ -5,7 +5,7 @@
 #include "./qapr_macro.h"
 #endif
 #include <QCoreApplication>
-#include <QtReforce/QStm>
+#include <QStm>
 
 namespace QApr {
 

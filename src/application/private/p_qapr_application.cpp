@@ -32,6 +32,7 @@ static void startSettings()
 
 static void startUp(Application &i)
 {
+    Q_UNUSED(i)
 #ifdef QT_DEBUG
     i.resourceExtract();
 #endif

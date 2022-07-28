@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtReforce/QApiDoc>
+#include <QApiDoc>
 #include "../../../qrpc/src/qrpc_macro.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
