@@ -135,7 +135,7 @@ private slots:
     }
 };
 
-Agent::Agent(QObject*parent):QThread{nullptr}
+Agent::Agent(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
     this->p = new AgentPvt{this};

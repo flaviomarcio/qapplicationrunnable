@@ -32,7 +32,7 @@ public:
     //! \brief NotifyBase
     //! \param parent
     //!
-    Q_INVOKABLE explicit NotifyBase(QObject*parent=nullptr);
+    Q_INVOKABLE explicit NotifyBase(QObject *parent=nullptr);
 
     //!
     //! \brief notifySetting

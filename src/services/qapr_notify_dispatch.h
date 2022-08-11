@@ -15,7 +15,7 @@ public:
     //! \brief NotifyDispatch
     //! \param parent
     //!
-    Q_INVOKABLE explicit NotifyDispatch(QObject*parent=nullptr);
+    Q_INVOKABLE explicit NotifyDispatch(QObject *parent=nullptr);
 
     //!
     //! \brief NotifyDispatch
@@ -23,7 +23,7 @@ public:
     //! \param md5
     //! \param parent
     //!
-    Q_INVOKABLE explicit NotifyDispatch(const QByteArray &name, const QByteArray &md5, QObject*parent=nullptr);
+    Q_INVOKABLE explicit NotifyDispatch(const QByteArray &name, const QByteArray &md5, QObject *parent=nullptr);
 
     //!
     //! \brief clear

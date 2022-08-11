@@ -26,7 +26,7 @@ public:
     //! \brief AgentBase
     //! \param parent
     //!
-    Q_INVOKABLE explicit AgentBase(QObject*parent=nullptr);
+    Q_INVOKABLE explicit AgentBase(QObject *parent=nullptr);
 
     //!
     //! \brief agentSetting

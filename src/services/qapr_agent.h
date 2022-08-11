@@ -21,7 +21,7 @@ public:
     //! \brief Agent
     //! \param parent
     //!
-    Q_INVOKABLE explicit Agent(QObject*parent=nullptr);
+    Q_INVOKABLE explicit Agent(QObject *parent=nullptr);
 
     //!
     //! \brief resourceSettings

@@ -119,7 +119,7 @@ public:
     }
 };
 
-Notify::Notify(QObject*parent):QThread{nullptr}
+Notify::Notify(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
     this->p = new NotifyPvt{this};

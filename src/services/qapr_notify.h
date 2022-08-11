@@ -29,7 +29,7 @@ public:
     //! \brief Notify
     //! \param parent
     //!
-    Q_INVOKABLE explicit Notify(QObject*parent=nullptr);
+    Q_INVOKABLE explicit Notify(QObject *parent=nullptr);
 
     //!
     //! \brief resourceSettings

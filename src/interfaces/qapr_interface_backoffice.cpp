@@ -77,7 +77,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
     static QMutex mutexInfo;
     static QList<const QMetaObject *> metaControllers=this->server()->controllers();
-    static QVector<ControllerInfo> infoCache;
+    static QHash<QString,ControllerInfo> infoCache;
 
     if(infoCache.isEmpty()){
         mutexInfo.lock();
@@ -95,23 +95,38 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                     continue;
 
                 const auto &nt = controller->notation();
-                ControllerInfo info;
-                info.invokableMethod=controller->invokableMethod();
+
+                auto display=nt.find(apiName()).toValueByteArray().trimmed();
+                if(display.isEmpty())
+                    continue;
+
+                ControllerInfo info=infoCache.value(display.toLower());
+                for(auto &method:controller->invokableMethod())
+                    info.invokableMethod.append(method);
 
                 if(info.invokableMethod.isEmpty())
                     continue;
 
-                info.basePath=nt.find(apiBasePath()).toValueByteArray();
-                info.display=nt.find(apiName()).toValueByteArray();
-                info.description=nt.find(apiDescription()).toValueByteArray();
+                info.basePath=nt.find(apiBasePath()).toValueByteArray().trimmed();
+                info.display=display;
+                info.description=nt.find(apiDescription()).toValueByteArray().trimmed();
 
-                infoCache.append(info);
+                if(info.display.isEmpty())
+                    continue;
+
+                infoCache.insert(display.toLower(),info);
+
+                //infoCache.append(info);
             }
         }
         mutexInfo.unlock();
     }
 
-    for(auto &controller: infoCache){
+    QStringList keys=infoCache.keys();
+    keys.sort();
+
+    for(auto &key: keys){
+        auto &controller=infoCache[key];
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;
@@ -143,7 +158,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                     .port(LOCAL_QAPR_SERVER_PORT)
                     );
         module.display(controller.display);
-        QHash<QByteArray, QMfe::Group *> groups;
+        QHash<QString, QMfe::Group *> groups;
         for(auto &info:controller.invokableMethod){
             if(info.group.isEmpty())
                 continue;
@@ -169,14 +184,22 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                         .pathUuid(path.uuid())
                         );
         }
-        QHashIterator<QByteArray, QMfe::Group*> i(groups);
-        while(i.hasNext()){
-            i.next();
-            auto v=i.value();
+        auto keys=groups.keys();
+        keys.sort();
+        for(auto&key:keys){
+            auto v=groups.value(key);
             if(!v) continue;
             module.group(*v);
             delete v;
         }
+//        QHashIterator<QString, QMfe::Group*> i(groups);
+//        while(i.hasNext()){
+//            i.next();
+//            auto v=i.value();
+//            if(!v) continue;
+//            module.group(*v);
+//            delete v;
+//        }
         p->access.api(api).module(module);
     }
     return p->access;

@@ -5,7 +5,7 @@
 
 namespace QApr {
 
-QVector<QApr::Interface*> makeInterfaces(QObject*parent)
+QVector<QApr::Interface*> makeInterfaces(QObject *parent)
 {
     QVector<QApr::Interface*> __return;
     auto &staticApiList=QRpc::Controller::staticApiList();
@@ -21,7 +21,7 @@ QVector<QApr::Interface*> makeInterfaces(QObject*parent)
             delete object;
             continue;
         }
-        __return<<parser;
+        __return.append(parser);
     }
     return __return;
 }

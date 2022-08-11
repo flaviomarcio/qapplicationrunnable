@@ -18,7 +18,7 @@ public:
     QDateTime activityLimit;
     qlonglong memoryLimitKB=0;
 
-    explicit CircuitBreakerPvt(QObject*parent=nullptr);
+    explicit CircuitBreakerPvt(QObject *parent=nullptr);
 
     virtual ~CircuitBreakerPvt();
 
