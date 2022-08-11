@@ -77,7 +77,8 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
     static QMutex mutexInfo;
     static QList<const QMetaObject *> metaControllers=this->server()->controllers();
-    static QHash<QString,ControllerInfo> infoCache;
+    //static QHash<QString,ControllerInfo> infoCache;
+    static QVector<ControllerInfo> infoCache;
 
     if(infoCache.isEmpty()){
         mutexInfo.lock();
@@ -100,7 +101,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 if(display.isEmpty())
                     continue;
 
-                ControllerInfo info=infoCache.value(display.toLower());
+                ControllerInfo info/*=infoCache.value(display.toLower())*/;
                 for(auto &method:controller->invokableMethod())
                     info.invokableMethod.append(method);
 
@@ -114,19 +115,15 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 if(info.display.isEmpty())
                     continue;
 
-                infoCache.insert(display.toLower(),info);
+                //infoCache.insert(display.toLower(),info);
 
-                //infoCache.append(info);
+                infoCache.append(info);
             }
         }
         mutexInfo.unlock();
     }
 
-    QStringList keys=infoCache.keys();
-    keys.sort();
-
-    for(auto &key: keys){
-        auto &controller=infoCache[key];
+    for(auto&controller:infoCache){
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;
@@ -192,14 +189,6 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
             module.group(*v);
             delete v;
         }
-//        QHashIterator<QString, QMfe::Group*> i(groups);
-//        while(i.hasNext()){
-//            i.next();
-//            auto v=i.value();
-//            if(!v) continue;
-//            module.group(*v);
-//            delete v;
-//        }
         p->access.api(api).module(module);
     }
     return p->access;
