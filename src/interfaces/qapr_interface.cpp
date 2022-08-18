@@ -21,6 +21,7 @@ public:
           session{parent}
     {
         this->parent = parent;
+        this->transaction.lr().clear();//clear thread erros
     }
 
     virtual ~InterfacePvt()

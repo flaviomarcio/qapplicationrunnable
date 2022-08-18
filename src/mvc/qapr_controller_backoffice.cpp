@@ -75,10 +75,6 @@ ControllerBackOffice::ControllerBackOffice(QObject *parent) : QApr::Controller{p
 {
 }
 
-ControllerBackOffice::~ControllerBackOffice()
-{
-}
-
 ResultValue &ControllerBackOffice::sessionAccount()
 {
     auto &credential=this->irq()->sessionObject().credential();
