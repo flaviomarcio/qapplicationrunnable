@@ -57,57 +57,46 @@ public:
     //!
     virtual SessionCredential &setUuid(const QUuid &value);
 
+
     //!
-    //! \brief domain_uuid
+    //! \brief domainUuid
     //! \return
     //!isolation level for systems
-    virtual QUuid domain_uuid()const;
+    virtual QUuid domainUuid()const;
+    virtual SessionCredential &setDomainUuid(const QVariant &uuid);
 
     //!
-    //! \brief set_domain_uuid
-    //! \param uuid
-    //! \return
-    //!set domain
-    virtual SessionCredential &set_domain_uuid(const QVariant &uuid);
-
-    //!
-    //! \brief account_uuid
+    //! \brief accountUuid
     //! \return
     //!account identification
-    virtual QUuid account_uuid()const;
-
-    //!
-    //! \brief set_account_uuid
-    //! \param uuid
-    //! \return
-    //!
+    virtual QUuid accountUuid()const;
     virtual SessionCredential &set_account_uuid(const QVariant &uuid);
 
     //!
-    //! \brief session_uuid
+    //! \brief sessionUuid
     //! \return
     //!
-    virtual QUuid session_uuid()const;
+    virtual QUuid sessionUuid()const;
 
     //!
-    //! \brief set_session_uuid
+    //! \brief setSessionUuid
     //! \param uuid
     //! \return
     //!
-    virtual SessionCredential &set_session_uuid(const QVariant &uuid);
+    virtual SessionCredential &setSessionUuid(const QVariant &uuid);
 
     //!
-    //! \brief service_uuid
+    //! \brief serviceUuid
     //! \return
     //!service identification
-    virtual QUuid service_uuid()const;
+    virtual QUuid serviceUuid()const;
 
     //!
-    //! \brief set_service_uuid
+    //! \brief setServiceUuid
     //! \param uuid
     //! \return
     //!
-    virtual SessionCredential &set_service_uuid(const QVariant &uuid);
+    virtual SessionCredential &setServiceUuid(const QVariant &uuid);
 
     //!
     //! \brief body

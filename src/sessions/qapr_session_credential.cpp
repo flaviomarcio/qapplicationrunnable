@@ -24,8 +24,8 @@ SessionCredential::SessionCredential(QObject *parent) : QObject{parent}
 QVariantHash SessionCredential::toVariant() const
 {
     QVariantHash vHash;
-    vHash[QT_STRINGIFY(session_uuid)]=this->session_uuid();
-    vHash[QT_STRINGIFY(account_uuid)]=this->account_uuid();
+    vHash[QT_STRINGIFY(session_uuid)]=this->sessionUuid();
+    vHash[QT_STRINGIFY(account_uuid)]=this->accountUuid();
     vHash[QT_STRINGIFY(profile)]=this->profile();
     vHash[QT_STRINGIFY(session)]=this->session();
     vHash[QT_STRINGIFY(permits)]=this->permits();
@@ -35,13 +35,13 @@ QVariantHash SessionCredential::toVariant() const
 bool SessionCredential::isValid() const
 {
     auto &credentials=*this;
-    if(!credentials.service_uuid().isNull())
-        return true;
+    if(credentials.serviceUuid().isNull())
+        return {};
 
-    if(!credentials.account_uuid().isNull() && !credentials.session_uuid().isNull())
-        return true;
+    if(credentials.accountUuid().isNull() || credentials.sessionUuid().isNull())
+        return {};
 
-    return false;
+    return true;
 }
 
 QVariantHash &SessionCredential::permits()const
@@ -49,37 +49,37 @@ QVariantHash &SessionCredential::permits()const
     return p->permits;
 }
 
-SessionCredential&SessionCredential::setPermits(const QVariantHash &permits)
+SessionCredential &SessionCredential::setPermits(const QVariantHash &permits)
 {
     p->permits = permits;
     return *this;
 }
 
-QUuid&SessionCredential::uuid() const
+QUuid &SessionCredential::uuid() const
 {
     return p->uuid;
 }
 
-SessionCredential&SessionCredential::setUuid(const QUuid &value)
+SessionCredential &SessionCredential::setUuid(const QUuid &value)
 {
     p->uuid = value;
     return *this;
 }
 
-QUuid SessionCredential::domain_uuid() const
+QUuid SessionCredential::domainUuid() const
 {
     Q_DECLARE_VU;
     return p->body[QT_STRINGIFY(domain_uuid)].toUuid();
 }
 
-SessionCredential &SessionCredential::set_domain_uuid(const QVariant &uuid)
+SessionCredential &SessionCredential::setDomainUuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(domain_uuid)]=vu.toUuid(uuid);
     return *this;
 }
 
-QUuid SessionCredential::account_uuid() const
+QUuid SessionCredential::accountUuid() const
 {
     Q_DECLARE_VU;
     return p->body.value(QT_STRINGIFY(account_uuid)).toUuid();
@@ -92,26 +92,26 @@ SessionCredential &SessionCredential::set_account_uuid(const QVariant &uuid)
     return *this;
 }
 
-QUuid SessionCredential::session_uuid() const
+QUuid SessionCredential::sessionUuid() const
 {
     Q_DECLARE_VU;
     return p->body.value(QT_STRINGIFY(session_uuid)).toUuid();
 }
 
-SessionCredential &SessionCredential::set_session_uuid(const QVariant &uuid)
+SessionCredential &SessionCredential::setSessionUuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(session_uuid)]=vu.toUuid(uuid);
     return *this;
 }
 
-QUuid SessionCredential::service_uuid() const
+QUuid SessionCredential::serviceUuid() const
 {
     Q_DECLARE_VU;
     return p->body.value(QT_STRINGIFY(service_uuid)).toUuid();
 }
 
-SessionCredential &SessionCredential::set_service_uuid(const QVariant &uuid)
+SessionCredential &SessionCredential::setServiceUuid(const QVariant &uuid)
 {
     Q_DECLARE_VU;
     p->body[QT_STRINGIFY(service_uuid)]=vu.toUuid(uuid);

@@ -39,7 +39,7 @@ public:
     //! \brief credential
     //! \return
     //!
-    virtual SessionCredential&credential();
+    virtual SessionCredential &credential();
 
     //!
     //! \brief init
