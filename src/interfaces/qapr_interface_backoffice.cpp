@@ -11,6 +11,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOSTNAME, (getenv("QAPR_SERVER_HOSTNAME")));
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, QAPR_SERVER_HEADERS, ());
 static int QAPR_SERVER_PORT=0;
+static const auto __console="console";
 
 static void init()
 {
@@ -196,7 +197,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
 QVariant InterfaceBackOffice::modules()
 {
-    return QVariantHash{{QStringLiteral("console"), qmfeAccess().toHash()}};
+    return QVariantHash{{__console, qmfeAccess().toHash()}};
 }
 #endif
 
