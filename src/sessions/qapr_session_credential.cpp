@@ -3,9 +3,19 @@
 
 namespace QApr {
 
+static auto const __account_uuid="account_uuid";
+static auto const __domain_uuid="domain_uuid";
+static auto const __session_uuid="session_uuid";
+static auto const __service_uuid="service_uuid";
+static auto const __profile="profile";
+static auto const __session="session";
+static auto const __token="token";
+static auto const __permits="permits";
+
 class CredentialsPvt:public QObject{
 public:
     SessionCredential *parent=nullptr;
+    QVariantHash body;
     QUuid uuid;
     QVariantHash permits;
     QUuid account_uuid;
@@ -25,6 +35,26 @@ public:
 SessionCredential::SessionCredential(QObject *parent) : QObject{parent}
 {
     this->p=new CredentialsPvt{this};
+}
+
+QVariantHash &SessionCredential::body() const
+{
+    return p->body;
+}
+
+SessionCredential &SessionCredential::setBody(const QVariantHash &value)
+{
+    p->body=value;
+    Q_DECLARE_VU;
+    p->account_uuid=vu.toUuid(value.value(__account_uuid));
+    p->domain_uuid=vu.toUuid(value.value(__domain_uuid));
+    p->session_uuid=vu.toUuid(value.value(__session_uuid));
+    p->service_uuid=vu.toUuid(value.value(__service_uuid));
+    p->profile=value.value(__profile);
+    p->session=value.value(__session);
+    p->token=value.value(__token);
+    p->permits=vu.toHash(value.value(__permits));
+    return *this;
 }
 
 QVariantHash SessionCredential::toVariant() const
