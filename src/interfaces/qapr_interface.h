@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QSqlDatabase>
-#include <QApiDoc>
-#include <QMfe>
+#include "../../../qapidoc/src/qapidoc.h"
+#include "../../../qmfe/src/v1/server/include/QMfe"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../../qorm/src/qorm_macro.h"
 #include "../application/qapr_global.h"

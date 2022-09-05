@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QAnnotation>
+#include "../../../qnotation/includes/QAnnotation"
 #include <QObject>
 #include <QVariant>
 #include <QVariantHash>

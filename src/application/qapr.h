@@ -26,3 +26,6 @@
 #include "../mvc/qapr_controller_backoffice.h"
 //util
 #include "../util/qapr_util_message.h"
+
+//startUp
+#include "../application/qapr_app_startup.h"
