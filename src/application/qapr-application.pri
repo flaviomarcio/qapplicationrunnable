@@ -27,6 +27,7 @@ SOURCES += \
     $$PWD/private/p_qapr_circuit_breaker.cpp \
     $$PWD/private/p_qapr_log_elk.cpp \
     $$PWD/private/p_qapr_log_telegram.cpp \
+    $$PWD/qapr_app_startup.cpp \
     $$PWD/qapr_host.cpp \
     $$PWD/qapr_circuit_breaker.cpp \
     $$PWD/qapr_runnable.cpp \

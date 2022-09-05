@@ -29,7 +29,7 @@ static void init()
     QAPR_SERVER_PORT=QByteArray{getenv("QAPR_SERVER_PORT")}.toInt();
     if(QAPR_SERVER_PORT<=0)
 #ifdef QT_DEBUG
-        QAPR_SERVER_PORT=28084;
+        QAPR_SERVER_PORT=228084;
 #else
         QAPR_SERVER_PORT=28080;
 #endif
