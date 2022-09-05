@@ -38,18 +38,19 @@ QStringList SDKGoogleTest::arguments()
 
 QByteArray SDKGoogleTest::toMd5(const QVariant &v)
 {
-    QByteArray bytes=QMetaTypeUtilObjects.contains(qTypeId(v))
+    QByteArray bytes=QMetaTypeUtilObjects.contains(v.typeId())
                            ?
                            QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
                            :
                            v.toByteArray();
-    return QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
+    auto md5=QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
+    return md5;
 }
 
 QVariant SDKGoogleTest::toVar(const QVariant &v)
 {
     return
-        QMetaTypeUtilString.contains(qTypeId(v))
+        QMetaTypeUtilString.contains(v.typeId())
             ?
             QJsonDocument::fromJson(v.toByteArray()).toVariant()
             :
@@ -59,7 +60,7 @@ QVariant SDKGoogleTest::toVar(const QVariant &v)
 QByteArray SDKGoogleTest::fakeBody(const int maxloop)
 {
     QByteArray __return;
-    Q_LOOP_LIMIT(maxloop){
+    Q_LOOP_LIMIT(i, maxloop){
         __return.append(QUuid::createUuid().toByteArray());
     }
     return __return;

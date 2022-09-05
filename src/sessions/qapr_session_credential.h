@@ -99,19 +99,6 @@ public:
     virtual SessionCredential &setServiceUuid(const QVariant &uuid);
 
     //!
-    //! \brief body
-    //! \return
-    //!full body of SessionCredential
-    virtual QVariantHash &body()const;
-
-    //!
-    //! \brief setBody
-    //! \param value
-    //! \return
-    //!
-    virtual SessionCredential &setBody(const QVariantHash &value);
-
-    //!
     //! \brief profile
     //! \return
     //! account body

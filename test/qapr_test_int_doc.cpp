@@ -36,7 +36,7 @@ TEST_F(Q_APR_TestIntDoc, checkMethodsHealtCheck)
         }
 
         EXPECT_TRUE(!vPaths.isEmpty())<<"No Paths";
-        auto methodsCheck=qvsl{QStringLiteral("/backofficemenu"), QStringLiteral("/check"), QStringLiteral("/ping"), QStringLiteral("/fullcheck"), QStringLiteral("/connectionscheck"), QStringLiteral("/businesscheck")};
+        auto methodsCheck=QStringList{QStringLiteral("/backofficemenu"), QStringLiteral("/check"), QStringLiteral("/ping"), QStringLiteral("/fullcheck"), QStringLiteral("/connectionscheck"), QStringLiteral("/businesscheck")};
         for(auto&methodName:methodsCheck){
             EXPECT_TRUE(vPaths.contains(methodName))<<"path not found";
         }
