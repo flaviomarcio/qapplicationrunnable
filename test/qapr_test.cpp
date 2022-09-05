@@ -38,7 +38,7 @@ QStringList SDKGoogleTest::arguments()
 
 QByteArray SDKGoogleTest::toMd5(const QVariant &v)
 {
-    QByteArray bytes=QMetaTypeUtilObjects.contains(qTypeId(v))
+    QByteArray bytes=QMetaTypeUtilObjects.contains(v.typeId())
                            ?
                            QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
                            :
@@ -49,17 +49,17 @@ QByteArray SDKGoogleTest::toMd5(const QVariant &v)
 QVariant SDKGoogleTest::toVar(const QVariant &v)
 {
     return
-        QMetaTypeUtilString.contains(qTypeId(v))
+        QMetaTypeUtilString.contains(v.typeId())
             ?
             QJsonDocument::fromJson(v.toByteArray()).toVariant()
             :
             v;
 }
 
-QByteArray SDKGoogleTest::fakeBody(const int maxloop)
+QByteArray SDKGoogleTest::fakeBody(int maxloop)
 {
     QByteArray __return;
-    Q_LOOP_LIMIT(maxloop){
+    Q_LOOP_LIMIT(loops, maxloop){
         __return.append(QUuid::createUuid().toByteArray());
     }
     return __return;
