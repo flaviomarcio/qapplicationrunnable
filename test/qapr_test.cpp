@@ -43,8 +43,7 @@ QByteArray SDKGoogleTest::toMd5(const QVariant &v)
                            QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
                            :
                            v.toByteArray();
-    auto md5=QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
-    return md5;
+    return QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
 }
 
 QVariant SDKGoogleTest::toVar(const QVariant &v)
@@ -57,10 +56,10 @@ QVariant SDKGoogleTest::toVar(const QVariant &v)
             v;
 }
 
-QByteArray SDKGoogleTest::fakeBody(const int maxloop)
+QByteArray SDKGoogleTest::fakeBody(int maxloop)
 {
     QByteArray __return;
-    Q_LOOP_LIMIT(i, maxloop){
+    Q_LOOP_LIMIT(loops, maxloop){
         __return.append(QUuid::createUuid().toByteArray());
     }
     return __return;

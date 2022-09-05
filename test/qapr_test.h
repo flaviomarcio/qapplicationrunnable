@@ -37,7 +37,7 @@ public:
 
     static QVariant toVar(const QVariant&v);
 
-    QByteArray fakeBody(const int maxloop=1);;
+    QByteArray fakeBody(int maxloop=1);;
 
     static QUuid toUUID(const QVariant&v);
 
