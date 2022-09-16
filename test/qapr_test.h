@@ -33,13 +33,13 @@ public:
 
     virtual QStringList arguments();
 
-    static QByteArray toMd5(const QVariant&v);
+    static QByteArray toMd5(const QVariant &v);
 
-    static QVariant toVar(const QVariant&v);
+    static QVariant toVar(const QVariant &v);
 
     QByteArray fakeBody(int maxloop=1);;
 
-    static QUuid toUUID(const QVariant&v);
+    static QUuid toUUID(const QVariant &v);
 
     static void SetUpTestCase();
 
