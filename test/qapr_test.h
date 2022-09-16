@@ -11,10 +11,9 @@
 #include <QLocale>
 #include <QJsonDocument>
 #include <gtest/gtest.h>
-#include "../../qrpc/src/qrpc_types.h"
-#include "../../qrpc/src/qrpc_request.h"
-#include "../../qrpc/src/qrpc_listen_protocol.h"
-#include "../../qstm/src/qstm_util_variant.h"
+//#include "../../qrpc/src/qrpc_types.h"
+//#include "../../qrpc/src/qrpc_request.h"
+//#include "../../qrpc/src/qrpc_listen_protocol.h"
 #include "../src/services/qapr_server.h"
 
 namespace QApr{
@@ -23,7 +22,7 @@ class SDKGoogleTest : public testing::Test{
 public:
     explicit SDKGoogleTest();
 
-    static QApr::Server&service();
+    static QApr::Server &service();
 
     virtual bool clear();
 

@@ -1,4 +1,7 @@
 #include "./qapr_test.h"
+#include "../../qstm/src/qstm_util_variant.h"
+#include "../../qstm/src/qstm_macro.h"
+#include "../../qrpc/src/qrpc_listen_protocol.h"
 
 namespace QApr{
 
