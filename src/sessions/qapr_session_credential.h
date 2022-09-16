@@ -20,6 +20,19 @@ public:
     Q_INVOKABLE explicit SessionCredential(QObject *parent = nullptr);
 
     //!
+    //! \brief body
+    //! \return
+    //!full body of SessionCredential
+    virtual QVariantHash &body()const;
+
+    //!
+    //! \brief setBody
+    //! \param value
+    //! \return
+    //!
+    virtual SessionCredential &setBody(const QVariantHash &value);
+
+    //!
     //! \brief toVariant
     //! \return
     //!return QVariantHash with credential information
