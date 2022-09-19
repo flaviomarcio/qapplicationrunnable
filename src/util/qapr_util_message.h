@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../../../qorm/src/qorm_controller.h"
 #include "../../../qrpc/src/qrpc_service_setting.h"
-#include "../../../qstm/src/qstm_message.h"
 #include "../application/qapr_global.h"
 
 namespace QApr {
@@ -20,11 +18,6 @@ public:
     Q_INVOKABLE explicit UtilMessage(QObject *parent = nullptr);
 
     //!
-    //! \brief ~UtilMessage
-    //!
-    ~UtilMessage();
-
-    //!
     //! \brief send
     //! \param setting
     //! \param serviceType
@@ -35,8 +28,8 @@ public:
     //! \return
     //!
     ResultValue &send(const QRpc::ServiceSetting &setting,
+                      const QUuid &serviceToken,
                       const QByteArray &serviceType,
-                      const QByteArray &serviceToken,
                       const QString &to,
                       const QString &body,
                       const QVariantList &attachment);
@@ -50,7 +43,7 @@ public:
     //! \return
     //!
     ResultValue &sendSMS(const QRpc::ServiceSetting &setting,
-                         const QByteArray &serviceToken,
+                         const QUuid &serviceToken,
                          const QString &to,
                          const QString &body);
 
@@ -63,7 +56,7 @@ public:
     //! \return
     //!
     ResultValue &sendPushNotify(const QRpc::ServiceSetting &setting,
-                                const QByteArray &serviceToken,
+                                const QUuid &serviceToken,
                                 const QString &to,
                                 const QString &body);
 
@@ -76,7 +69,7 @@ public:
     //! \return
     //!
     ResultValue &sendTelegram(const QRpc::ServiceSetting &setting,
-                              const QByteArray &serviceToken,
+                              const QUuid &serviceToken,
                               const QString &to,
                               const QString &body);
 
@@ -89,7 +82,7 @@ public:
     //! \return
     //!
     ResultValue &sendEmail(const QRpc::ServiceSetting &setting,
-                           const QByteArray &serviceToken,
+                           const QUuid &serviceToken,
                            const QString &to,
                            const QString &body);
 
@@ -102,7 +95,7 @@ public:
     //! \return
     //!
     ResultValue &sendWhatsApp(const QRpc::ServiceSetting &setting,
-                              const QByteArray &serviceToken,
+                              const QUuid &serviceToken,
                               const QString &to,
                               const QString &body);
 

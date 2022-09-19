@@ -2,6 +2,8 @@
 #include "../../../qrpc/src/qrpc_request.h"
 #include "../../../qstm/src/qstm_message.h"
 #include "../application/qapr_application.h"
+#include "../../../qorm/src/qorm_controller.h"
+#include "../../../qstm/src/qstm_message.h"
 
 namespace QApr {
 
@@ -46,7 +48,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant &vMs
 }
 
 static bool sendMessage(const QRpc::ServiceSetting &setting,
-                        const QByteArray &serviceToken,
+                        const QUuid &serviceToken,
                         const QString &type,
                         const QString &to,
                         const QString &payload,
@@ -58,7 +60,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting,
     auto uuid = QUuid::createUuidV3(QUuid::createUuid(), base);
     QRpc::Request request;
     request = setting;
-    if (!serviceToken.trimmed().isEmpty())
+    if (!serviceToken.isNull())
         request.header().setAuthorization(QRpc::Service, serviceToken);
     QVariantHash map;
     map.insert(QStringLiteral("uuid"), uuid);
@@ -79,36 +81,32 @@ static bool sendMessage(const QRpc::ServiceSetting &setting,
 
 UtilMessage::UtilMessage(QObject *parent) : QStm::Object{parent} {}
 
-UtilMessage::~UtilMessage() {}
-
 ResultValue &UtilMessage::send(const QRpc::ServiceSetting &setting,
+                               const QUuid &serviceToken,
                                const QByteArray &serviceType,
-                               const QByteArray &serviceToken,
                                const QString &to,
                                const QString &body,
                                const QVariantList &attachment)
 {
     QVariant response;
-    if (!sendMessage(setting, serviceType, serviceToken, to, body, attachment, response))
+    if (!sendMessage(setting, serviceToken, serviceType, to, body, attachment, response))
         return this->lr().setCritical("No send sms message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting,
-                                  const QByteArray &serviceToken,
+                                  const QUuid &serviceToken,
                                   const QString &to,
                                   const QString &body)
 {
     QVariant response;
     if (!sendMessage(setting, serviceToken, QStringLiteral("sms"), to, body, QVariantList(), response))
         return this->lr().setCritical("No send sms message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
-                                         const QByteArray &serviceToken,
+                                         const QUuid &serviceToken,
                                          const QString &to,
                                          const QString &body)
 {
@@ -116,52 +114,47 @@ ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
     if (!sendMessage(
             setting, serviceToken, QStringLiteral("pushnotification"), to, body, QVariantList(), response))
         return this->lr().setCritical("No send push notification");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting,
-                                       const QByteArray &serviceToken,
+                                       const QUuid &serviceToken,
                                        const QString &to,
                                        const QString &body)
 {
     QVariant response;
     if (!sendMessage(setting, serviceToken, QStringLiteral("telegram"), to, body, QVariantList(), response))
         return this->lr().setCritical("No send telegram message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting,
-                                    const QByteArray &serviceToken,
+                                    const QUuid &serviceToken,
                                     const QString &to,
                                     const QString &body)
 {
     QVariant response;
     if (!sendMessage(setting, serviceToken, QStringLiteral("email"), to, body, QVariantList(), response))
         return this->lr().setCritical("No send email");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting,
-                                       const QByteArray &serviceToken,
+                                       const QUuid &serviceToken,
                                        const QString &to,
                                        const QString &body)
 {
     QVariant response;
     if (!sendMessage(setting, serviceToken, QStringLiteral("whatsapp"), to, body, QVariantList(), response))
         return this->lr().setCritical("No send whatsapp message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::send(const QRpc::ServiceSetting &setting, const QVariant &message)
 {
     if (!sendMessage(setting, message))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting, const QVariant &message)
@@ -169,8 +162,7 @@ ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting, const QVa
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("sms"))))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
@@ -179,8 +171,7 @@ ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("PushNotify"))))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting, const QVariant &message)
@@ -188,8 +179,7 @@ ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting, cons
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("telegram"))))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting, const QVariant &message)
@@ -197,8 +187,7 @@ ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting, const Q
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("email"))))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting, const QVariant &message)
@@ -206,8 +195,7 @@ ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting, cons
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("whatsApp"))))
         return this->lr().setCritical("No send message");
-    else
-        return this->lr();
+    return this->lr();
 }
 
 } // namespace QApr

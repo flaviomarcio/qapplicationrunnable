@@ -21,6 +21,7 @@ namespace QApr{
 class SDKGoogleTest : public testing::Test{
 public:
     explicit SDKGoogleTest();
+    virtual ~SDKGoogleTest(){};
 
     static QApr::Server &service();
 
@@ -33,6 +34,8 @@ public:
     virtual QStringList arguments();
 
     static QByteArray toMd5(const QVariant &v);
+
+    static QUuid toMd5Uuid(const QVariant &v);
 
     static QVariant toVar(const QVariant &v);
 

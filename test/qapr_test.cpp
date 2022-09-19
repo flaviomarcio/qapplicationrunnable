@@ -41,12 +41,14 @@ QStringList SDKGoogleTest::arguments()
 
 QByteArray SDKGoogleTest::toMd5(const QVariant &v)
 {
-    QByteArray bytes=QMetaTypeUtilObjects.contains(v.typeId())
-                           ?
-                           QJsonDocument::fromVariant(v).toJson(QJsonDocument::Compact)
-                           :
-                           v.toByteArray();
-    return QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
+    Q_DECLARE_VU;
+    return vu.toMd5(v);
+}
+
+QUuid SDKGoogleTest::toMd5Uuid(const QVariant &v)
+{
+    Q_DECLARE_VU;
+    return vu.toMd5Uuid(v);
 }
 
 QVariant SDKGoogleTest::toVar(const QVariant &v)
