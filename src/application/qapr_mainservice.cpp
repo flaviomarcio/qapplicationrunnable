@@ -1,10 +1,17 @@
 #include "./qapr_mainservice.h"
+#include <QProcess>
+#include <QDir>
+
+#ifdef QAPR_TEST
+#include <gmock/gmock.h>
+#include <QCoreApplication>
+#else
 #include "./qapr_application.h"
 #include "../services/qapr_server.h"
 #include "../services/qapr_agent.h"
 #include "../services/qapr_notify.h"
-#include <QProcess>
-#include <QDir>
+#endif
+
 
 namespace QApr {
 
@@ -15,7 +22,17 @@ MainService::MainService(QObject *parent):QObject{parent}
 
 int MainService::exec(QCoreApplication &a)
 {
+    return exec(a, 0, nullptr);
+}
+
+int MainService::exec(QCoreApplication &a, int argc, char* argv[])
+{
     Q_UNUSED(a)
+#ifdef QAPR_TEST
+    testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
+#else
     bool __return=false;
 
     auto &appInstance=Application::i();
@@ -44,6 +61,9 @@ int MainService::exec(QCoreApplication &a)
         return appInstance.exec(a);
 
     return QProcess::NormalExit;
+
+#endif
+
 }
 
 }
