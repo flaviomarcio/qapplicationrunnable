@@ -66,6 +66,7 @@ InterfaceBackOffice::InterfaceBackOffice(QObject *parent) : QApr::Interface{pare
 }
 
 #ifdef QTREFORCE_QMFE
+
 QMfe::Access &InterfaceBackOffice::qmfeAccess()
 {
     struct ControllerInfo{
@@ -85,22 +86,29 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         mutexInfo.lock();
         if(infoCache.isEmpty()){
             for(auto &m:metaControllers){
-                if(this->staticMetaObject.className()==m->className())
+                auto metaClassName=m->className();
+                if(this->staticMetaObject.className()==metaClassName)
                     continue;
                 QScopedPointer<QObject> sp(m->newInstance(Q_ARG(QObject*, nullptr )));
-                if(!sp.data())
+                if(!sp.data()){
+                    qWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QApr::Interface::staticMetaObject.className());
                     continue;
+                }
 
                 auto controller=dynamic_cast<QApr::Interface*>(sp.data());
 
-                if(!controller)
+                if(!controller){
+                    qWarning()<<QString("%1: Invalid inherits of %s").arg(metaClassName, QApr::Interface::staticMetaObject.className());
                     continue;
+                }
 
                 const auto &nt = controller->notation();
 
                 auto display=nt.find(apiName()).toValueByteArray().trimmed();
-                if(display.isEmpty())
+                if(display.isEmpty()){
+                    qWarning()<<QString("%1: apiName is empty").arg(metaClassName);
                     continue;
+                }
 
                 ControllerInfo info/*=infoCache.value(display.toLower())*/;
                 for(auto &method:controller->invokableMethod())
@@ -116,15 +124,13 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 if(info.display.isEmpty())
                     continue;
 
-                //infoCache.insert(display.toLower(),info);
-
                 infoCache.append(info);
             }
         }
         mutexInfo.unlock();
     }
 
-    for(auto&controller:infoCache){
+    for(auto &controller:infoCache){
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;
@@ -200,5 +206,6 @@ QVariant InterfaceBackOffice::modules()
     return QVariantHash{{__console, qmfeAccess().toHash()}};
 }
 #endif
+
 
 } // namespace QApr
