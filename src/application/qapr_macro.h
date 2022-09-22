@@ -58,4 +58,5 @@ if(irq())\
 crudBlock.host().addHeaders(irq()->request().authorizationHeaders());\
 QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
 
-
+#define QAPR_CRUD_REPORT_MAKER(crudBlock)QAPR_CRUD_BLOCK_MAKER(crudBlock); \
+crudBlock.setType(crudBlock.ReportForm);crudBlock
