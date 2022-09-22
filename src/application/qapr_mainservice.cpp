@@ -28,6 +28,8 @@ int MainService::exec(QCoreApplication &a)
 int MainService::exec(QCoreApplication &a, int argc, char* argv[])
 {
     Q_UNUSED(a)
+    Q_UNUSED(argc)
+    Q_UNUSED(argv)
 #ifdef QAPR_TEST
     testing::InitGoogleTest(&argc, argv);
     testing::InitGoogleMock(&argc, argv);
