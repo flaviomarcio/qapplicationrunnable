@@ -1,5 +1,5 @@
 #include "./p_qapr_circuit_breaker.h"
-#include "../../../qorm/src/qorm_macro.h"
+#include "../qapr_macro.h"
 
 namespace QApr {
 
@@ -54,7 +54,7 @@ void CircuitBreakerPvt::onCheck()
         this->memoryLimitKB=_memoryLimit/1024;//to KB
 
     if(activityLimit.isValid() && (_now>this->activityLimit)){
-        oWarning()<<QStringLiteral("break application by timeout");
+        aWarning()<<QStringLiteral("break application by timeout");
         this->onBreak();
     }
 
@@ -62,7 +62,7 @@ void CircuitBreakerPvt::onCheck()
 //    const auto &memoryLimitKB=this->memoryLimitKB;
 
 //    if(memoryLimitKB>0 && (memoryUsage > memoryLimitKB)){
-//        oWarning()<<QStringLiteral("break application by memory limit(limitMem: %1 KB, curMen==%2 KB)").arg(memoryUsage, memoryLimitKB);
+//        aWarning()<<QStringLiteral("break application by memory limit(limitMem: %1 KB, curMen==%2 KB)").arg(memoryUsage, memoryLimitKB);
 //        this->onBreak();
 //    }
 }
@@ -71,7 +71,7 @@ void CircuitBreakerPvt::onBreak()
 {
     QObject::disconnect(this->timerBreaker, &QTimer::timeout,this, &CircuitBreakerPvt::onCheck);
     this->timerBreaker->stop();
-    oWarning()<<QStringLiteral("circuit will be stopped");
+    aWarning()<<QStringLiteral("circuit will be stopped");
     qApp->quit();
 }
 

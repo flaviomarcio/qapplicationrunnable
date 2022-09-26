@@ -28,7 +28,7 @@ public slots:
     void onServiceRun()
     {
 #if Q_APR_LOG_VERBOSE
-        oWarning()<<this->parent->agentName()<<tr(": started");
+        aWarning()<<this->parent->agentName()<<tr(": started");
 #endif
         QMutexLocker<QMutex> locker(&serviceStartLock);
         auto &pp=*this->parent;
@@ -61,7 +61,7 @@ public slots:
             return;
         }
 #if Q_APR_LOG_VERBOSE
-        oWarning()<<this->parent->agentName()<<tr(": finished");
+        aWarning()<<this->parent->agentName()<<tr(": finished");
 #endif
     }
 
@@ -86,12 +86,12 @@ public slots:
             if(!pp.canMethodExecute(method))
                 continue;
 #if Q_APR_LOG_VERBOSE
-            oWarning()<<QStringLiteral("invoke method(%1)").arg(QString(method.name()));
+            aWarning()<<QStringLiteral("invoke method(%1)").arg(QString(method.name()));
 #endif
             if(!method.invoke(&pp, Qt::DirectConnection)){
                 message=tr("Method not called");
 #if Q_APR_LOG
-                oWarning()<<QStringLiteral("invoke method(%1): error==%2").arg(method.name(), message);
+                aWarning()<<QStringLiteral("invoke method(%1): error==%2").arg(method.name(), message);
 #endif
                 continue;
             }

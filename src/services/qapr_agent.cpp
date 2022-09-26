@@ -19,7 +19,7 @@ public:
     QHash<QByteArray, AgentBase*> tasks;
     QHash<QByteArray, QDateTime> tasksInterval;
     QTimer*timer=nullptr;
-    explicit AgentPvt(Agent*parent) : QObject{parent}, agent(parent)
+    explicit AgentPvt(Agent *parent) : QObject{parent}, agent(parent)
     {
     }
 
@@ -155,7 +155,7 @@ void Agent::run()
 {
     p->topicSetting=QStringLiteral("agent:%1").arg(QT_STRINGIFY2(topicSetting)+QStringLiteral(":")+QString::fromUtf8(this->metaObject()->className()));
 #ifdef QAPR_LOG_VERBOSE
-    oWarning()<<QStringLiteral("started");
+    aWarning()<<QStringLiteral("started");
 #endif
     p->timer=p->newTimer();
     p->timer->start();
@@ -167,7 +167,7 @@ void Agent::run()
 bool Agent::start()
 {
 #ifdef QAPR_LOG_VERBOSE
-    oWarning()<<QStringLiteral("started");
+    aWarning()<<QStringLiteral("started");
 #endif
     auto objectName=this->objectName().trimmed();
     if(objectName.isEmpty()){

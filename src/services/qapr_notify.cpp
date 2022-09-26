@@ -145,7 +145,7 @@ void Notify::run()
 bool Notify::start()
 {
 #ifdef QAPR_LOG_VERBOSE
-    oWarning()<<tr("started");
+    aWarning()<<tr("started");
 #endif
     auto objectName=this->objectName().trimmed();
     if(objectName.isEmpty()){

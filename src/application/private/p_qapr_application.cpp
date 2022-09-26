@@ -1,6 +1,7 @@
 #include "./p_qapr_application.h"
 #include "../qapr_startup.h"
 #include "../qapr_consts.h"
+#include "../qapr_macro.h"
 #include "../../qorm/src/qorm_macro.h"
 
 namespace QApr{
@@ -21,12 +22,18 @@ static void startSettings()
     auto settingFiles=i.resourceSettings().toStringList();
     auto &manager=i.manager();
     for(auto &settingFile: settingFiles){
-        if(manager.load(settingFile)){
-            i.settings().setValues(settingFile);
-            if(!i.connectionManager().load(settingFile))
-                oWarning()<<QObject::tr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
+        if(!manager.load(settingFile))
+            continue;
+
+        i.settings().setValues(settingFile);
+        if(!i.connectionManager().load(settingFile)){
+            aWarning()<<QObject::tr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
             break;
         }
+
+        aWarning() << QObject::tr("loaded settings: %1").arg(settingFile);
+        break;
+
     }
 }
 
@@ -103,13 +110,13 @@ void ApplicationPvt::resourceExtract()
 
         if(!fileSrc.open(fileSrc.ReadOnly)){
 #if Q_RPC_LOG
-            oWarning()<<QStringLiteral("No open file:")<<fileSrc.fileName()<<QStringLiteral(", error: ")<<fileSrc.errorString();
+            aWarning()<<QStringLiteral("No open file:")<<fileSrc.fileName()<<QStringLiteral(", error: ")<<fileSrc.errorString();
 #endif
             continue;
         }
         if(!fileDst.open(fileDst.Truncate | fileDst.Unbuffered | fileDst.WriteOnly)){
 #if Q_RPC_LOG
-            oWarning()<<QStringLiteral("No open file:")<<fileDst.fileName()<<QStringLiteral(", error: ")<<fileDst.errorString();
+            aWarning()<<QStringLiteral("No open file:")<<fileDst.fileName()<<QStringLiteral(", error: ")<<fileDst.errorString();
 #endif
             fileSrc.close();
             continue;
@@ -141,13 +148,13 @@ QVariantHash &ApplicationPvt::arguments()
 
         auto key=l.first().toLower();
         auto value=l.last();
-        _arguments[key]=value;
+        _arguments.insert(key, value);
     }
 
     QHashIterator<QString, QVariant> i(manager.arguments());
     while (i.hasNext()) {
         i.next();
-        _arguments[i.key()]=i.value();
+        _arguments.insert(i.key(), i.value());
     }
     return _arguments;
 }

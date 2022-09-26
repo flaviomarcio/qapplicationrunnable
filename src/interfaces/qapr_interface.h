@@ -31,7 +31,7 @@ public: \
     virtual bool transactionRollbackForce() const \
     { \
         if (this->irq() == nullptr) { \
-            oWarning() << tr("Request não identificado"); \
+            aWarning() << tr("Request não identificado"); \
             return false; \
         } \
         this->irq()->transactionRollbackForce(); \
@@ -40,7 +40,7 @@ public: \
     virtual void setTransactionRollbackForce(bool value) \
     { \
         if (this->irq() == nullptr) { \
-            oWarning() << tr("Request não identificado"); \
+            aWarning() << tr("Request não identificado"); \
             return; \
         } \
         this->irq()->setTransactionRollbackForce(value); \
