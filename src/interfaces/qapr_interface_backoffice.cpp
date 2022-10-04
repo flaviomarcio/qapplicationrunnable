@@ -10,6 +10,7 @@ namespace QApr {
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOSTNAME, (getenv("QAPR_SERVER_HOSTNAME")));
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, QAPR_SERVER_HEADERS, ());
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_BASEPATH, ());
 static int QAPR_SERVER_PORT=0;
 static const auto __console="console";
 
@@ -129,18 +130,20 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         }
         mutexInfo.unlock();
     }
+    const auto &host=QApr::Application::i().settings().host();
+    auto LOCAL_QAPR_SERVER_PROTOCOL=QAPR_SERVER_PROTOCOL->isEmpty()?host->protocol():(*QAPR_SERVER_PROTOCOL);
+    auto LOCAL_QAPR_SERVER_HOSTNAME=QAPR_SERVER_HOSTNAME->isEmpty()?host->hostName():(*QAPR_SERVER_HOSTNAME);
+    auto LOCAL_QAPR_SERVER_PORT=QAPR_SERVER_PORT<=0?host->port():(QAPR_SERVER_PORT);
+    auto LOCAL_QAPR_SERVER_HEADERS=(*QAPR_SERVER_HEADERS);
+    auto LOCAL_QAPR_SERVER_BASEPATH=QAPR_SERVER_BASEPATH?host->basePath():(*QAPR_SERVER_BASEPATH);
 
     for(auto &controller:infoCache){
         QMfe::Api api;
         QMfe::Module module;
         static const QStm::Network network;
 
-        const auto &host=QApr::Application::i().settings().host();
 
-        auto LOCAL_QAPR_SERVER_PROTOCOL=QAPR_SERVER_PROTOCOL->isEmpty()?host->protocol():(*QAPR_SERVER_PROTOCOL);
-        auto LOCAL_QAPR_SERVER_HOSTNAME=QAPR_SERVER_HOSTNAME->isEmpty()?host->hostName():(*QAPR_SERVER_HOSTNAME);
-        auto LOCAL_QAPR_SERVER_PORT=QAPR_SERVER_PORT<=0?host->port():(QAPR_SERVER_PORT);
-        auto LOCAL_QAPR_SERVER_HEADERS=(*QAPR_SERVER_HEADERS);
+
         if(!this->request().authorizationHeaders().isEmpty()){
             LOCAL_QAPR_SERVER_HEADERS.clear();
             QHashIterator<QString, QVariant> i(this->request().authorizationHeaders());
@@ -160,6 +163,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                     .hostName(LOCAL_QAPR_SERVER_HOSTNAME)
                     .headers(LOCAL_QAPR_SERVER_HEADERS)
                     .port(LOCAL_QAPR_SERVER_PORT)
+                    .basePath(LOCAL_QAPR_SERVER_BASEPATH)
                     );
         module.display(controller.display);
         QHash<QString, QMfe::Group *> groups;

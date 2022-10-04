@@ -2,7 +2,7 @@
 #include "../qapr_startup.h"
 #include "../qapr_consts.h"
 #include "../qapr_macro.h"
-#include "../../qorm/src/qorm_macro.h"
+//#include "../../qorm/src/qorm_macro.h"
 
 namespace QApr{
 
