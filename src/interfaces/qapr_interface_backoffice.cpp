@@ -99,7 +99,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 auto controller=dynamic_cast<QApr::Interface*>(sp.data());
 
                 if(!controller){
-                    qWarning()<<QString("%1: Invalid inherits of %s").arg(metaClassName, QApr::Interface::staticMetaObject.className());
+                    qWarning()<<QString("%1: Invalid inherits of %2").arg(metaClassName, QApr::Interface::staticMetaObject.className());
                     continue;
                 }
 
