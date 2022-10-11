@@ -9,12 +9,12 @@ class InterfacePrinterPvt;
 class InterfacePrinter : public QRpc::Controller
 {
     Q_OBJECT
-    Q_ANNOTATION(InterfacePrinter, QVariantList({apiBasePath("v1/printer")}))
+    Q_ANNOTATION(InterfacePrinter, QVariantList({apiBasePath("/v1/printer")}))
 public:
-    explicit InterfacePrinter(QObject *parent = nullptr);
+    Q_INVOKABLE explicit InterfacePrinter(QObject *parent = nullptr);
 
-    Q_ANNOTATION(printer, QVariantList({opPost}))
-    Q_INVOKABLE virtual QVariant printer();
+    Q_ANNOTATION(execute, QVariantList({opPost}))
+    Q_INVOKABLE virtual QVariant execute();
 private:
     InterfacePrinterPvt *p=nullptr;
 };

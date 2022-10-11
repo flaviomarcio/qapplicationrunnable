@@ -5,10 +5,6 @@
 
 namespace QApr {
 
-static const auto _printer="";
-
-
-
 class InterfacePrinterPvt:public QObject{
 public:
     explicit InterfacePrinterPvt(InterfacePrinter *parent):QObject{parent}, requestService{parent}
@@ -18,8 +14,9 @@ public:
 
     QRpc::Request &req()
     {
+        static const auto __settings="printservice";
         auto &manager=QApr::Application::i().manager();
-        auto &settingAcl=manager.setting(_printer);
+        auto &settingAcl=manager.setting(__settings);
         requestSession=settingAcl;
         auto headers=parent->request().requestHeader();
         this->requestSession.header().setRawHeader(headers);
@@ -35,13 +32,15 @@ InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}
     this->p=new InterfacePrinterPvt{this};
 }
 
-QVariant InterfacePrinter::printer()
+QVariant InterfacePrinter::execute()
 {
+    static const auto __path="/v1/service/maker/execute";
     QRPC_V_SET_BODY(body);
-    auto &req=p->req();
-    req.call(QRpc::Post, body);
 
-    if(req.response().isOk())
+    auto &req=p->req();
+    req.call(QRpc::Post, __path, body);
+
+    if(!req.response().isOk())
         return {};
 
     return req.response().body();
