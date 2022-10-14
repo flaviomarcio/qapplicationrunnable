@@ -34,14 +34,19 @@ InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}
 
 QVariant InterfacePrinter::execute()
 {
+    QApr::Controller controller{this};
     static const auto __path="/v1/service/maker/execute";
     QRPC_V_SET_BODY(body);
 
     auto &req=p->req();
     req.call(QRpc::Post, __path, body);
 
-    if(!req.response().isOk())
-        return {};
+    if(!req.response().isOk()){
+        auto &resultInfo=controller.lr().resultInfo();
+        resultInfo.setSuccess(false);
+        resultInfo.setErrors(tr("Falha no serviço de impressão"));
+        return controller.resultInfo();
+    }
 
     return req.response().body();
 }
