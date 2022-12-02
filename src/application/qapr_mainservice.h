@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QCoreApplication>
+#include <QGuiApplication>
 
 #define QAPR_MAIN_DECLARE()\
 int main(int argc, char* argv[])\
 {\
-    QCoreApplication a(argc, argv);\
+    QGuiApplication a(argc, argv);\
     return QApr::MainService(nullptr).exec(a, argc, argv);\
 }
 
@@ -29,8 +29,8 @@ public:
     //! \param a
     //! \return
     //!
-    static int exec(QCoreApplication &a);
-    static int exec(QCoreApplication &a, int argc, char *argv[]);
+    static int exec(QGuiApplication &a);
+    static int exec(QGuiApplication &a, int argc, char *argv[]);
 };
 
 }
