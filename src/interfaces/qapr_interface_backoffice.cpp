@@ -25,7 +25,7 @@ static void init()
     if(QAPR_SERVER_HOSTNAME->isEmpty())
         *QAPR_SERVER_HOSTNAME="localhost";
 
-    *QAPR_SERVER_HEADERS=vu.toHash(getenv("QAPR_SERVER_HEADERS"));
+    *QAPR_SERVER_HEADERS=vu.toHash(QByteArray(getenv("QAPR_SERVER_HEADERS")));
 
     QAPR_SERVER_PORT=QByteArray{getenv("QAPR_SERVER_PORT")}.toInt();
     if(QAPR_SERVER_PORT<=0)
