@@ -1,18 +1,22 @@
 #include "./qapr_interface_backoffice.h"
 #include "../../../qorm/src/qorm_transaction.h"
-#include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_startup.h"
+#ifdef QTREFORCE_QRMK
+#include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_application.h"
+#endif
 #include <QStm>
 
 namespace QApr {
 
+static int QAPR_SERVER_PORT=0;
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOSTNAME, (getenv("QAPR_SERVER_HOSTNAME")));
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, QAPR_SERVER_HEADERS, ());
+#ifdef QTREFORCE_QRMK
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_BASEPATH, ());
-static int QAPR_SERVER_PORT=0;
 static const auto __console="console";
+#endif
 
 static void init()
 {
@@ -43,14 +47,17 @@ class InterfaceBackOfficePvt:public QObject
 public:
     bool connectionDb = true;
     bool transactionRollbackForce = false;
-    QOrm::Transaction transaction;
     QRpc::Controller *parent = nullptr;
+#ifdef QTREFORCE_QRMK
     QMfe::Access access;
-
+#endif
+    QOrm::Transaction transaction;
     explicit InterfaceBackOfficePvt(QRpc::Controller *parent)
         : QObject{parent},
-          transaction{parent},
-          access{parent}
+#ifdef QTREFORCE_QRMK
+          access{parent},
+      #endif
+          transaction{parent}
     {
         this->parent = parent;
     }

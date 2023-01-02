@@ -20,12 +20,12 @@ MainService::MainService(QObject *parent):QObject{parent}
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }
 
-int MainService::exec(QGuiApplication &a)
+int MainService::exec(Q_APR_APP_CLASS &a)
 {
     return exec(a, 0, nullptr);
 }
 
-int MainService::exec(QGuiApplication &a, int argc, char* argv[])
+int MainService::exec(Q_APR_APP_CLASS &a, int argc, char* argv[])
 {
     Q_UNUSED(a)
     Q_UNUSED(argc)

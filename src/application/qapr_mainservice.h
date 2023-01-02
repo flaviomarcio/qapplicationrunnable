@@ -1,11 +1,19 @@
 #pragma once
 
+#ifdef QT_GUI_LIB
+#define Q_APR_APP_CLASS QGuiApplication
 #include <QGuiApplication>
+#else
+#define Q_APR_APP_CLASS QCoreApplication
+#include <QCoreApplication>
+#endif
+
+
 
 #define QAPR_MAIN_DECLARE()\
 int main(int argc, char* argv[])\
 {\
-    QGuiApplication a(argc, argv);\
+    Q_APR_APP_CLASS a(argc, argv);\
     return QApr::MainService(nullptr).exec(a, argc, argv);\
 }
 
@@ -29,8 +37,8 @@ public:
     //! \param a
     //! \return
     //!
-    static int exec(QGuiApplication &a);
-    static int exec(QGuiApplication &a, int argc, char *argv[]);
+    static int exec(Q_APR_APP_CLASS &a);
+    static int exec(Q_APR_APP_CLASS &a, int argc, char *argv[]);
 };
 
 }
