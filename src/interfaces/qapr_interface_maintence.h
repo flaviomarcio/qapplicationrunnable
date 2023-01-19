@@ -1,6 +1,8 @@
 #pragma once
 
+#if QTREFORCE_QAPIDOC
 #include "../../../qapidoc/includes/QApiDoc"
+#endif
 #include "../../../qrpc/src/qrpc_macro.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
@@ -19,6 +21,7 @@ class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller,
     Q_APR_DECLARE_INTERFACE_METHOD_CHECK()
     Q_ANNOTATION(InterfaceMaintence, QVariantList({apiBasePath("/v1/maintence")}))
 
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_INFO()
     {
         document->host(QStringLiteral("localhost"))
@@ -45,7 +48,7 @@ class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller,
             .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
             .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
-
+#endif
 public:
     //!
     //! \brief InterfaceMaintence
@@ -59,6 +62,7 @@ public:
     //!
     Q_ANNOTATION(serverStart, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStart();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(serverStart)
     {
         path->operation(sptoGet)
@@ -67,13 +71,14 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
-
+#endif
     //!
     //! \brief serverStop
     //! \return
     //!
     Q_ANNOTATION(serverStop, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverStop();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(serverStop)
     {
         path->operation(sptoGet)
@@ -82,13 +87,14 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
-
+#endif
     //!
     //! \brief serverRestart
     //! \return
     //!
     Q_ANNOTATION(serverRestart, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant serverRestart();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(serverRestart)
     {
         path->operation(sptoGet)
@@ -97,13 +103,14 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
-
+#endif
     //!
     //! \brief servicesCheck
     //! \return
     //!
     Q_ANNOTATION(servicesCheck, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant servicesCheck();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(servicesCheck)
     {
         path->operation(sptoGet)
@@ -112,13 +119,14 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
-
+#endif
     //!
     //! \brief applicationQuit
     //! \return
     //!
     Q_ANNOTATION(applicationQuit, QVariantList({opPost, opPut}))
     Q_INVOKABLE virtual QVariant applicationQuit();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(applicationQuit)
     {
         path->operation(sptoGet)
@@ -127,6 +135,7 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), QStringLiteral("custom implementation")}}));
     }
+#endif
 signals:
 };
 

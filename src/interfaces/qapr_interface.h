@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QSqlDatabase>
+#if QTREFORCE_QAPIDOC
 #include "../../../qapidoc/src/qapidoc.h"
+#endif
 #include "../../../qmfe/src/v1/server/include/QMfe"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../../qorm/src/qorm_macro.h"
@@ -64,6 +66,7 @@ class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::Inte
     Q_OBJECT
     QORM_CONNECTION_SUPPORT()
 public:
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_INFO()
     {
         document->host(QStringLiteral("localhost"))
@@ -89,7 +92,7 @@ public:
             .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
             .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
-
+#endif
 public:
     //!
     //! \brief InterfaceDatabase
@@ -102,6 +105,7 @@ public:
     //! \return
     //!
     Q_INVOKABLE virtual QVariantList backOfficeMenu() const;
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(backOfficeMenu)
     {
         path->operation(sptoGet)
@@ -110,13 +114,14 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), this->backOfficeMenu()}}));
     }
-
+#endif
     //!
     //! \brief check
     //! \return
     //!
     Q_ANNOTATION(check, QVariantList({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
     Q_INVOKABLE virtual QVariant check();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(check)
     {
         path->operation(sptoGet)
@@ -124,13 +129,14 @@ public:
             .description(QStringLiteral("Simple check method for tests"))
             .responses(QApiResponse().statusCode(200));
     }
-
+#endif
     //!
     //! \brief ping
     //! \return
     //!
     Q_INVOKABLE virtual QVariant ping();
     Q_ANNOTATION(ping, QVariantList({opGet, dbNoConnection, healtCheck, rqSecurityIgnore}))
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(ping)
     {
         path->operation(sptoGet)
@@ -139,13 +145,14 @@ public:
             .responses(
                 QApiResponse().statusCode(200).examples(QVariantHash{{QStringLiteral("response"), this->ping()}}));
     }
-
+#endif
     //!
     //! \brief fullCheck
     //! \return
     //!
     Q_ANNOTATION(fullCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant fullCheck();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(fullCheck)
     {
         path->operation(sptoGet)
@@ -154,13 +161,14 @@ public:
             .responses(
                 QApiResponse().statusCode(200).examples(QVariantHash{{QStringLiteral("response"), this->fullCheck()}}));
     }
-
+#endif
     //!
     //! \brief connectionsCheck
     //! \return
     //!
     Q_ANNOTATION(connectionsCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant connectionsCheck();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(connectionsCheck)
     {
         path->operation(sptoGet)
@@ -169,6 +177,7 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), this->connectionsCheck()}}));
     }
+#endif
 
     //!
     //! \brief businessCheck
@@ -176,6 +185,7 @@ public:
     //!
     Q_ANNOTATION(businessCheck, {healtCheck})
     Q_INVOKABLE virtual QVariant businessCheck();
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_PATH(businessCheck)
     {
         path->operation(sptoGet)
@@ -184,7 +194,7 @@ public:
             .responses(QApiResponse().statusCode(200).examples(
                 QVariantHash{{QStringLiteral("response"), this->businessCheck()}}));
     }
-
+#endif
     //!
     //! \brief sessionObject
     //! \return

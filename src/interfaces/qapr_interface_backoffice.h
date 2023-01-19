@@ -11,6 +11,7 @@ class InterfaceBackOfficePvt;
 class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
 {
     Q_OBJECT
+#if QTREFORCE_QAPIDOC
     Q_API_DOC_INFO()
     {
         document->host(QStringLiteral("localhost"))
@@ -37,7 +38,7 @@ class Q_APR_EXPORT InterfaceBackOffice : public QApr::Interface
             .name(QStringLiteral("Apache License - Version 2.0, January 2004"))
             .url(QStringLiteral("http://www.apache.org/licenses/LICENSE-2.0"));
     }
-
+#endif
 public:
     //!
     //! \brief InterfaceBackOffice
