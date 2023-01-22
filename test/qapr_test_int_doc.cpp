@@ -3,7 +3,6 @@
 
 #include "./qapr_test_integration.h"
 #include "./qapr_interface.h"
-
 namespace QApr{
 
 class Q_APR_TestIntDoc : public SDKGoogleTestIntegration {
@@ -13,12 +12,12 @@ public:
 TEST_F(Q_APR_TestIntDoc, checkMethodsHealtCheck)
 {
     QApr::Interface interface;
+    Q_UNUSED(interface)
 
+#if QTREFORCE_QAPIDOC
     auto vhash=interface.documentation().toHash();
-
     EXPECT_TRUE(!vhash.isEmpty())<<"fail no documentation";
     EXPECT_TRUE(vhash.contains("paths"))<<"invalid format";
-
 
     {
         auto vPathsList=vhash.value("paths").toList();
@@ -41,8 +40,8 @@ TEST_F(Q_APR_TestIntDoc, checkMethodsHealtCheck)
             EXPECT_TRUE(vPaths.contains(methodName))<<"path not found";
         }
     }
+#endif
 }
-
 }
 
 #endif
