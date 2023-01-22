@@ -47,7 +47,7 @@ public slots:
 #endif
         if(!pool.get(db)){
 #if Q_APR_LOG
-            oInfo()<<QStringLiteral("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
+            sInfo()<<QStringLiteral("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
 #endif
             return;
         }
