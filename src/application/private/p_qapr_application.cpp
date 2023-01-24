@@ -29,6 +29,7 @@ static void startSettings()
 #ifdef QT_DEBUG
     QString envFile=__static_env_file;
 #else
+    Q_UNUSED(__static_env_file)
     QString envFile;
 #endif
     if(!envs.contains(__env_file)){
