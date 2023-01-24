@@ -34,6 +34,11 @@ QOrm::ConnectionPool &Application::pool()
     return p->connectionManager.pool();
 }
 
+QStm::Envs &Application::envs()const
+{
+    return p->envs;
+}
+
 int Application::exec(QCoreApplication &a)
 {
     p->circuitBreakerStart();

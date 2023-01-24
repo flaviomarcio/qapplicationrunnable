@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QMutex>
 #include "../qapr_application.h"
+#include "../../../../qstm/src/qstm_envs.h"
 
 namespace QApr {
 
@@ -20,6 +21,7 @@ public:
     QOrm::ConnectionManager connectionManager;
     Settings settings;
     QApr::CircuitBreaker circuitBreaker;
+    QStm::Envs envs;
 
     explicit ApplicationPvt(Application*parent=nullptr);
 

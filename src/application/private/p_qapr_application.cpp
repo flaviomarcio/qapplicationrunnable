@@ -10,6 +10,9 @@ Q_GLOBAL_STATIC(QString, applicationSettingDir)
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QRpc::ServiceSetting, circuitBreakerSettings);
 
+static const auto __env_file="ENV_FILE";
+static const auto __static_env_file=":/env_file.env";
+
 static void startCircuitBreaker()
 {
     auto &manager=staticInstance->manager();
@@ -21,6 +24,28 @@ static void startSettings()
     auto&i=*staticInstance;
     auto settingFiles=i.resourceSettings().toStringList();
     auto &manager=i.manager();
+    auto &envs=i.envs();
+
+#ifdef QT_DEBUG
+    QString envFile=__static_env_file;
+#else
+    QString envFile;
+#endif
+    if(!envs.contains(__env_file)){
+        auto file=envs.value(__env_file).toString();
+        if(QFile::exists(file))
+            envFile=file;
+    }
+    QFile file(envFile);
+    if(file.exists())
+        envs.customEnvs(file);
+
+    if(file.exists()){
+        aWarning()<<QObject::tr("loaded ${ENV_FILE}: [%1]").arg(file.fileName());
+        envs.customEnvs(file);
+    }
+
+
     for(auto &settingFile: settingFiles){
         if(!manager.load(settingFile))
             continue;

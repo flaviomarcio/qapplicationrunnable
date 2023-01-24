@@ -1,7 +1,8 @@
 #include "./qapr_settings.h"
+#include "../../../qstm/src/qstm_envs.h"
 
 namespace QApr {
-
+static const auto __qapr="qapr";
 Settings::Settings(QObject *parent): QStm::ObjectWrapper{parent}
 {
 
@@ -23,10 +24,12 @@ bool Settings::setValues(const QVariant &v)
     default:
         break;
     }
+    QStm::Envs envs;
     for(auto &v:vList){
+        v=envs.parser(v);
         auto vHash=ObjectWrapper::parserVariant(v).toHash();
-        if(vHash.contains(QStringLiteral("mfe")))
-            vHash=vHash.value(QStringLiteral("mfe")).toHash();
+        if(vHash.contains(__qapr))
+            vHash=vHash.value(__qapr).toHash();
         if(vHash.isEmpty())
             continue;
         if(ObjectWrapper::setValues(vHash))
