@@ -13,6 +13,8 @@
 
 namespace QApr{
 
+static const auto __agentName="agentName";
+
 class AgentBasePvt:public QObject{
 public:
     QMutex serviceStartLock;
@@ -47,7 +49,7 @@ public slots:
 #endif
         if(!pool.get(db)){
 #if Q_APR_LOG
-            oInfo()<<QStringLiteral("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
+            oInfo()<<tr("%1, no connection db: %2").arg(pp.agentName(), pool.lastError().text());
 #endif
             return;
         }
@@ -212,13 +214,13 @@ void AgentBase::start()
 
 QByteArray AgentBase::agentName() const
 {
-    auto v=this->property(QByteArrayLiteral("agentName")).toByteArray();
+    auto v=this->property(__agentName).toByteArray();
     return v;
 }
 
 void AgentBase::setAgentName(const QVariant &v)
 {
-    this->setProperty(QByteArrayLiteral("agentName"),v);
+    this->setProperty(__agentName,v);
     auto c_name=QString(this->metaObject()->className());
     auto a_name=QString(this->agentName());
     auto objectName=QStringLiteral("%1::%2").arg(c_name, a_name);
@@ -231,7 +233,7 @@ QVariantHash &AgentBase::stats()
     return p->stats;
 }
 
-const QVariant AgentBase::resourceSettings()
+const SettingFile &AgentBase::resourceSettings()
 {
     return QApr::Application::i().resourceSettings();
 }

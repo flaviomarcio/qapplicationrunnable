@@ -63,7 +63,7 @@ void NotifyBase::setNotifyName(const QVariant &v)
     this->setObjectName(objectName);
 }
 
-const QVariant NotifyBase::resourceSettings()
+const SettingFile &NotifyBase::resourceSettings()
 {
     return QApr::Application::i().resourceSettings();
 }

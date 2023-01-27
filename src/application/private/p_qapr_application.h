@@ -15,8 +15,8 @@ class ApplicationPvt:public QObject
     Q_OBJECT
 public:
     Application *application=nullptr;
-    QStringList _resourceSettings;
-    QVariantHash _arguments;
+    SettingFile settingFile;
+    QVariantHash arguments;
     QRpc::SettingManager manager;
     QOrm::ConnectionManager connectionManager;
     Settings settings;
@@ -27,11 +27,11 @@ public:
 
     ~ApplicationPvt();
 
-    QStringList &resourceSettings();
+    const SettingFile &resourceSettings();
 
     static void resourceExtract();
 
-    QVariantHash &arguments();
+    QVariantHash &getArguments();
 
     static Application &i();
 

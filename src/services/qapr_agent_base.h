@@ -8,6 +8,7 @@
 #include "../../../qorm/src/qorm_macro.h"
 #include "../../../qrpc/src/qrpc_service_setting.h"
 #include "../application/qapr_global.h"
+#include "../application/qapr_setting_file.h"
 
 namespace QApr {
 
@@ -79,7 +80,7 @@ public:
     //! \brief resourceSettings
     //! \return
     //!server setting file
-    Q_INVOKABLE static const QVariant resourceSettings();
+    Q_INVOKABLE static const QApr::SettingFile &resourceSettings();
 
 signals:
 

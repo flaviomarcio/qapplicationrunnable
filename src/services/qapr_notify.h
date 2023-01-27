@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QVariant>
 #include "../application/qapr_global.h"
+#include "../application/qapr_setting_file.h"
 #include "./qapr_notify_dispatch.h"
 //#include "../../../qrpc/src/qrpc_setting_manager.h"
 //#include "../../../qorm/src/qorm_connection_manager.h"
@@ -35,7 +36,7 @@ public:
     //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE static const QVariant resourceSettings();
+    Q_INVOKABLE static const QApr::SettingFile &resourceSettings();
 
     //!
     //! \brief instance

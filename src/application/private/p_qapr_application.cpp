@@ -22,7 +22,7 @@ static void startCircuitBreaker()
 static void startSettings()
 {
     auto&i=*staticInstance;
-    auto settingFiles=i.resourceSettings().toStringList();
+    const auto &settingFile=i.resourceSettings();
     auto &manager=i.manager();
     auto &envs=i.envs();
 
@@ -47,20 +47,18 @@ static void startSettings()
     }
 
 
-    for(auto &settingFile: settingFiles){
-        if(!manager.load(settingFile))
-            continue;
-
-        i.settings().setValues(settingFile);
-        if(!i.connectionManager().load(settingFile)){
-            aWarning()<<QObject::tr("Connection manager is not loaded for %1").arg(settingFiles.join(','));
-            break;
-        }
-
-        aWarning() << QObject::tr("loaded settings: %1").arg(settingFile);
-        break;
-
+    if(!manager.load(settingFile.setting())){
+        aWarning()<<QObject::tr("Connection manager: no loaded for %1").arg(settingFile.setting());
+        return;
     }
+
+    i.settings().setValues(settingFile.setting());
+    if(!i.connectionManager().load(settingFile.setting())){
+        aWarning()<<QObject::tr("Connection manager is not loaded for %1").arg(settingFile.setting());
+        return;
+    }
+
+    aWarning() << QObject::tr("loaded settings: %1").arg(settingFile.setting());
 }
 
 static void startUp(Application &i)
@@ -94,27 +92,58 @@ ApplicationPvt::~ApplicationPvt()
     circuitBreaker.stop();
 }
 
-QStringList &ApplicationPvt::resourceSettings()
+const SettingFile &ApplicationPvt::resourceSettings()
 {
-    if(!_resourceSettings.isEmpty())
-        return this->_resourceSettings;
+    if(QFile::exists(settingFile.setting().trimmed()))
+        return this->settingFile;
 
-    QStringList vList;
+    static const auto __development_file=
+    #ifdef Q_APR_TEST
+        "settings.debug.json";
+    #else
+        #ifdef QT_DEBUG
+            "settings.debug.json";
+        #else
+            "settings.release.json";
+        #endif
+    #endif
+
+    this->settingFile.clear();
     {
-        auto settingsFile=QStringLiteral("%1.json").arg(qApp->applicationFilePath());
-        if(!QFile::exists(settingsFile))
-            settingsFile=QStringLiteral("%1/%2").arg(*applicationSettingDir, resourceSettings_FILE);
+        static const auto __application="application";
+        static const auto __qt_reforce_file_dir=settings_HOME_DIR+"/"+qAppName().toLower();
+        static const auto __listPaths=QStringList{{qApp->applicationDirPath(), __qt_reforce_file_dir}};
+        static const auto __listFileNames=QStringList{{qApp->applicationName().toLower(), __application, __development_file}};
+        static const auto __fileFormatSetting=QStringLiteral("%1/%2.settings.json");
+        static const auto __fileFormatEnv=QStringLiteral("%1/%2.settings.env");
+        auto checkFile=[this](const QString &path)
+        {
+            for(auto&fileName:__listFileNames){
+                auto fileSetting=__fileFormatSetting.arg(path,fileName);
+                auto fileEnvs=__fileFormatEnv.arg(path,fileName);
+                if(QFile::exists(fileSetting)){
+                    this->settingFile
+                            .setting(fileSetting)
+                            .envs(fileEnvs);
+                    return true;
+                }
+            }
+            return false;
+        };
 
-        if(QFile::exists(settingsFile))
-            vList.append(settingsFile);
+        for(auto&path:__listPaths){
+            if(checkFile(path))
+                break;
+        }
     }
 
-    {
-        auto settingsFile=QStringLiteral("%1/%2/%3.json").arg(settings_HOME_DIR, qAppName(), resourceSettings_FILE);
-        if(QFile::exists(settingsFile))
-            vList.append(settingsFile);
+    if(this->settingFile.setting().isEmpty()){
+        aWarning()<<"Application settings not found:";
+        this->settingFile.clear();
     }
-    return (this->_resourceSettings=vList);
+
+    return this->settingFile;
+
 }
 
 void ApplicationPvt::resourceExtract()
@@ -155,10 +184,10 @@ void ApplicationPvt::resourceExtract()
     }
 }
 
-QVariantHash &ApplicationPvt::arguments()
+QVariantHash &ApplicationPvt::getArguments()
 {
-    if(!_arguments.isEmpty())
-        return _arguments;
+    if(!arguments.isEmpty())
+        return arguments;
 
     for(auto &v:qApp->arguments()){
         auto l=v.split(QStringLiteral("="));
@@ -168,21 +197,21 @@ QVariantHash &ApplicationPvt::arguments()
         if(l.size()==1){
             auto key=l.first();
             auto value=l.last();
-            _arguments[key]=value;
+            arguments.insert(key, value);
             continue;
         }
 
         auto key=l.first().toLower();
         auto value=l.last();
-        _arguments.insert(key, value);
+        arguments.insert(key, value);
     }
 
     QHashIterator<QString, QVariant> i(manager.arguments());
     while (i.hasNext()) {
         i.next();
-        _arguments.insert(i.key(), i.value());
+        arguments.insert(i.key(), i.value());
     }
-    return _arguments;
+    return arguments;
 }
 
 Application &ApplicationPvt::i()

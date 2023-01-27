@@ -14,7 +14,7 @@ Application::Application(QObject *parent) : QObject{parent}
     this->p=new ApplicationPvt{this};
 }
 
-QVariant Application::resourceSettings()const
+const SettingFile &Application::resourceSettings()
 {
     return p->resourceSettings();
 }
@@ -58,13 +58,13 @@ const QUuid &Application::instanceUuid()
 
 QVariantHash &Application::arguments()const
 {
-    return p->arguments();
+    return p->getArguments();
 }
 
 Application &Application::printArguments()
 {
 #if Q_APR_LOG
-    QHashIterator<QString, QVariant> i(p->_arguments);
+    QHashIterator<QString, QVariant> i(p->getArguments());
     while (i.hasNext()) {
         i.next();
         aInfo()<<QStringLiteral("%1 : %2").arg(i.key(), i.value().toString());

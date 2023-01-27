@@ -3,6 +3,7 @@
 #include <QObject>
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_global.h"
+#include "../application/qapr_setting_file.h"
 
 namespace QApr {
 class ServerPvt;
@@ -29,7 +30,7 @@ public:
     //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE const QVariant resourceSettings();
+    Q_INVOKABLE const QApr::SettingFile &resourceSettings();
 private:
     ServerPvt *p=nullptr;
 };

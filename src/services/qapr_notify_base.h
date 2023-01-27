@@ -7,6 +7,7 @@
 #include <QSqlDatabase>
 #include "../../../qorm/src/qorm_macro.h"
 #include "../application/qapr_global.h"
+#include "../application/qapr_setting_file.h"
 #include "../../../qrpc/src/qrpc_service_setting.h"
 //#include "../application/qapr_consts.h"
 //#include "../../../qrpc/src/qrpc_setting_manager.h"
@@ -66,7 +67,7 @@ public:
     //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE static const QVariant resourceSettings();
+    Q_INVOKABLE static const QApr::SettingFile &resourceSettings();
 
 private slots:
 

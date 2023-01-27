@@ -141,7 +141,7 @@ Agent::Agent(QObject *parent):QThread{nullptr}
     this->p = new AgentPvt{this};
 }
 
-const QVariant Agent::resourceSettings()
+const SettingFile &Agent::resourceSettings()
 {
     return QApr::Application::i().resourceSettings();
 }

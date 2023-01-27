@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QVariant>
 #include "../application/qapr_global.h"
+#include "../application/qapr_setting_file.h"
 
 #define QAPR_AGENT_DECLARE_SCHEDULE(AgentClass, methodName)\
 const auto agentRegistered##AgentClass = QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, QByteArrayLiteral(#methodName));
@@ -27,7 +28,7 @@ public:
     //! \brief resourceSettings
     //! \return
     //!
-    Q_INVOKABLE static const QVariant resourceSettings();
+    Q_INVOKABLE static const SettingFile &resourceSettings();
 
     //!
     //! \brief instance

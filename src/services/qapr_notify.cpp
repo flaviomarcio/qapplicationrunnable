@@ -125,7 +125,7 @@ Notify::Notify(QObject *parent):QThread{nullptr}
     this->p = new NotifyPvt{this};
 }
 
-const QVariant Notify::resourceSettings()
+const SettingFile &Notify::resourceSettings()
 {
     return QApr::Application::i().resourceSettings();
 }
