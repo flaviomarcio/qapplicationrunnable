@@ -2,7 +2,7 @@
 #include "../../../qstm/src/qstm_envs.h"
 
 namespace QApr {
-static const auto __qapr="qapr";
+static const auto __apr="apr";
 Settings::Settings(QObject *parent): QStm::ObjectWrapper{parent}
 {
 
@@ -28,8 +28,8 @@ bool Settings::setValues(const QVariant &v)
     for(auto &v:vList){
         v=envs.parser(v);
         auto vHash=ObjectWrapper::parserVariant(v).toHash();
-        if(vHash.contains(__qapr))
-            vHash=vHash.value(__qapr).toHash();
+        if(vHash.contains(__apr))
+            vHash=vHash.value(__apr).toHash();
         if(vHash.isEmpty())
             continue;
         if(ObjectWrapper::setValues(vHash))
