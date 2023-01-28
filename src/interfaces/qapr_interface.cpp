@@ -91,14 +91,14 @@ bool Interface::requestBeforeInvoke()
     if (rq.isMethodOptions())
         return true;
 
-    const auto &notations = this->notation();
+    const auto &annotations = this->annotation();
 
-    auto dbConnection = !notations.contains(this->dbNoConnection);
+    auto dbConnection = !annotations.contains(this->dbNoConnection);
     if (!dbConnection) //if no connection return true
         return true;
 
-    auto dbReadOnly = notations.contains(this->dbReadOnly);
-    auto dbTransaction = !notations.contains(this->dbNoTransaction);
+    auto dbReadOnly = annotations.contains(this->dbReadOnly);
+    auto dbTransaction = !annotations.contains(this->dbNoTransaction);
 
 
     auto &pool = p->pool;

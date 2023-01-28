@@ -110,9 +110,9 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                     continue;
                 }
 
-                const auto &nt = controller->notation();
+                const auto &ann = controller->annotation();
 
-                auto display=nt.find(apiName()).toValueByteArray().trimmed();
+                auto display=ann.find(apiName()).toValueByteArray().trimmed();
                 if(display.isEmpty()){
                     qWarning()<<QString("%1: apiName is empty").arg(metaClassName);
                     continue;
@@ -125,9 +125,9 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 if(info.invokableMethod.isEmpty())
                     continue;
 
-                info.basePath=nt.find(apiBasePath()).toValueByteArray().trimmed();
+                info.basePath=ann.find(apiBasePath()).toValueByteArray().trimmed();
                 info.display=display;
-                info.description=nt.find(apiDescription()).toValueByteArray().trimmed();
+                info.description=ann.find(apiDescription()).toValueByteArray().trimmed();
 
                 if(info.display.isEmpty())
                     continue;
