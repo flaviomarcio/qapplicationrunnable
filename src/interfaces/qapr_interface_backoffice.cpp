@@ -4,6 +4,7 @@
 #ifdef QTREFORCE_QRMK
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_application.h"
+#include "../application/qapr_macro.h"
 #endif
 #include <QStm>
 
@@ -99,14 +100,14 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                     continue;
                 QScopedPointer<QObject> sp(m->newInstance(Q_ARG(QObject*, nullptr )));
                 if(!sp.data()){
-                    qWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QApr::Interface::staticMetaObject.className());
+                    aWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
                     continue;
                 }
 
-                auto controller=dynamic_cast<QApr::Interface*>(sp.data());
+                auto controller=dynamic_cast<QRpc::Controller*>(sp.data());
 
                 if(!controller){
-                    qWarning()<<QString("%1: Invalid inherits of %2").arg(metaClassName, QApr::Interface::staticMetaObject.className());
+                    aWarning()<<QString("%1: Invalid inherits of %2").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
                     continue;
                 }
 
@@ -114,7 +115,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
                 auto display=ann.find(apiName()).toValueByteArray().trimmed();
                 if(display.isEmpty()){
-                    qWarning()<<QString("%1: apiName is empty").arg(metaClassName);
+                    aWarning()<<QString("%1: apiName is empty").arg(metaClassName);
                     continue;
                 }
 
