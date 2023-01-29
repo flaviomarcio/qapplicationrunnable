@@ -139,6 +139,6 @@ public:
 signals:
 };
 
-QRPC_CONTROLLER_AUTO_REGISTER(InterfaceMaintence)
+//QRPC_CONTROLLER_AUTO_REGISTER(InterfaceMaintence)
 
 } // namespace QApr
