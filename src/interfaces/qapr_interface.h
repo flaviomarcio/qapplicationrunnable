@@ -101,21 +101,6 @@ public:
     Q_INVOKABLE explicit Interface(QObject *parent = nullptr);
 
     //!
-    //! \brief backOfficeMenu
-    //! \return
-    //!
-    Q_INVOKABLE virtual QVariantList backOfficeMenu() const;
-#if QTREFORCE_QAPIDOC
-    Q_API_DOC_PATH(backOfficeMenu)
-    {
-        path->operation(sptoGet)
-            .operationId({})
-            .description(QStringLiteral("Menus for currenty API"))
-            .responses(QApiResponse().statusCode(200).examples(
-                QVariantHash{{QStringLiteral("response"), this->backOfficeMenu()}}));
-    }
-#endif
-    //!
     //! \brief check
     //! \return
     //!

@@ -38,12 +38,6 @@ Interface::Interface(QObject *parent)
     this->p = new InterfacePvt{this};
 }
 
-
-QVariantList Interface::backOfficeMenu() const
-{
-    return {};
-}
-
 QVariant Interface::check()
 {
     this->rq().co().setOK();

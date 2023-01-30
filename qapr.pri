@@ -18,12 +18,19 @@ QAPR_MVC_SOURCE=$$PWD/src/mvc/qapr-mvc.pri
 QAPR_UTIL_SOURCE=$$PWD/src/util/qapr-util.pri
 
 #SOURCES CHECK
-exists($$QAPR_UTIL_SOURCE)          {QAPR_APPLICATION=true} else {QAPR_APPLICATION=false}
-exists($$QAPR_MVC_SOURCE)           {QAPR_SERVICES=true} else {QAPR_SERVICES=false}
-exists($$QAPR_INTERFACES_SOURCE)    {QAPR_SESSIONS=true} else {QAPR_SESSIONS=false}
-exists($$QAPR_SESSIONS_SOURCE)      {QAPR_INTERFACES=true} else {QAPR_INTERFACES=false}
-exists($$QAPR_SERVICES_SOURCE)      {QAPR_MVC=true} else {QAPR_MVC=false}
-exists($$QAPR_APPLICATION_SOURCE)   {QAPR_UTIL=true} else {QAPR_UTIL=false}
+exists($$QAPR_APPLICATION_SOURCE) {QAPR_APPLICATION=true} else {QAPR_APPLICATION=false}
+exists($$QAPR_SERVICES_SOURCE) {QAPR_SERVICES=true} else {QAPR_SERVICES=false}
+exists($$QAPR_SESSIONS_SOURCE) {QAPR_SESSIONS=true} else {QAPR_SESSIONS=false}
+exists($$QAPR_INTERFACES_SOURCE) {QAPR_INTERFACES=true} else {QAPR_INTERFACES=false}
+exists($$QAPR_MVC_SOURCE) {QAPR_MVC=true} else {QAPR_MVC=false}
+exists($$QAPR_UTIL_SOURCE) {QAPR_UTIL=true} else {QAPR_UTIL=false}
+
+equals(QAPR_NO_APPLICATION,true):  QAPR_APPLICATION=false
+equals(QAPR_NO_SERVICES,true):     QAPR_SERVICES=false
+equals(QAPR_NO_SESSIONS,true):     QAPR_SESSIONS=false
+equals(QAPR_NO_INTERFACES,true):   QAPR_INTERFACES=false
+equals(QAPR_NO_MVC,true):          QAPR_MVC=false
+equals(QAPR_NO_UTIL,true):         QAPR_UTIL=false
 
 #SOURCES INCLUDE
 equals(QAPR_APPLICATION,true):  include($$QAPR_APPLICATION_SOURCE)
