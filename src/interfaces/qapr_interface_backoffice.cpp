@@ -92,7 +92,7 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
     static QVector<ControllerInfo> infoCache;
 
     if(infoCache.isEmpty()){
-        mutexInfo.lock();
+        QMutexLocker loker(&mutexInfo);
         if(infoCache.isEmpty()){
             for(auto &m:metaControllers){
                 auto metaClassName=m->className();
@@ -136,7 +136,6 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 infoCache.append(info);
             }
         }
-        mutexInfo.unlock();
     }
     const auto &host=QApr::Application::i().settings().host();
     auto LOCAL_QAPR_SERVER_PROTOCOL=QAPR_SERVER_PROTOCOL->isEmpty()?host->protocol():(*QAPR_SERVER_PROTOCOL);
