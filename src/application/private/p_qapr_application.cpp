@@ -27,7 +27,9 @@ static void startSettings()
 
     QFile file(settingFile.envs());
     if(file.exists())
-        envs.systemEnvs(file);
+        envs
+                .systemEnvs(file)
+                .customEnvs(file);
 
     if(!manager.load(settingFile.setting())){
         aWarning()<<QObject::tr("Connection manager: no loaded for %1").arg(settingFile.setting());
