@@ -49,15 +49,21 @@
    },
    "services":{
       "default":{
-         "protocol":"http",
-         "hostName":"localhost",
-         "headers":{
-            "authorization":"Service 03f92485-9b9d-01b4-58fe-0b1268d53dba"
-         },
-         "enabled":true,
-         "port":8080
+         "protocol":"${APPLICATION_PROTOCOL}",
+         "enabled":true
+      },
+      "circuit-breaker":{
+         "activityLimit":"${APPLICATION_CIRCUIT_BREAKER_INTERVAL}",
+         "enabled":"${APPLICATION_CIRCUIT_BREAKER_ENABLED}"
+      },
+      "token":{
+         "activityLimit":"1y",
+         "variables":{
+            "secret":"ZG1Mx0OD-Uw^OW>Yw"
+         }
       },
       "acl":{
+         "enabled":"${ACL_ENABLED}",
          "protocol":"${ACL_PROTOCOL}",
          "hostName":"${ACL_DNS}",
          "port":"${ACL_PORT}",
@@ -68,6 +74,7 @@
          "basePath":"${ACL_CONTEXT_PATH}"
       },
       "message":{
+         "enabled":"${MSG_ENABLED}",
          "protocol":"${MSG_PROTOCOL}",
          "hostName":"${MSG_DNS}",
          "port":"${MSG_PORT}",
@@ -75,9 +82,30 @@
             "Content-Type":"application/json",
             "authorization":"Service ${MSG_AUTH}"
          },
-         "basePath":"${MSG_CONTEXT_PATH}"
+         "basePath":"${MSG_CONTEXT_PATH}",
+         "enabled":true,
+         "configs":{
+            "code":{
+               "logMessage":true,
+               "enabled":true,
+               "length":4,
+               "attempts":6,
+               "dispatcher":false,
+               "defaults":{
+                  "enabled":true,
+                  "type":"fake",
+                  "number":"123456"
+               },
+               "compliance":{
+                  "enabled":true,
+                  "identification":"99123456789",
+                  "number":"6545"
+               }
+            }
+         }
       },
       "agent":{
+         "enabled":"${AGT_ENABLED}",
          "protocol":"${AGT_PROTOCOL}",
          "hostName":"${AGT_DNS}",
          "port":"${AGT_PORT}",
@@ -91,6 +119,7 @@
          }
       },
       "payment":{
+         "enabled":"${PAY_ENABLED}",
          "protocol":"${PAY_PROTOCOL}",
          "hostName":"${PAY_DNS}",
          "port":"${PAY_PORT}",
@@ -101,6 +130,7 @@
          "basePath":"${PAY_CONTEXT_PATH}"
       },
       "fileserver":{
+         "enabled":"${FIL_ENABLED}",
          "protocol":"${FIL_PROTOCOL}",
          "hostName":"${FIL_DNS}",
          "port":"${FIL_PORT}",
@@ -111,6 +141,7 @@
          "basePath":"${FIL_CONTEXT_PATH}"
       },
       "printservice":{
+         "enabled":"${PTR_ENABLED}",
          "protocol":"${PTR_PROTOCOL}",
          "hostName":"${PTR_DNS}",
          "port":"${PTR_PORT}",
@@ -121,6 +152,7 @@
          "basePath":"${PTR_CONTEXT_PATH}"
       },
       "printserver":{
+         "enabled":"${PTR_ENABLED}",
          "protocol":"http",
          "headers":{
             "Content-Type":"application/x-www-form-urlencoded"
