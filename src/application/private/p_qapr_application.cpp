@@ -10,13 +10,12 @@ Q_GLOBAL_STATIC(QString, applicationSettingDir)
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QRpc::ServiceSetting, circuitBreakerSettings);
 
-static const auto __env_file="ENV_FILE";
-static const auto __static_env_file=":/env_file.env";
+static const auto __circuit_breaker="circuit-breaker";
 
 static void startCircuitBreaker()
 {
     auto &manager=staticInstance->manager();
-    *circuitBreakerSettings=manager.setting(QStringLiteral("circuit-breaker"));
+    *circuitBreakerSettings=manager.setting(__circuit_breaker);
 }
 
 static void startSettings()
@@ -26,26 +25,9 @@ static void startSettings()
     auto &manager=i.manager();
     auto &envs=i.envs();
 
-#ifdef QT_DEBUG
-    QString envFile=__static_env_file;
-#else
-    Q_UNUSED(__static_env_file)
-    QString envFile;
-#endif
-    if(!envs.contains(__env_file)){
-        auto file=envs.value(__env_file).toString();
-        if(QFile::exists(file))
-            envFile=file;
-    }
-    QFile file(envFile);
+    QFile file(settingFile.envs());
     if(file.exists())
-        envs.customEnvs(file);
-
-    if(file.exists()){
-        aWarning()<<QObject::tr("loaded ${ENV_FILE}: [%1]").arg(file.fileName());
-        envs.customEnvs(file);
-    }
-
+        envs.systemEnvs(file);
 
     if(!manager.load(settingFile.setting())){
         aWarning()<<QObject::tr("Connection manager: no loaded for %1").arg(settingFile.setting());
@@ -58,15 +40,16 @@ static void startSettings()
         return;
     }
 
-    aWarning() << QObject::tr("loaded settings: %1").arg(settingFile.setting());
+    aWarning() << QObject::tr("loaded settings json: %1").arg(settingFile.setting());
+    aWarning() << QObject::tr("loaded settings env: %1").arg(settingFile.envs());
 }
 
 static void startUp(Application &i)
 {
     Q_UNUSED(i)
-#ifdef QT_DEBUG
-    i.resourceExtract();
-#endif
+//#ifdef QT_DEBUG
+//    i.resourceExtract();
+//#endif
     startSettings();
     startCircuitBreaker();
 }
@@ -97,53 +80,53 @@ const SettingFile &ApplicationPvt::resourceSettings()
     if(QFile::exists(settingFile.setting().trimmed()))
         return this->settingFile;
 
-    static const auto __development_file=
-    #ifdef Q_APR_TEST
-        "settings.debug.json";
+    auto findFile=[](const QString &ext){
+#ifdef Q_APR_TEST
+    #define __qapr__development_file "application-test.json"
+#else
+    #ifdef QT_DEBUG
+        #define __qapr__development_file "application-development"
     #else
-        #ifdef QT_DEBUG
-            "settings.debug.json";
-        #else
-            "settings.release.json";
-        #endif
+        #undef __qapr__development_file
     #endif
-
-    this->settingFile.clear();
-    {
+#endif
         static const auto __application="application";
-        static const auto __qt_reforce_file_dir=settings_HOME_DIR+"/"+qAppName().toLower();
-        static const auto __listPaths=QStringList{{qApp->applicationDirPath(), __qt_reforce_file_dir}};
-        static const auto __listFileNames=QStringList{{qApp->applicationName().toLower(), __application, __development_file}};
-        static const auto __fileFormatSetting=QStringLiteral("%1/%2.settings.json");
-        static const auto __fileFormatEnv=QStringLiteral("%1/%2.settings.env");
-        auto checkFile=[this](const QString &path)
-        {
-            for(auto&fileName:__listFileNames){
-                auto fileSetting=__fileFormatSetting.arg(path,fileName);
-                auto fileEnvs=__fileFormatEnv.arg(path,fileName);
-                if(QFile::exists(fileSetting)){
-                    this->settingFile
-                            .setting(fileSetting)
-                            .envs(fileEnvs);
-                    return true;
-                }
-            }
-            return false;
-        };
+#ifdef __qapr__development_file
+        static const auto __listFileNames=QStringList{{qApp->applicationName().toLower(), __application, __qapr__development_file}};
+#else
+        static const auto __listFileNames=QStringList{{qApp->applicationName().toLower(), __application}};
+#endif
+
+        static const auto __root_path=":";
+        static const auto __qapr_path=":/qapr";
+        static const auto __listPaths=QStringList{{/*qApp->applicationDirPath(), */__root_path, __qapr_path}};
+        static const auto __fileFormatSetting=QStringLiteral("%1/%2-settings.%3");
 
         for(auto&path:__listPaths){
-            if(checkFile(path))
-                break;
+            for(auto&fileName:__listFileNames){
+                auto fileCheck=__fileFormatSetting.arg(path,fileName,ext);
+                QFile file(fileCheck);
+                if(file.exists())
+                    return fileCheck;
+            }
         }
-    }
+        return QString{};
+    };
 
-    if(this->settingFile.setting().isEmpty()){
-        aWarning()<<"Application settings not found:";
+    auto fileSetting=findFile("json");
+    auto fileEnv=findFile("env");
+
+    if(!QFile::exists(fileSetting)){
+        aWarning()<<"Application settings not found";
         this->settingFile.clear();
+    }
+    else{
+        this->settingFile
+                .setting(fileSetting)
+                .envs(fileEnv);
     }
 
     return this->settingFile;
-
 }
 
 void ApplicationPvt::resourceExtract()
@@ -155,11 +138,37 @@ void ApplicationPvt::resourceExtract()
     if(!dirHome.exists())
         return;
 
-    QDir dir(QStringLiteral(":"));
-    dir.setNameFilters(QStringList{QStringLiteral("*.json")});
-    for(auto &info:dir.entryInfoList()){
-        QFile fileSrc(info.filePath());
-        QFile fileDst(QStringLiteral("%1/%2").arg(*applicationSettingDir,info.fileName()));
+    auto findFile=[](QStringList &outPut, const QString &ext){
+        auto filter=QStringList{QString("*.%1").arg(ext)};
+        auto sufix=QString{"-settings.%1"}.arg(ext);
+        auto __listPath=QStringList{":",":/qapr"};
+        for(auto&path:__listPath){
+            QDir dir(path);
+            dir.setNameFilters(filter);
+            for(auto &info:dir.entryInfoList()){
+                QFile fileSrc(info.filePath());
+
+                if (!fileSrc.fileName().endsWith(sufix))
+                    continue;
+
+                if(fileSrc.exists())
+                    outPut.append(fileSrc.fileName());
+            }
+        }
+        return !outPut.isEmpty();
+    };
+
+    QStringList fileList;
+
+    if(!findFile(fileList, "json"))
+        return;
+
+    findFile(fileList, "env");
+
+    for(auto&filePath: fileList){
+        auto fileName=filePath.split("/").last();
+        QFile fileSrc(filePath);
+        QFile fileDst(QStringLiteral("%1/%2").arg(*applicationSettingDir,fileName));
         if(fileDst.exists())
             continue;
 

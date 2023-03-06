@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qapr"/>
+    <qresource prefix="/">
+        <file>application-settings.json</file>
+    </qresource>
+</RCC>

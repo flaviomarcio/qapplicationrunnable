@@ -37,3 +37,6 @@ SOURCES += \
     $$PWD/qapr_setting_file.cpp \
     $$PWD/qapr_settings.cpp \
     $$PWD/qapr_startup.cpp
+
+RESOURCES += \
+    $$PWD/qapr.qrc
