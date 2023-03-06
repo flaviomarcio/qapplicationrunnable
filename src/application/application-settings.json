@@ -28,7 +28,7 @@
          "port":"${APR_PORT}",
          "headers":{
             "Content-Type":"application/json",
-            "authorization":"Service ${APR_AUTH}"
+            "Authorization":"Service ${APR_AUTH}"
          },
          "basePath":"${APR_CONTEXT_PATH}"
       }
