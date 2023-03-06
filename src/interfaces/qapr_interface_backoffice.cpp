@@ -10,35 +10,36 @@
 
 namespace QApr {
 
-static int QAPR_SERVER_PORT=0;
-Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_PROTOCOL, ());
-Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_HOSTNAME, (getenv("QAPR_SERVER_HOSTNAME")));
-Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, QAPR_SERVER_HEADERS, ());
+static int APR_PORT=0;
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_PROTOCOL, ());
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_DNS, ());
+Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, APR_HEADERS, ());
 #ifdef QTREFORCE_QRMK
-Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, QAPR_SERVER_BASEPATH, ());
+Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_CONTEXT_PATH, ());
 static const auto __console="console";
 #endif
 
 static void init()
 {
+    QStm::Envs envs;
     Q_DECLARE_VU;
-    *QAPR_SERVER_PROTOCOL=getenv("QAPR_SERVER_PROTOCOL");
-    if(QAPR_SERVER_PROTOCOL->isEmpty())
-        *QAPR_SERVER_PROTOCOL="http";
+    *APR_PROTOCOL=envs.value("APR_PROTOCOL").toByteArray();
+    if(APR_PROTOCOL->isEmpty())
+        *APR_PROTOCOL="http";
 
-    *QAPR_SERVER_HOSTNAME=getenv("QAPR_SERVER_PROTOCOL");
-    if(QAPR_SERVER_HOSTNAME->isEmpty())
-        *QAPR_SERVER_HOSTNAME="localhost";
+    *APR_DNS=envs.value("APR_DNS").toByteArray();
+    if(APR_DNS->isEmpty())
+        *APR_DNS="localhost";
 
-    *QAPR_SERVER_HEADERS=vu.toHash(QByteArray(getenv("QAPR_SERVER_HEADERS")));
+    *APR_CONTEXT_PATH=envs.value("APR_CONTEXT_PATH").toByteArray();
+    if(APR_CONTEXT_PATH->isEmpty())
+        *APR_CONTEXT_PATH="/";
 
-    QAPR_SERVER_PORT=QByteArray{getenv("QAPR_SERVER_PORT")}.toInt();
-    if(QAPR_SERVER_PORT<=0)
-#ifdef QT_DEBUG
-        QAPR_SERVER_PORT=28084;
-#else
-        QAPR_SERVER_PORT=28080;
-#endif
+    *APR_HEADERS=vu.toHash(envs.value("APR_HEADERS"));
+
+    APR_PORT=envs.value("APR_PORT").toInt();
+    if(APR_PORT<=0)
+        APR_PORT=80;
 }
 
 Q_APR_STARTUP_FUNCTION(init)
@@ -138,11 +139,11 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
         }
     }
     const auto &host=QApr::Application::i().settings().host();
-    auto LOCAL_QAPR_SERVER_PROTOCOL=QAPR_SERVER_PROTOCOL->isEmpty()?host->protocol():(*QAPR_SERVER_PROTOCOL);
-    auto LOCAL_QAPR_SERVER_HOSTNAME=QAPR_SERVER_HOSTNAME->isEmpty()?host->hostName():(*QAPR_SERVER_HOSTNAME);
-    auto LOCAL_QAPR_SERVER_PORT=QAPR_SERVER_PORT<=0?host->port():(QAPR_SERVER_PORT);
-    auto LOCAL_QAPR_SERVER_HEADERS=(*QAPR_SERVER_HEADERS);
-    auto LOCAL_QAPR_SERVER_BASEPATH=QAPR_SERVER_BASEPATH?host->basePath():(*QAPR_SERVER_BASEPATH);
+    auto LOCAL_APR_PROTOCOL=APR_PROTOCOL->isEmpty()?host->protocol():(*APR_PROTOCOL);
+    auto LOCAL_APR_DNS=APR_DNS->isEmpty()?host->hostName():(*APR_DNS);
+    auto LOCAL_APR_PORT=APR_PORT<=0?host->port():(APR_PORT);
+    auto LOCAL_APR_HEADERS=(*APR_HEADERS);
+    auto LOCAL_APR_CONTEXT_PATH=APR_CONTEXT_PATH?host->basePath():(*APR_CONTEXT_PATH);
 
     for(auto &controller:infoCache){
         QMfe::Api api;
@@ -152,11 +153,11 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
 
         if(!this->request().authorizationHeaders().isEmpty()){
-            LOCAL_QAPR_SERVER_HEADERS.clear();
+            LOCAL_APR_HEADERS.clear();
             QHashIterator<QString, QVariant> i(this->request().authorizationHeaders());
             while(i.hasNext()){
                 i.next();
-                LOCAL_QAPR_SERVER_HEADERS.insert(i.key(), i.value());
+                LOCAL_APR_HEADERS.insert(i.key(), i.value());
             }
         }
 
@@ -166,11 +167,11 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
                 .description(controller.description)
                 .host(
                     QMfe::Host{}
-                    .protocol(LOCAL_QAPR_SERVER_PROTOCOL)
-                    .hostName(LOCAL_QAPR_SERVER_HOSTNAME)
-                    .headers(LOCAL_QAPR_SERVER_HEADERS)
-                    .port(LOCAL_QAPR_SERVER_PORT)
-                    .basePath(LOCAL_QAPR_SERVER_BASEPATH)
+                    .protocol(LOCAL_APR_PROTOCOL)
+                    .hostName(LOCAL_APR_DNS)
+                    .headers(LOCAL_APR_HEADERS)
+                    .port(LOCAL_APR_PORT)
+                    .basePath(LOCAL_APR_CONTEXT_PATH)
                     );
         module.display(controller.display);
         QHash<QString, QMfe::Group *> groups;
