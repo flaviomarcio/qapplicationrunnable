@@ -51,12 +51,15 @@ Q_INVOKABLE virtual QVariant businessCheck() \
 
 #define aDebugMethodFinish()qDebug()<<___a_party_1<<___a_party_2<<QStringLiteral(":finish")
 
-#define QAPR_CRUD_BLOCK_MAKER(crudBlock)\
-QOrm::CRUDBlock crudBlock(this); \
+#define QAPR_CRUD_BLOCK_MAKER_ARGS(parent, crudBlock)\
+QOrm::CRUDBlock crudBlock(parent); \
 crudBlock.host(QApr::Application::i().settings().host()->toHash()); \
-if(irq())\
-crudBlock.host().addHeaders(irq()->request().authorizationHeaders());\
+auto irq=parent->irq();\
+if(irq!=nullptr)\
+    crudBlock.host().addHeaders(irq->request().authorizationHeaders());\
 QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
+
+#define QAPR_CRUD_BLOCK_MAKER(crudBlock) QAPR_CRUD_BLOCK_MAKER_ARGS(this, crudBlock)
 
 #define QAPR_CRUD_REPORT_MAKER(crudBlock)QAPR_CRUD_BLOCK_MAKER(crudBlock); \
 crudBlock.type(crudBlock.ReportForm);crudBlock
