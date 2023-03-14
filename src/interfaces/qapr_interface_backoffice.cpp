@@ -1,5 +1,6 @@
 #include "./qapr_interface_backoffice.h"
 #include "../../../qorm/src/qorm_transaction.h"
+#include "../../../qstm/src/qstm_envs.h"
 #include "../application/qapr_startup.h"
 #ifdef QTREFORCE_QRMK
 #include "../../../qrpc/src/qrpc_server.h"
@@ -30,11 +31,11 @@ static void init()
     *APR_DNS=envs.value("APR_DNS").toByteArray();
     if(APR_DNS->isEmpty())
         *APR_DNS="localhost";
-
+#ifdef QTREFORCE_QRMK
     *APR_CONTEXT_PATH=envs.value("APR_CONTEXT_PATH").toByteArray();
     if(APR_CONTEXT_PATH->isEmpty())
         *APR_CONTEXT_PATH="/";
-
+#endif
     *APR_HEADERS=vu.toHash(envs.value("APR_HEADERS"));
 
     APR_PORT=envs.value("APR_PORT").toInt();
