@@ -44,7 +44,7 @@ QVariant InterfacePrinter::execute()
     if(!req.response().isOk()){
         auto &resultInfo=controller.lr().resultInfo();
         resultInfo.setSuccess(false);
-        resultInfo.setErrors(tr("Falha no serviço de impressão"));
+        resultInfo.setMessages(tr("Falha no serviço de impressão"));
         return controller.resultInfo();
     }
 
