@@ -2,10 +2,10 @@
 #include "../../../qorm/src/qorm_transaction.h"
 #include "../../../qstm/src/qstm_envs.h"
 #include "../application/qapr_startup.h"
-#ifdef QTREFORCE_QRMK
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_application.h"
 #include "../application/qapr_macro.h"
+#ifdef QTREFORCE_QRMK
 #endif
 #include <QStm>
 
@@ -24,11 +24,10 @@ public:
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_DNS, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, APR_HEADERS, ());
+Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
 static int APR_PORT=0;
-
 #ifdef QTREFORCE_QRMK
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_CONTEXT_PATH, ());
-Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
 static const auto __console="console";
 #endif
 
@@ -88,6 +87,7 @@ public:
         transaction.rollback();
     }
 
+#ifdef QTREFORCE_QRMK
     QVector<const QRpc::Controller*> controllers(QRpc::Server *server){
         QVector<const QRpc::Controller*> __return;
         static QList<const QMetaObject *> metaControllers=server->controllers();
@@ -200,7 +200,6 @@ public:
         Q_SORT(staticInfoCache, [](const ControllerInfo &d1, const ControllerInfo &d2){ return d1.order<d2.order;});
     }
 
-
     QMfe::Access &initAccess(){
 
         initControllersCache();
@@ -280,7 +279,7 @@ public:
 
         return this->access;
     }
-
+#endif
 };
 
 InterfaceBackOffice::InterfaceBackOffice(QObject *parent) : QApr::Interface{parent}
