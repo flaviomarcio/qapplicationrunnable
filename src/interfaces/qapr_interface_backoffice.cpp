@@ -2,10 +2,10 @@
 #include "../../../qorm/src/qorm_transaction.h"
 #include "../../../qstm/src/qstm_envs.h"
 #include "../application/qapr_startup.h"
-#include "../../../qrpc/src/qrpc_server.h"
-#include "../application/qapr_application.h"
 #include "../application/qapr_macro.h"
 #ifdef QTREFORCE_QRMK
+#include "../../../qrpc/src/qrpc_server.h"
+#include "../application/qapr_application.h"
 #endif
 #include <QStm>
 
