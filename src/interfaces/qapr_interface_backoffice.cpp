@@ -171,13 +171,11 @@ public:
 
         for(auto &controller:controllers){
 
-            auto metaClassName=controller->metaObject()->className();
-
             const auto &ann = controller->annotation();
 
-            auto display=ann.find(apiName).toValueByteArray().trimmed();
-            if(display.isEmpty()){
-                aWarning()<<QString("%1: apiName is empty").arg(metaClassName);
+            auto displaName=ann.find(apiName).toValueByteArray().trimmed();
+            if(displaName.isEmpty()){
+                aWarning()<<QStringLiteral("%1: apiName is empty").arg(controller->metaObject()->className());
                 continue;
             }
 
@@ -189,7 +187,7 @@ public:
                 continue;
 
             info.basePath=ann.find(apiBasePath).toValueByteArray().trimmed();
-            info.display=display;
+            info.display=displaName;
             info.description=ann.find(apiDescription).toValueByteArray().trimmed();
             info.order=ann.find(apiOrder).toValueLongLong();
 
