@@ -88,6 +88,62 @@ public:
         transaction.rollback();
     }
 
+    QVector<const QRpc::Controller*> controllers(QRpc::Server *server){
+        QVector<const QRpc::Controller*> __return;
+        static QList<const QMetaObject *> metaControllers=server->controllers();
+
+        static auto apiNameOrder=this->parent->apiNameOrder();
+        static auto apiName=this->parent->apiName();
+
+        QMultiHash<QByteArray, QRpc::Controller*> controllers;
+        for(auto &m:metaControllers){
+            auto metaClassName=m->className();
+            if(this->staticMetaObject.className()==metaClassName)
+                continue;
+            QObject *object=m->newInstance(Q_ARG(QObject*, nullptr ));
+            if(!object){
+                aWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
+                continue;
+            }
+            auto controller=dynamic_cast<QRpc::Controller*>(object);
+            if(controller==nullptr){
+                delete object;
+                aWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
+                continue;
+            }
+
+            auto &ann = controller->annotation();
+            auto nameOrder=ann.find(apiName).toValueByteArray().trimmed().toLower();
+            if(nameOrder.isEmpty())
+                nameOrder=controller->metaObject()->className();
+            controllers.insert(nameOrder, controller);
+        }
+
+        auto &ann = this->parent->annotation();
+        auto nameOrder=ann.find(apiNameOrder).toValueStringVector();
+        if(nameOrder.isEmpty())
+            return __return;
+
+        for(auto&item:nameOrder){
+            auto orderName=item.toLower().trimmed();
+            auto controller=controllers.value(orderName);
+            if(!controller)
+                continue;
+            auto list=controllers.values(orderName);
+            controllers.remove(orderName);
+            for(auto&v:list)
+                __return.append(v);
+        }
+        if(!controllers.isEmpty()){
+            auto list=controllers.values();
+            for(auto&v:list){
+                qWarning()<<QStringLiteral("Controller without annotation of %1::apiNameOrder").arg(this->parent->metaObject()->className());
+                __return.append(v);
+            }
+        }
+        return __return;
+    }
+
     void initControllersCache()
     {
         static QMutex mutexInfo;
@@ -103,8 +159,6 @@ public:
         if(!server)
             return;
 
-        static QList<const QMetaObject *> metaControllers=server->controllers();
-
         if(!staticInfoCache->isEmpty())
             return;
 
@@ -113,22 +167,11 @@ public:
         auto apiBasePath=this->parent->apiBasePath();
         auto apiDescription=this->parent->apiDescription();
 
-        for(auto &m:metaControllers){
-            auto metaClassName=m->className();
-            if(this->staticMetaObject.className()==metaClassName)
-                continue;
-            QScopedPointer<QObject> sp(m->newInstance(Q_ARG(QObject*, nullptr )));
-            if(!sp.data()){
-                aWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
-                continue;
-            }
+        auto controllers=this->controllers(server);
 
-            auto controller=dynamic_cast<QRpc::Controller*>(sp.data());
+        for(auto &controller:controllers){
 
-            if(!controller){
-                aWarning()<<QString("%1: Invalid inherits of %2").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
-                continue;
-            }
+            auto metaClassName=controller->metaObject()->className();
 
             const auto &ann = controller->annotation();
 
@@ -155,6 +198,7 @@ public:
 
             staticInfoCache->append(info);
         }
+        qDeleteAll(controllers);
         Q_SORT(staticInfoCache, [](const ControllerInfo &d1, const ControllerInfo &d2){ return d1.order<d2.order;});
     }
 
