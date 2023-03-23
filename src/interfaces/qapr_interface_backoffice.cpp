@@ -24,9 +24,9 @@ public:
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_DNS, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, APR_HEADERS, ());
-Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
-static int APR_PORT=0;
 #ifdef QTREFORCE_QRMK
+static int APR_PORT=0;
+Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_CONTEXT_PATH, ());
 static const auto __console="console";
 #endif
@@ -46,12 +46,12 @@ static void initConsts()
     *APR_CONTEXT_PATH=envs.value("APR_CONTEXT_PATH").toByteArray();
     if(APR_CONTEXT_PATH->isEmpty())
         *APR_CONTEXT_PATH="/";
-#endif
-    *APR_HEADERS=vu.toHash(envs.value("APR_HEADERS"));
-
     APR_PORT=envs.value("APR_PORT").toInt();
     if(APR_PORT<=0)
         APR_PORT=80;
+#endif
+    *APR_HEADERS=vu.toHash(envs.value("APR_HEADERS"));
+
 }
 
 static void init()
