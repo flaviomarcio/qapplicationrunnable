@@ -24,11 +24,11 @@ public:
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_DNS, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, APR_HEADERS, ());
+static int APR_PORT=0;
 
 #ifdef QTREFORCE_QRMK
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_CONTEXT_PATH, ());
 Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
-static int APR_PORT=0;
 static const auto __console="console";
 #endif
 
