@@ -62,4 +62,4 @@ QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
 #define QAPR_CRUD_BLOCK_MAKER(crudBlock) QAPR_CRUD_BLOCK_MAKER_ARGS(this, crudBlock)
 
 #define QAPR_CRUD_REPORT_MAKER(crudBlock)QAPR_CRUD_BLOCK_MAKER(crudBlock); \
-crudBlock.type(QByteArrayLiteral("ReportForm"));crudBlock
+crudBlock.type(Q_ORM_REPORTFORM);crudBlock
