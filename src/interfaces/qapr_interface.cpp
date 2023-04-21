@@ -75,7 +75,6 @@ Session &Interface::sessionObject()
 
 const SessionCredential &Interface::credential()
 {
-
     return p->credentials();
 }
 
