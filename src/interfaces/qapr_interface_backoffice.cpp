@@ -64,7 +64,6 @@ Q_APR_STARTUP_FUNCTION(init)
 class InterfaceBackOfficePvt:public QObject
 {
 public:
-
     bool connectionDb = true;
     bool transactionRollbackForce = false;
     QRpc::Controller *parent = nullptr;
@@ -72,6 +71,7 @@ public:
     QMfe::Access access;
 #endif
     QOrm::Transaction transaction;
+    QVariant modules;
     explicit InterfaceBackOfficePvt(QRpc::Controller *parent)
         : QObject{parent},
 #ifdef QTREFORCE_QRMK
@@ -296,7 +296,11 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
 QVariant InterfaceBackOffice::modules()
 {
-    return QVariantHash{{__console, qmfeAccess().toHash()}};
+    if(p->modules.isValid())
+        return p->modules;
+
+    p->modules=QVariantHash{{__console, qmfeAccess().toHash()}};
+    return p->modules;
 }
 #endif
 
