@@ -71,7 +71,7 @@ public:
     QMfe::Access access;
 #endif
     QOrm::Transaction transaction;
-    QVariant modules;
+    QVariantHash modules;
     explicit InterfaceBackOfficePvt(QRpc::Controller *parent)
         : QObject{parent},
 #ifdef QTREFORCE_QRMK
@@ -189,7 +189,7 @@ public:
             info.basePath=ann.find(apiBasePath).toValueByteArray().trimmed();
             info.display=displaName;
             info.description=ann.find(apiDescription).toValueByteArray().trimmed();
-            info.order=ann.find(apiOrder).toValueLongLong();
+            info.order=ann.find(apiOrder).toValueInt(-1);
 
             if(info.display.isEmpty())
                 continue;
@@ -212,6 +212,8 @@ public:
         auto LOCAL_APR_PORT=APR_PORT<=0?host->port():(APR_PORT);
         auto LOCAL_APR_HEADERS=(*APR_HEADERS);
         auto LOCAL_APR_CONTEXT_PATH=APR_CONTEXT_PATH?host->basePath():(*APR_CONTEXT_PATH);
+
+        QVariantList vModulesList;
 
         for(auto &controller:*staticInfoCache){
             QMfe::Api api;
@@ -239,17 +241,20 @@ public:
                         .port(LOCAL_APR_PORT)
                         .basePath(LOCAL_APR_CONTEXT_PATH)
                         );
-            module.display(controller.display);
+            module
+                .order(controller.order)
+                .display(controller.display)
+                ;
             QHash<QString, QMfe::Group *> groups;
             for(auto &info:controller.invokableMethod){
                 if(info.group.isEmpty())
                     continue;
 
-                auto group=groups.value(info.group.toLower());
+                auto group=groups.value(info.group.toLower().trimmed());
                 if(!group){
                     group=new QMfe::Group{this};
-                    group->display(info.group).description(info.group);
-                    groups.insert(info.group.toLower(),group);
+                    group->display(info.group).description(info.group.trimmed());
+                    groups.insert(info.group.toLower().trimmed(), group);
                 }
 
                 QMfe::Path path;
@@ -274,8 +279,13 @@ public:
                 module.group(*v);
                 delete v;
             }
-            this->access.api(api).module(module);
+            this->access
+                .api(api);
+            vModulesList.append(module.toHash());
         }
+
+        QMfe::Module::sortOrder(vModulesList);
+        this->access.module(vModulesList);
 
         return this->access;
     }
@@ -296,10 +306,10 @@ QMfe::Access &InterfaceBackOffice::qmfeAccess()
 
 QVariant InterfaceBackOffice::modules()
 {
-    if(p->modules.isValid())
+    if(!p->modules.isEmpty())
         return p->modules;
 
-    p->modules=QVariantHash{{__console, qmfeAccess().toHash()}};
+    p->modules={{__console, qmfeAccess().toHash()}};
     return p->modules;
 }
 #endif
