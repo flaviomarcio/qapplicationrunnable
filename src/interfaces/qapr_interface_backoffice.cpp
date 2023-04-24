@@ -284,7 +284,7 @@ public:
             vModulesList.append(module.toHash());
         }
 
-        QMfe::Module::sortOrder(vModulesList);
+        QMfe::Module::sortList(vModulesList);
         this->access.module(vModulesList);
 
         return this->access;
