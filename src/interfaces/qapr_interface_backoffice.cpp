@@ -3,7 +3,7 @@
 #include "../../../qstm/src/qstm_envs.h"
 #include "../application/qapr_startup.h"
 #include "../application/qapr_macro.h"
-#ifdef QTREFORCE_QRMK
+#ifdef QTREFORCE_QMFE
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_application.h"
 #endif
@@ -24,7 +24,7 @@ public:
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_PROTOCOL, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_DNS, ());
 Q_GLOBAL_STATIC_WITH_ARGS(QVariantHash, APR_HEADERS, ());
-#ifdef QTREFORCE_QRMK
+#ifdef QTREFORCE_QMFE
 static int APR_PORT=0;
 Q_GLOBAL_STATIC(QList<ControllerInfo>, staticInfoCache);
 Q_GLOBAL_STATIC_WITH_ARGS(QByteArray, APR_CONTEXT_PATH, ());
@@ -42,7 +42,7 @@ static void initConsts()
     *APR_DNS=envs.value("APR_DNS").toByteArray();
     if(APR_DNS->isEmpty())
         *APR_DNS="localhost";
-#ifdef QTREFORCE_QRMK
+#ifdef QTREFORCE_QMFE
     *APR_CONTEXT_PATH=envs.value("APR_CONTEXT_PATH").toByteArray();
     if(APR_CONTEXT_PATH->isEmpty())
         *APR_CONTEXT_PATH="/";
@@ -67,7 +67,7 @@ public:
     bool connectionDb = true;
     bool transactionRollbackForce = false;
     QRpc::Controller *parent = nullptr;
-#ifdef QTREFORCE_QRMK
+#ifdef QTREFORCE_QMFE
     QMfe::Access access;
 #endif
     QOrm::Transaction transaction;
@@ -87,7 +87,7 @@ public:
         transaction.rollback();
     }
 
-#ifdef QTREFORCE_QRMK
+#ifdef QTREFORCE_QMFE
     QVector<const QRpc::Controller*> controllers(QRpc::Server *server){
         QVector<const QRpc::Controller*> __return;
         static QList<const QMetaObject *> metaControllers=server->controllers();
