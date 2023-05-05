@@ -101,20 +101,7 @@ public slots:
         }
     }
 
-    bool serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames)
-    {
-        static auto chars=QStringList{QStringLiteral(";"),QStringLiteral("|"),QStringLiteral(","),QStringLiteral("  ")};
-        QString service=methodNames;
-        for(auto &c:chars){
-            while(service.contains(c))
-                service=service.replace(c,QStringLiteral(" "));
-        }
-        auto listMethod=methodNames.split(' ');
-        for(auto &service:listMethod){
-            services.insert(service.trimmed(), &metaObject);
-        }
-        return true;
-    }
+    const QMetaObject &serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames);
 
 
 private slots:
@@ -200,7 +187,7 @@ QVariantHash Agent::serviceStats(const QByteArray &service)
     return p->taskStats(service);
 }
 
-bool Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &service)
+const QMetaObject &Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &service)
 {
     return p->serviceRegister(metaObject, service);
 }
@@ -208,6 +195,21 @@ bool Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &serv
 bool Agent::notifySettingsChanged(const QVariant &payload)
 {
     return p->connectionNotify.notify_send(p->topicSetting, payload);
+}
+
+const QMetaObject &AgentPvt::serviceRegister(const QMetaObject &metaObject, const QByteArray &methodNames)
+{
+    static auto chars=QStringList{QStringLiteral(";"),QStringLiteral("|"),QStringLiteral(","),QStringLiteral("  ")};
+    QString service=methodNames;
+    for(auto &c:chars){
+        while(service.contains(c))
+            service=service.replace(c,QStringLiteral(" "));
+    }
+    auto listMethod=methodNames.split(' ');
+    for(auto &service:listMethod){
+        services.insert(service.trimmed(), &metaObject);
+    }
+    return metaObject;
 }
 
 }
