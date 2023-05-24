@@ -6,8 +6,22 @@ CONFIG -= c++11
 CONFIG+=c++17
 CONFIG+=silent
 
-QTREFORCE_QAPR=true
+!defined(QTREFORCE_QAPR):QTREFORCE_QAPR=true
+DEFINES-=QTREFORCE_QAPR
 DEFINES+=QTREFORCE_QAPR
+#QMAKE_CXXFLAGS += -DQTREFORCE_QAPR=\\\"$$QTREFORCE_QAPR\\\"
+
+#application api
+equals(QAPR_APP_TYPE,api)QAPR_APP_API=true
+equals(QAPR_APP_TYPE,api)DEFINES+=QAPR_APP_API
+
+#application service
+equals(QAPR_APP_TYPE,service)QAPR_APP_SERVICE=true
+equals(QAPR_APP_TYPE,service)DEFINES+=QAPR_APP_SERVICE
+
+#application tests
+equals(QAPR_APP_TYPE,tests):QAPR_APP_TESTS=true
+equals(QAPR_APP_TYPE,tests):DEFINES+=QAPR_APP_TESTS
 
 #SOURCES
 QAPR_APPLICATION_SOURCE=$$PWD/src/application/qapr-application.pri
@@ -48,8 +62,13 @@ equals(QAPR_INTERFACES,true):   DEFINES+=QAPR_INTERFACES
 equals(QAPR_MVC,true):          DEFINES+=QAPR_MVC
 equals(QAPR_UTIL,true):         DEFINES+=QAPR_UTIL
 
+
 message(" ")
 message(-QTREFORCE QAPR-MODULES-DEFINITION-ACCEPT)
+message("   -QAPR_APP_TYPE: "$$QAPR_APP_TYPE)
+equals(QAPR_APP_API,true)      {message("      +QAPR_APP_API............ accepted") } else { message("      +QAPR_APP_API............ ignored") }
+equals(QAPR_APP_SERVICE,true)  {message("      +QAPR_APP_SERVICE........ accepted") } else { message("      +QAPR_APP_SERVICE........ ignored") }
+equals(QAPR_APP_TESTS,true)    {message("      +QAPR_APP_TESTS.......... accepted") } else { message("      +QAPR_APP_TESTS.......... ignored") }
 message("   -MODULES")
 equals(QAPR_APPLICATION,true)  {message("      +QAPR_APPLICATION........ accepted") } else { message("      +QAPR_APPLICATION........ ignored") }
 equals(QAPR_SERVICES,true)     {message("      +QAPR_SERVICES........... accepted") } else { message("      +QAPR_SERVICES........... ignored") }

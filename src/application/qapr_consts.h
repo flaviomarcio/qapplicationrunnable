@@ -10,7 +10,7 @@
 
 #define settings_HOME_DIR QStringLiteral("%1/qtreforce.files").arg(QDir::homePath())
 
-#ifdef Q_APR_TEST
+#ifdef QAPR_APP_TESTS
 #define resourceSettings_FILE QStringLiteral("settings.test.json")
 #elif QT_NO_DEBUG
 #define resourceSettings_FILE QStringLiteral("settings.release.json")

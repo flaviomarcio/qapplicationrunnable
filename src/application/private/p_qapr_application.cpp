@@ -83,7 +83,7 @@ const SettingFile &ApplicationPvt::resourceSettings()
         return this->settingFile;
 
     auto findFile=[](const QString &ext){
-#ifdef Q_APR_TEST
+#ifdef QAPR_APP_TESTS
     #define __qapr__development_file "application-test.json"
 #else
     #ifdef QT_DEBUG

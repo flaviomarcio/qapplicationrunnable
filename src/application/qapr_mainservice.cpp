@@ -2,10 +2,14 @@
 #include <QProcess>
 #include <QDir>
 
-#ifdef QAPR_TEST
+#ifdef QAPR_APP_TESTS
 #include <gmock/gmock.h>
+#else
+#ifdef QT_GUI_LIB
 #include <QGuiApplication>
 #else
+#include <QCoreApplication>
+#endif
 #include "./qapr_application.h"
 #include "../services/qapr_server.h"
 #include "../services/qapr_agent.h"
@@ -30,7 +34,7 @@ int MainService::exec(Q_APR_APP_CLASS &a, int argc, char* argv[])
     Q_UNUSED(a)
     Q_UNUSED(argc)
     Q_UNUSED(argv)
-#ifdef QAPR_TEST
+#ifdef QAPR_APP_TESTS
     testing::InitGoogleTest(&argc, argv);
     testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
