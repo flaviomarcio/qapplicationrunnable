@@ -18,7 +18,7 @@ class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller,
                                         public QAprPrivate::InterfaceNotations
 {
     Q_OBJECT
-    Q_APR_DECLARE_INTERFACE_METHOD_CHECK()
+    QAPR_DECLARE_INTERFACE_METHOD_CHECK()
     Q_ANNOTATION(InterfaceMaintence, QVariantList({apiBasePath("/v1/maintence")}))
 
 #if QTREFORCE_QAPIDOC

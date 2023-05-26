@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QCoreApplication>
 
-#define Q_APR_DECLARE_INTERFACE_METHOD_CHECK() \
+#define QAPR_DECLARE_INTERFACE_METHOD_CHECK() \
 public: \
 Q_INVOKABLE virtual QVariant check() \
 { \
@@ -63,3 +63,5 @@ QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
 
 #define QAPR_CRUD_REPORT_MAKER(crudBlock)QAPR_CRUD_BLOCK_MAKER(crudBlock); \
 crudBlock.type(Q_ORM_REPORTFORM);crudBlock
+
+#define QAPR_TEST_RUNNER(CLASS){CLASS var; var.execute();}
