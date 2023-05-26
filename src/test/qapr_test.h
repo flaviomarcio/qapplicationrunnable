@@ -10,23 +10,38 @@
 #include <QNetworkReply>
 #include <QLocale>
 #include <QJsonDocument>
+#ifdef QT_TESTLIB_LIB
+#include <QTest>
+#else
 #include <gtest/gtest.h>
-//#include "../../qrpc/src/qrpc_types.h"
-//#include "../../qrpc/src/qrpc_request.h"
-//#include "../../qrpc/src/qrpc_listen_protocol.h"
+#endif
 #include "../../src/services/qapr_server.h"
-
 
 namespace QApr{
 
-class SDKGoogleTest : public testing::Test{
+#ifdef QT_TESTLIB_LIB
+class ObjectTest : public QObject{
+    Q_OBJECT
+#else
+class ObjectTest : public testing::Test{
+#endif
 public:
-    explicit SDKGoogleTest();
-    virtual ~SDKGoogleTest(){};
+#ifdef QT_TESTLIB_LIB
+    Q_INVOKABLE explicit ObjectTest(QObject *parent=nullptr);
+#else
+    explicit ObjectTest();
+#endif
+    virtual ~ObjectTest();
 
     static QApr::Server &service();
 
     virtual bool clear();
+
+    virtual void configure();
+
+    virtual void deconfigure();
+
+    virtual void execute();
 
     virtual bool serviceStart();
 
@@ -40,20 +55,14 @@ public:
 
     static QVariant toVar(const QVariant &v);
 
-    QByteArray fakeBody(int maxloop=1);;
+    static QByteArray fakeBody(int maxloop=1);;
 
     static QUuid toUUID(const QVariant &v);
-
-    static void SetUpTestCase();
-
-    virtual void SetUp();
-
-    virtual void TearDown();
-
-    static void TearDownTestCase();
 
 public:
 
 };
+
+typedef QApr::ObjectTest ObjectTest;
 
 }

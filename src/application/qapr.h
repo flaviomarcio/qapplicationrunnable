@@ -31,6 +31,4 @@
 
 #ifdef QAPR_TEST
 #include "../test/qapr_test.h"
-#include "../test/qapr_test_unit.h"
-#include "../test/qapr_test_integration.h"
 #endif

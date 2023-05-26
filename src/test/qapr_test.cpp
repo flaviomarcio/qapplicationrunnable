@@ -5,12 +5,21 @@
 
 namespace QApr{
 
-SDKGoogleTest::SDKGoogleTest()
+#ifdef QT_TESTLIB_LIB
+ObjectTest::ObjectTest(QObject *parent):QObject{parent}
+#else
+ObjectTest::ObjectTest()
+#endif
 {
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }
 
-Server &SDKGoogleTest::service()
+ObjectTest::~ObjectTest()
+{
+
+}
+
+Server &ObjectTest::service()
 {
     auto&service=QApr::Server::instance();
     auto &http = service.colletions().protocol(QRpc::Http);
@@ -18,50 +27,87 @@ Server &SDKGoogleTest::service()
     return service;
 }
 
-bool SDKGoogleTest::clear()
+void ObjectTest::configure()
+{
+    //
+}
+
+void ObjectTest::deconfigure()
+{
+    //
+}
+
+void ObjectTest::execute()
+{
+    static const QByteArray prefix="test_";
+
+    this->configure();
+
+    for (int i = 0; i < this->metaObject()->methodCount(); ++i) {
+        auto method=this->metaObject()->method(i);
+
+        if(method.methodType()!=QMetaMethod::Slot)
+            continue;
+
+        if(method.parameterCount()>0)
+            continue;
+
+        if(!method.name().startsWith(prefix))
+            continue;
+
+        method.invoke(this, Qt::DirectConnection);
+    }
+
+    this->deconfigure();
+}
+
+bool ObjectTest::clear()
 {
     return true;
 }
 
-bool SDKGoogleTest::serviceStart()
+bool ObjectTest::serviceStart()
 {
     return service().start();
 }
 
-bool SDKGoogleTest::serviceStop()
+bool ObjectTest::serviceStop()
 {
     return service().stop();
 
 }
 
-QStringList SDKGoogleTest::arguments()
+QStringList ObjectTest::arguments()
 {
     return qApp->arguments();
 }
 
-QByteArray SDKGoogleTest::toMd5(const QVariant &v)
+QByteArray ObjectTest::toMd5(const QVariant &v)
 {
     Q_DECLARE_VU;
     return vu.toMd5(v);
 }
 
-QUuid SDKGoogleTest::toMd5Uuid(const QVariant &v)
+QUuid ObjectTest::toMd5Uuid(const QVariant &v)
 {
     Q_DECLARE_VU;
     return vu.toMd5Uuid(v);
 }
 
-QVariant SDKGoogleTest::toVar(const QVariant &v)
+QVariant ObjectTest::toVar(const QVariant &v)
 {
-    return
-        QMetaTypeUtilString.contains(v.typeId())
-            ?
-            QJsonDocument::fromJson(v.toByteArray()).toVariant()
-            :
-            v;
+    switch (v.typeId()) {
+    case QMetaType::QString:
+    case QMetaType::QByteArray:
+    case QMetaType::QBitArray:
+    case QMetaType::QChar:
+        return QJsonDocument::fromJson(v.toByteArray()).toVariant();
+    default:
+        return v;
+    }
 }
 
-QByteArray SDKGoogleTest::fakeBody(int maxloop)
+QByteArray ObjectTest::fakeBody(int maxloop)
 {
     QByteArray __return;
     Q_LOOP_LIMIT(loops, maxloop){
@@ -70,25 +116,9 @@ QByteArray SDKGoogleTest::fakeBody(int maxloop)
     return __return;
 }
 
-QUuid SDKGoogleTest::toUUID(const QVariant &v)
+QUuid ObjectTest::toUUID(const QVariant &v)
 {
     return VariantUtil().toUuid(v);
-}
-
-void SDKGoogleTest::SetUpTestCase()
-{
-}
-
-void SDKGoogleTest::SetUp()
-{
-}
-
-void SDKGoogleTest::TearDown()
-{
-}
-
-void SDKGoogleTest::TearDownTestCase()
-{
 }
 
 }
