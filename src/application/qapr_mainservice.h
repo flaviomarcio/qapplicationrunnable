@@ -8,14 +8,16 @@
 #include <QCoreApplication>
 #endif
 
-
-
+#ifdef QAPR_APP_TESTS
+#define QAPR_MAIN_DECLARE()
+#else
 #define QAPR_MAIN_DECLARE()\
 int main(int argc, char* argv[])\
 {\
     Q_APR_APP_CLASS a(argc, argv);\
     return QApr::MainService(nullptr).exec(a, argc, argv);\
 }
+#endif
 
 namespace QApr{
 

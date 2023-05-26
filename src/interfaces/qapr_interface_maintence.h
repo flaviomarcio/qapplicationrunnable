@@ -3,7 +3,6 @@
 #if QTREFORCE_QAPIDOC
 #include "../../../qapidoc/includes/QApiDoc"
 #endif
-#include "../../../qrpc/src/qrpc_macro.h"
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_macro.h"
