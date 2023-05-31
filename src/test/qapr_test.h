@@ -19,6 +19,10 @@
 
 namespace QApr{
 
+#define QAPR_OBJECT_TEST(OBJECT) \
+public:\
+Q_INVOKABLE explicit OBJECT(QObject *parent=nullptr):ObjectTest{parent}{};
+
 #ifdef QT_TESTLIB_LIB
 class ObjectTest : public QObject{
     Q_OBJECT

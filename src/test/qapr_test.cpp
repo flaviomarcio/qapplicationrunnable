@@ -29,11 +29,12 @@ Server &ObjectTest::service()
 
 void ObjectTest::configure()
 {
-    //
+    QVERIFY(this->serviceStart());
 }
 
 void ObjectTest::deconfigure()
 {
+    QVERIFY(this->serviceStop());
     //
 }
 
