@@ -84,7 +84,7 @@ public:
 
 signals:
 
-    void serviceStart();
+    void taskRun();
 
 
     void taskError(const QByteArray &agentName, const QVariant &error);

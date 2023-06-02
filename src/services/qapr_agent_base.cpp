@@ -17,22 +17,24 @@ static const auto __agentName="agentName";
 
 class AgentBasePvt:public QObject{
 public:
-    QMutex serviceStartLock;
+    QRpc::ServiceSetting *setting=nullptr;
+    QMutex taskRunLocker;
     QDateTime runner_date;
     QVariantHash stats;
     AgentBase*parent = nullptr;
     explicit AgentBasePvt(AgentBase*parent=nullptr):QObject{parent}
     {
         this->parent=parent;
+        QObject::connect(parent, &AgentBase::taskRun, this, &AgentBasePvt::taskRun);
     }
 
 public slots:
-    void onServiceRun()
+    void taskRun()
     {
 #if Q_APR_LOG_VERBOSE
         aWarning()<<this->parent->agentName()<<tr(": started");
 #endif
-        QMutexLocker<QMutex> locker(&serviceStartLock);
+        QMutexLocker<QMutex> locker(&taskRunLocker);
         auto &pp=*this->parent;
 #if Q_APR_LOG_SUPER_VERBOSE
         sInfo()<<"run "<<pp.agentName();
@@ -134,15 +136,15 @@ public slots:
         auto _run=[this, &p, &service](){
             Q_UNUSED(service)
             this->runner_date=this->makeNewDateRun();
-            if(!p.serviceStartLock.tryLock(10)){
+            if(!p.taskRunLocker.tryLock(10)){
 #if Q_APR_LOG_VERBOSE
                 sInfo()<<service<<QStringLiteral(" skipped");
 #endif
                 return false;
             }
 
-            emit this->parent->serviceStart();
-            p.serviceStartLock.unlock();
+            emit this->parent->taskRun();
+            p.taskRunLocker.unlock();
             return true;
         };
 
@@ -162,8 +164,7 @@ AgentBase::AgentBase(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
     this->p = new AgentBasePvt{this};
-    this->moveToThread(this);
-    QObject::connect(this, &AgentBase::serviceStart, p, &AgentBasePvt::onServiceRun);
+    //this->moveToThread(this);
 }
 
 
@@ -171,13 +172,20 @@ QRpc::ServiceSetting &AgentBase::agentSetting()
 {
     auto &manager=Application::i().manager();
     auto agentName=this->agentName();
-    auto &setting=manager.setting(agentName);
-    if(!setting.enabled()){
-        static QRpc::ServiceSetting __default;
+    if(p->setting==nullptr)
+        p->setting=manager.settingClone(agentName, this);
+
+    static QRpc::ServiceSetting __default;
+    if(p->setting==nullptr){
+        qWarning()<<QString("invalid settings for scheduler(%1)").arg(this->agentName());
         return __default;
     }
 
-    return setting;
+    if(!p->setting->enabled()){
+        return __default;
+    }
+
+    return *p->setting;
 }
 
 void AgentBase::run()

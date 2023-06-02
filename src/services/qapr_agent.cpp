@@ -21,6 +21,7 @@ public:
     QTimer*timer=nullptr;
     explicit AgentPvt(Agent *parent) : QObject{parent}, agent(parent)
     {
+
     }
 
     virtual ~AgentPvt()
@@ -41,9 +42,10 @@ public:
     QTimer*newTimer()
     {
         freeTimer();
-        this->timer=new QTimer(nullptr);
-        timer->setInterval(500);
+        auto timer=new QTimer();
+        timer->setInterval(1000);
         QObject::connect(timer, &QTimer::timeout, this, &AgentPvt::taskCheck);
+        //timer->moveToThread(this->agent);
         return timer;
     }
 
@@ -101,7 +103,20 @@ public slots:
         }
     }
 
-    const QMetaObject &serviceRegister(const QMetaObject&metaObject, const QByteArray &methodNames);
+    bool serviceRegister(const QMetaObject &metaObject, const QByteArray &methodNames)
+    {
+        static auto chars=QStringList{QStringLiteral(";"),QStringLiteral("|"),QStringLiteral(","),QStringLiteral("  ")};
+        QString service=methodNames;
+        for(auto &c:chars){
+            while(service.contains(c))
+                service=service.replace(c,QStringLiteral(" "));
+        }
+        auto listMethod=methodNames.split(' ');
+        for(auto &service:listMethod){
+            services.insert(service.trimmed(), &metaObject);
+        }
+        return !services.isEmpty();
+    }
 
 
 private slots:
@@ -126,6 +141,7 @@ Agent::Agent(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
     this->p = new AgentPvt{this};
+    this->moveToThread(this);
 }
 
 const SettingFile &Agent::resourceSettings()
@@ -187,7 +203,7 @@ QVariantHash Agent::serviceStats(const QByteArray &service)
     return p->taskStats(service);
 }
 
-const QMetaObject &Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &service)
+bool Agent::serviceRegister(const QMetaObject&metaObject, const QByteArray &service)
 {
     return p->serviceRegister(metaObject, service);
 }
@@ -197,19 +213,6 @@ bool Agent::notifySettingsChanged(const QVariant &payload)
     return p->connectionNotify.notify_send(p->topicSetting, payload);
 }
 
-const QMetaObject &AgentPvt::serviceRegister(const QMetaObject &metaObject, const QByteArray &methodNames)
-{
-    static auto chars=QStringList{QStringLiteral(";"),QStringLiteral("|"),QStringLiteral(","),QStringLiteral("  ")};
-    QString service=methodNames;
-    for(auto &c:chars){
-        while(service.contains(c))
-            service=service.replace(c,QStringLiteral(" "));
-    }
-    auto listMethod=methodNames.split(' ');
-    for(auto &service:listMethod){
-        services.insert(service.trimmed(), &metaObject);
-    }
-    return metaObject;
-}
+
 
 }

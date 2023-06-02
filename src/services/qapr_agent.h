@@ -8,7 +8,7 @@
 
 
 #define QAPR_AGENT_DECLARE_SCHEDULE(AgentClass, methodName)\
-static const auto &agentRegistered##AgentClass=QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, #methodName);
+static const auto agentRegistered##Agent=QApr::Agent::instance().serviceRegister(AgentClass::staticMetaObject, #methodName);
 
 namespace QApr{
 class AgentPvt;
@@ -73,7 +73,7 @@ public:
     //! \param service
     //! \return
     //!
-    virtual const QMetaObject &serviceRegister(const QMetaObject &metaObject, const QByteArray &service);
+    virtual bool serviceRegister(const QMetaObject &metaObject, const QByteArray &service);
 
     //!
     //! \brief notifySettingsChanged
