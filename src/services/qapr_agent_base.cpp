@@ -175,6 +175,11 @@ QRpc::ServiceSetting &AgentBase::agentSetting()
     if(p->setting==nullptr)
         p->setting=manager.settingClone(agentName, this);
 
+    if(p->setting==nullptr){
+        static const auto __defaultAgentName="default";
+        p->setting=manager.settingClone(__defaultAgentName, this);
+    }
+
     static QRpc::ServiceSetting __default;
     if(p->setting==nullptr){
         qWarning()<<QString("invalid settings for scheduler(%1)").arg(this->agentName());
