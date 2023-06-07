@@ -24,7 +24,6 @@ public:
     explicit SchedulerTaskPvt(SchedulerTask *parent) : QObject{parent}
     {
         this->parent=parent;
-        this->timer=newTimer();
     }
 
     void freeTimer()
@@ -110,6 +109,7 @@ void SchedulerTask::run()
         aDebug()<<QStringLiteral("Scheduler[%1]: stoped").arg(this->name());
     }
     else{
+        p->timer=p->newTimer();
         p->timer->start();
         aDebug()<<QStringLiteral("Scheduler: running");
         this->exec();

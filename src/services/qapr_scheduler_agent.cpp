@@ -105,9 +105,9 @@ public slots:
             static const auto t1m="1m";
             static const auto t100ms="100";
 
-            scInterval=(scInterval.toInt()>0)?scInterval:t1m;
-            scIntervalInitial=(scIntervalInitial.toInt()>0)?scIntervalInitial:t100ms;
-            scIntervalLimit=(scIntervalLimit.toInt()>0)?scIntervalLimit:t10m;
+            scInterval=(scInterval.isValid())?scInterval:t1m;
+            scIntervalInitial=(scIntervalInitial.isValid())?scIntervalInitial:t100ms;
+            scIntervalLimit=(scIntervalLimit.isValid())?scIntervalLimit:t10m;
 
             auto task=SchedulerTask::builder(this)
                             .name(method.name())
