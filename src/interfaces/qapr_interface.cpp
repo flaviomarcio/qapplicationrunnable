@@ -33,7 +33,7 @@ public:
 };
 
 Interface::Interface(QObject *parent)
-    : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
+    : QRpc::Controller(parent), QAprPrivate::InterfaceAnnotations{this}
 {
     this->p = new InterfacePvt{this};
 }

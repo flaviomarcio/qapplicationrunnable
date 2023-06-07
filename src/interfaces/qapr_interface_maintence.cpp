@@ -4,7 +4,7 @@
 namespace QApr {
 
 InterfaceMaintence::InterfaceMaintence(QObject *parent)
-    : QRpc::Controller(parent), QAprPrivate::InterfaceNotations{this}
+    : QRpc::Controller(parent), QAprPrivate::InterfaceAnnotations{this}
 {}
 
 QVariant InterfaceMaintence::serverStart()

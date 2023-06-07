@@ -9,18 +9,18 @@
 namespace QAprPrivate {
 
 //!
-//! \brief The InterfaceNotations class
+//! \brief The InterfaceAnnotations class
 //!
-class InterfaceNotations
+class InterfaceAnnotations//:public QAnnotation::Extended
 {
 public:
     enum Classification { DataBase, Audit, Security };
     //!
-    //! \brief InterfaceNotations
+    //! \brief InterfaceAnnotations
     //! \param parent
     //!
-    explicit InterfaceNotations(QObject *parent = nullptr);
-    virtual ~InterfaceNotations();
+    explicit InterfaceAnnotations(QObject *parent = nullptr);
+    virtual ~InterfaceAnnotations();
 
 public:
     //!

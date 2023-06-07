@@ -7,6 +7,8 @@
 #include <QDateTime>
 #include <QCoreApplication>
 
+#define QAPR_METHOD_BACK_LIST {"destroyed", "objectnamechanged", "deletelater", "_q_reregistertimers", "basepathchanged", "enabledchanged", "connection", "connectionid", "connectionclose","connectionclear","connectionfinish"}
+
 #define QAPR_DECLARE_INTERFACE_METHOD_CHECK() \
 public: \
 Q_INVOKABLE virtual QVariant check() \

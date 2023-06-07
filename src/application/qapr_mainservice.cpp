@@ -9,8 +9,7 @@
 #endif
 #include "./qapr_application.h"
 #include "../services/qapr_server.h"
-#include "../services/qapr_agent.h"
-#include "../services/qapr_notify.h"
+#include "../services/qapr_scheduler_agent.h"
 
 namespace QApr {
 
@@ -43,13 +42,7 @@ int MainService::exec(Q_APR_APP_CLASS &a, int argc, char* argv[])
     }
 
     if(arguments.contains(QStringLiteral("job")) || arguments.contains(QStringLiteral("agent"))){
-        auto &service = Agent::instance();
-        service.start();
-        __return = service.isRunning() || __return;
-    }
-
-    if(arguments.contains(QStringLiteral("notify"))){
-        auto &service = Notify::instance();
+        auto &service = SchedulerAgent::instance();
         service.start();
         __return = service.isRunning() || __return;
     }

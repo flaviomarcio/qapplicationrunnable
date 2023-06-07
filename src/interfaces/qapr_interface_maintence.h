@@ -6,7 +6,7 @@
 #include "../../../qrpc/src/qrpc_controller.h"
 #include "../application/qapr_global.h"
 #include "../application/qapr_macro.h"
-#include "./qapr_interface_notations.h"
+#include "./qapr_interface_annotations.h"
 
 namespace QApr {
 
@@ -14,7 +14,7 @@ namespace QApr {
 //! \brief The InterfaceMaintence class
 //!
 class Q_APR_EXPORT InterfaceMaintence : public QRpc::Controller,
-                                        public QAprPrivate::InterfaceNotations
+                                        public QAprPrivate::InterfaceAnnotations
 {
     Q_OBJECT
     QAPR_DECLARE_INTERFACE_METHOD_CHECK()

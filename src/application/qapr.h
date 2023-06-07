@@ -7,11 +7,8 @@
 #include "../application/qapr_mainservice.h"
 #include "../application/qapr_application.h"
 //services
-#include "../services/qapr_notify.h"
-#include "../services/qapr_notify_base.h"
-#include "../services/qapr_notify_dispatch.h"
-#include "../services/qapr_agent.h"
-#include "../services/qapr_agent_base.h"
+#include "../services/qapr_scheduler_agent.h"
+#include "../services/qapr_scheduler.h"
 #include "../services/qapr_server.h"
 //session
 #include "../sessions/qapr_session.h"

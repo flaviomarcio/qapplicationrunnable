@@ -9,7 +9,7 @@
 #include "../../qorm/src/qorm_macro.h"
 #include "../application/qapr_global.h"
 #include "../sessions/qapr_session.h"
-#include "./qapr_interface_notations.h"
+#include "./qapr_interface_annotations.h"
 //#include "../../../qorm/src/qorm_object_db.h"
 //#include "./qapr_menu_object.h"
 
@@ -61,7 +61,7 @@ class InterfacePvt;
 //! \brief The InterfaceDatabase class
 //!
 //!camada criada para implementacao da parte de banco de dados
-class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::InterfaceNotations
+class Q_APR_EXPORT Interface : public QRpc::Controller, public QAprPrivate::InterfaceAnnotations
 {
     Q_OBJECT
     QORM_CONNECTION_SUPPORT()
