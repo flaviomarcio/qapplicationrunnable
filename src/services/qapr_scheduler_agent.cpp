@@ -49,7 +49,7 @@ public slots:
     {
         auto lst=tasks.values();
         tasks.clear();
-        for(auto&task: lst){
+        for(auto &task: lst){
             task->quit();
             if(task->wait(1000))
                 delete task;
@@ -103,7 +103,7 @@ public slots:
 
             static const auto t10m="10m";
             static const auto t1m="1m";
-            static const auto t100ms="100";
+            static const auto t100ms="100ms";
 
             scInterval=(scInterval.isValid())?scInterval:t1m;
             scIntervalInitial=(scIntervalInitial.isValid())?scIntervalInitial:t100ms;
@@ -158,7 +158,9 @@ SchedulerAgent &SchedulerAgent::instance()
 void SchedulerAgent::run()
 {
     aDebug()<<QStringLiteral("Scheduler running");
-    p->start();
+    QTimer::singleShot(100,this,[this](){
+        p->start();
+    });
     this->exec();
     p->free();
     aDebug()<<QStringLiteral("Scheduler finished");

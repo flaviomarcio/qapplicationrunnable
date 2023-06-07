@@ -3,6 +3,7 @@
 #include "../application/qapr_macro.h"
 #include "../application/qapr_application.h"
 #include "../../qstm/src/qstm_util_variant.h"
+#include "../../qstm/src/qstm_util_formatting.h"
 #include <QTimer>
 #include <QSqlError>
 
@@ -20,6 +21,8 @@ public:
     QMetaMethod taskMetaMethod;
     QVariantHash connection;
     QVariantHash stats;
+    QDateTime lastExec;
+    QMutex mutex;
 
     explicit SchedulerTaskPvt(SchedulerTask *parent) : QObject{parent}
     {
@@ -50,10 +53,19 @@ public slots:
 
     void taskRun()
     {
+        if(mutex.tryLock(1))
+            return;
+
+        this->lastExec=QDateTime::currentDateTime();
+        aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(this->parent->name());
+
+        this->timer->stop();
+        this->timer->setInterval(this->settings.activityInterval());
         QScopedPointer<QObject> sObj(this->taskMetaObject.newInstance(Q_ARG(QObject*, this )));
 
         if(sObj.data()==nullptr){
             aWarning()<<tr("%1, Invalid Scheduler metaObject: [%1], method: [%2]").arg(this->taskMetaObject.className(), this->taskMetaMethod.name());
+            mutex.unlock();
             return;
         }
         
@@ -61,11 +73,9 @@ public slots:
 
         if(taskObject==nullptr){
             aWarning()<<tr("%1, Invalid Scheduler object: [%1], method: [%2]").arg(this->taskMetaObject.className(), this->taskMetaMethod.name());
+            mutex.unlock();
             return;
         }
-
-        this->timer->stop();
-        this->timer->setInterval(this->settings.activityInterval());
 
         QOrm::ConnectionPool pool(Application::i().connectionManager().pool());
         if(!settings.connection().isEmpty())
@@ -82,11 +92,14 @@ public slots:
         if(!taskMetaMethod.invoke(taskObject, Qt::DirectConnection))
             aWarning()<<QStringLiteral("invoke method(%1): error==%2").arg(taskMetaMethod.name());
 
-        pool.finish();
+        pool.finish(db);
 
         emit this->parent->taskUpdate(this->parent);
         if(this->timer->interval()>0)
             this->timer->start();
+
+        auto totalTime=QDateTime::currentDateTime().toMSecsSinceEpoch()-this->lastExec.toMSecsSinceEpoch();
+        aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->parent->name(), QString::number(totalTime));
     }
 
 };
@@ -104,12 +117,12 @@ void SchedulerTask::run()
 #ifdef QAPR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
+    p->timer=p->newTimer();
     if(!p->timer || (p->timer->interval()<=0)){
         aDebug()<<QStringLiteral("Scheduler[%1]: interval is 0").arg(this->name());
         aDebug()<<QStringLiteral("Scheduler[%1]: stoped").arg(this->name());
     }
     else{
-        p->timer=p->newTimer();
         p->timer->start();
         aDebug()<<QStringLiteral("Scheduler: running");
         this->exec();
