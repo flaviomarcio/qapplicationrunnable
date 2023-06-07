@@ -8,20 +8,20 @@
 
 namespace QApr {
 
-Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 
-Q_GLOBAL_STATIC_WITH_ARGS(QList<QByteArray>, methodBlackList,(QAPR_METHOD_BACK_LIST));
-
-static void init()
+static auto __make_methodBlackList()
 {
+    QList<QByteArray> __return=QAPR_METHOD_BACK_LIST;
     auto metaObject=QStm::Object::staticMetaObject;
     for (int index = 0; index < metaObject.superClass()->methodCount(); ++index){
         auto method=metaObject.method(index);
-        methodBlackList->append(method.name());
+        __return.append(method.name());
     }
+    return __return;
 }
 
-Q_COREAPP_STARTUP_FUNCTION(init)
+Q_GLOBAL_STATIC_WITH_ARGS(QList<QByteArray>, methodBlackList, (__make_methodBlackList()));
+Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 
 class SchedulerAgentPvt: public QObject{
 public:
@@ -78,10 +78,10 @@ public slots:
         for (int index = 0; index < metaObject.methodCount(); ++index) {
             auto method=metaObject.method(index);
 
-            if(method.methodType()!=QMetaMethod::Method || method.returnType()!=QMetaType::Void)
+            if(method.methodType()!=QMetaMethod::Method)
                 continue;
 
-            auto methodName=method.name().toLower();
+            auto methodName=method.name();
 
             if(methodBlackList->contains(methodName))
                 continue;
