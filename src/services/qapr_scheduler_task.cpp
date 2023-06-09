@@ -17,7 +17,7 @@ public:
     QTimer *timer=nullptr;
     QRpc::ServiceSetting settings;
     QVariant name;
-    QMetaObject taskMetaObject;
+    QHash<QByteArray, const QMetaObject *> taskMetaObject;
     QMetaMethod taskMetaMethod;
     QVariantHash connection;
     QVariantHash stats;
@@ -61,10 +61,16 @@ public slots:
 
         this->timer->stop();
         this->timer->setInterval(this->settings.activityInterval());
-        QScopedPointer<QObject> sObj(this->taskMetaObject.newInstance(Q_ARG(QObject*, this )));
+
+        if(this->taskMetaObject.isEmpty())
+            return;
+
+        auto taskMetaObject=this->taskMetaObject.values().first();
+
+        QScopedPointer<QObject> sObj(taskMetaObject->newInstance(Q_ARG(QObject*, this )));
 
         if(sObj.data()==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler metaObject: [%1], method: [%2]").arg(this->taskMetaObject.className(), this->taskMetaMethod.name());
+            aWarning()<<tr("%1, Invalid Scheduler metaObject: [%1], method: [%2]").arg(taskMetaObject->className(), this->taskMetaMethod.name());
             mutex.unlock();
             return;
         }
@@ -72,7 +78,7 @@ public slots:
         auto taskObject=dynamic_cast<Scheduler*>(sObj.data());
 
         if(taskObject==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler object: [%1], method: [%2]").arg(this->taskMetaObject.className(), this->taskMetaMethod.name());
+            aWarning()<<tr("%1, Invalid Scheduler object: [%1], method: [%2]").arg(taskMetaObject->className(), this->taskMetaMethod.name());
             mutex.unlock();
             return;
         }
@@ -140,7 +146,7 @@ QUuid SchedulerTask::uuid() const
 {
     static const auto __format=QString("%1.%2");
     Q_DECLARE_VU;
-    auto bytes=__format.arg(this->taskMetaObject().className(),this->name());
+    auto bytes=__format.arg(p->taskMetaObject.keys().join(' '),this->name());
     return vu.toUuid(bytes);
 }
 
@@ -182,14 +188,9 @@ void SchedulerTask::resetConnection()
     return connection({});
 }
 
-QMetaObject &SchedulerTask::taskMetaObject() const
-{
-    return p->taskMetaObject;
-}
-
 SchedulerTask &SchedulerTask::taskMetaObject(const QMetaObject &newTaskMetaObject)
 {
-    p->taskMetaObject = newTaskMetaObject;
+    p->taskMetaObject.insert(newTaskMetaObject.className(), &newTaskMetaObject);
     return *this;
 }
 

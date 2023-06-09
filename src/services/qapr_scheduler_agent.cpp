@@ -1,5 +1,6 @@
 #include "./qapr_scheduler_agent.h"
 #include "../application/qapr_macro.h"
+#include "../application/qapr_application.h"
 #include "./qapr_scheduler.h"
 #include "./qapr_scheduler_task.h"
 #include <QMultiHash>
@@ -8,6 +9,8 @@
 
 namespace QApr {
 
+
+static const auto __services="services";
 
 static auto __make_methodBlackList()
 {
@@ -26,7 +29,7 @@ Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 class SchedulerAgentPvt: public QObject{
 public:
     SchedulerAgent *agent=nullptr;
-    QHash<QByteArray, const QMetaObject*> services;
+    QHash<int, const QMetaObject*> services;
     QHash<QByteArray, Schedule*> schedulers;
     QHash<QByteArray, QDateTime> tasksInterval;
     QHash<QUuid, SchedulerTask*> tasks;
@@ -40,9 +43,24 @@ public slots:
 
     void start()
     {
-        auto lst=tasks.values();
-        for(auto &task: lst)
-            task->start();
+        this->free();
+
+        QHashIterator <int, const QMetaObject*> i(this->services);
+        while(i.hasNext()){
+            i.next();
+            const auto metaObject=i.value();
+            auto method=metaObject->method(i.key());
+            scheduleCreate(method, *metaObject);
+        }
+
+        {//start
+            QHashIterator <QUuid, SchedulerTask*> i(this->tasks);
+            while(i.hasNext()){
+                i.next();
+                if(!i.value()->isRunning())
+                    i.value()->start();
+            }
+        }
     }
 
     void free()
@@ -58,16 +76,77 @@ public slots:
         }
     }
 
-    bool serviceRegister(const QMetaObject &metaObject)
+    bool scheduleCreate(const QMetaMethod &method, const QMetaObject &metaObject)
     {
-        if (!metaObject.inherits(&Scheduler::staticMetaObject))
+        QScopedPointer<QObject> sObj(metaObject.newInstance(Q_ARG(QObject*, this )));
+        if(!sObj.data())
+            return false;
+        auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
+        if(!scheduler)
             return false;
 
-        QScopedPointer<QObject> sObj(metaObject.newInstance(Q_ARG(QObject*, this )));
-        
-        auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
+        auto vSettings=QApr::Application::i().manager().settingBody();
+        vSettings=vSettings.value(__services).toHash();
 
-        if(scheduler==nullptr)
+        const auto &annotations = scheduler->annotation(method);
+
+        if(!annotations.contains(agent->scSchedule()))
+            return false;
+
+        auto scEnabled = annotations.find(agent->scEnabled()).value();
+        auto scIntervalLimit = annotations.find(agent->scIntervalLimit()).value();
+        auto scIntervalInitial = annotations.find(agent->scIntervalInitial()).value();
+        auto scInterval = annotations.find(agent->scInterval()).value();
+
+        QStm::Envs envs;
+        envs.customEnvs(vSettings.value(method.name()).toHash());
+        scEnabled = envs.parser(scEnabled);
+        scIntervalLimit = envs.parser(scIntervalLimit);
+        scIntervalInitial = envs.parser(scIntervalInitial);
+        scInterval = envs.parser(scInterval);
+
+        if (scEnabled.isValid() && !scEnabled.toBool())
+            return false;
+
+        static const auto t10m="10m";
+        static const auto t1m="1m";
+        static const auto t100ms="100ms";
+
+        scInterval=(scInterval.isValid())?scInterval:t1m;
+        scIntervalInitial=(scIntervalInitial.isValid())?scIntervalInitial:t100ms;
+        scIntervalLimit=(scIntervalLimit.isValid())?scIntervalLimit:t10m;
+
+        auto task=SchedulerTask::builder(this)
+                        .name(method.name())
+                        .taskMetaMethod(method)
+                        .taskMetaObject(metaObject)
+                        .build();
+
+        if(!this->tasks.contains(task->uuid())){
+
+        }
+
+        task->settings().clear();
+        task->settings().setActivityInterval(scInterval);
+        task->settings().setActivityIntervalInitial(scIntervalInitial);
+        task->settings().setActivityLimit(scIntervalLimit);
+        task->settings().setEnabled(scEnabled.toBool());
+
+        this->tasks.insert(task->uuid(), task);
+        return true;
+    }
+
+
+    bool serviceRegister(const QMetaObject *metaObject)
+    {
+        if (!metaObject->inherits(&Scheduler::staticMetaObject))
+            return false;
+
+        QScopedPointer<QObject> sObj(metaObject->newInstance(Q_ARG(QObject*, this )));
+        if(!sObj.data())
+            return false;
+        auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
+        if(!scheduler)
             return false;
 
         const auto &annotations = scheduler->annotation();
@@ -75,8 +154,11 @@ public slots:
         if(!annotations.contains(agent->scObject()))
             return false;
 
-        for (int index = 0; index < metaObject.methodCount(); ++index) {
-            auto method=metaObject.method(index);
+        auto vSettings=QApr::Application::i().manager().settingBody();
+        vSettings=vSettings.value(__services).toHash();
+
+        for (int index = 0; index < metaObject->methodCount(); ++index) {
+            auto method=metaObject->method(index);
 
             if(method.methodType()!=QMetaMethod::Method)
                 continue;
@@ -88,58 +170,14 @@ public slots:
 
             const auto &annotations = scheduler->annotation(method);
 
-            if(annotations.isEmpty())
+            if(!annotations.contains(agent->scSchedule()))
                 continue;
 
-            auto scEnabled = annotations.find(agent->scEnabled()).value();
-            if (scEnabled.isValid() && !scEnabled.toBool())
-                continue;
+            this->services.insert(index, metaObject);
 
-
-            scEnabled=true;
-            auto scIntervalLimit = annotations.find(agent->scIntervalLimit()).value();
-            auto scIntervalInitial = annotations.find(agent->scIntervalInitial()).value();
-            auto scInterval = annotations.find(agent->scInterval()).value();
-
-            static const auto t10m="10m";
-            static const auto t1m="1m";
-            static const auto t100ms="100ms";
-
-            scInterval=(scInterval.isValid())?scInterval:t1m;
-            scIntervalInitial=(scIntervalInitial.isValid())?scIntervalInitial:t100ms;
-            scIntervalLimit=(scIntervalLimit.isValid())?scIntervalLimit:t10m;
-
-            auto task=SchedulerTask::builder(this)
-                            .name(method.name())
-                            .taskMetaMethod(method)
-                            .taskMetaObject(metaObject)
-                            .build();
-
-            if(task->uuid().isNull()){
-                delete task;
-                continue;
-            }
-
-            {//free old object
-                auto oldTask=this->tasks.value(task->uuid());
-                if(oldTask){
-                    oldTask->quit();
-                    oldTask->wait(1000);
-                    oldTask->deleteLater();
-                }
-            }
-
-            task->settings().clear();
-            task->settings().setActivityInterval(scInterval);
-            task->settings().setActivityIntervalInitial(scIntervalInitial);
-            task->settings().setActivityLimit(scIntervalLimit);
-            task->settings().setEnabled(scEnabled.toBool());
-
-            this->tasks.insert(task->uuid(), task);
         }
         return !services.isEmpty();
     }
-private slots:
 
 };
 
@@ -183,9 +221,9 @@ bool SchedulerAgent::stop()
     return true;
 }
 
-bool SchedulerAgent::serviceRegister(const QMetaObject&metaObject)
+bool SchedulerAgent::serviceRegister(const QMetaObject &metaObject)
 {
-    return p->serviceRegister(metaObject);
+    return p->serviceRegister(&metaObject);
 }
 
 }

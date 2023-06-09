@@ -31,6 +31,11 @@ public:
     Q_ANNOTATION_DECLARE_FUNC(scObject, Attribute);
 
     //!
+    //! \brief scSchedule
+    //!
+    Q_ANNOTATION_DECLARE_FUNC(scSchedule, Attribute);
+
+    //!
     //! \brief scObject
     //!
     Q_ANNOTATION_DECLARE_VALUE(scMode, Attribute, ContinuosExec);

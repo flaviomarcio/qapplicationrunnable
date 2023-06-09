@@ -64,7 +64,6 @@ public:
     //! \brief taskMetaObject
     //! \return
     //!
-    QMetaObject &taskMetaObject() const;
     SchedulerTask &taskMetaObject(const QMetaObject &newTaskMetaObject);
     SchedulerTask &resetTaskMetaObject();
 
