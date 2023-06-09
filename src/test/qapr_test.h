@@ -35,7 +35,6 @@ public:
 #else
     explicit ObjectTest();
 #endif
-    virtual ~ObjectTest();
 
     static QApr::Server &service();
 

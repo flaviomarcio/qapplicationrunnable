@@ -10,7 +10,7 @@
 #define QAPR_SCHEDULE_OBJECT(CLASS)\
 
 #define QAPR_SCHEDULE_REGISTER(CLASS)\
-static const auto CLASS##SchedulerRegistered=QApr::SchedulerAgent::instance().serviceRegister(CLASS::staticMetaObject);
+static const auto CLASS##SchedulerRegistered=QApr::SchedulerAgent::i().serviceRegister(CLASS::staticMetaObject);
 
 namespace QApr{
 class SchedulerAgentPvt;
@@ -29,12 +29,11 @@ public:
     //!
     Q_INVOKABLE explicit SchedulerAgent(QObject *parent=nullptr);
 
-
     //!
-    //! \brief instance
+    //! \brief i
     //! \return
     //!
-    static SchedulerAgent &instance();
+    static SchedulerAgent &i();
 
     //!
     //! \brief run

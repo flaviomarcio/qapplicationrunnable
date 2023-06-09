@@ -85,12 +85,6 @@ public:
     virtual Application &printArguments();
 
     //!
-    //! \brief resourceExtract
-    //! \return
-    //!
-    virtual Application &resourceExtract();
-
-    //!
     //! \brief circuitBreaker
     //! \return
     //!

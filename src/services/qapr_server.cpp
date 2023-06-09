@@ -5,27 +5,15 @@ namespace QApr {
 
 Q_GLOBAL_STATIC(Server, staticServer)
 
-class ServerPvt:public QObject{
-public:
-    explicit ServerPvt(Server*parent=nullptr):QObject{parent}
-    {
-        Q_UNUSED(parent)
-    }
-};
-
-Server::Server(QObject *parent) : QRpc::Server{Application::i().resourceSettings().setting(), parent}
+Server::Server(QObject *parent) : QRpc::Server{parent}
 {
-    this->p=new ServerPvt{this};
+    const auto &vSettings=QApr::Application::i().manager().settingBody();
+    this->load(vSettings);
 }
 
-Server &Server::instance()
+Server &Server::i()
 {
     return *staticServer;
-}
-
-const SettingFile &Server::resourceSettings()
-{
-    return QApr::Application::i().resourceSettings();
 }
 
 }

@@ -2,6 +2,7 @@
 #include "../../qstm/src/qstm_util_variant.h"
 #include "../../qstm/src/qstm_macro.h"
 #include "../../qrpc/src/qrpc_listen_protocol.h"
+#include <QtReforce/QApr>
 
 namespace QApr{
 
@@ -14,14 +15,9 @@ ObjectTest::ObjectTest()
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }
 
-ObjectTest::~ObjectTest()
-{
-
-}
-
 Server &ObjectTest::service()
 {
-    auto&service=QApr::Server::instance();
+    auto &service=QApr::Server::i();
     auto &http = service.colletions().protocol(QRpc::Http);
     http.setPort(9999);
     return service;
@@ -35,7 +31,6 @@ void ObjectTest::configure()
 void ObjectTest::deconfigure()
 {
     QVERIFY(this->serviceStop());
-    //
 }
 
 void ObjectTest::execute()
@@ -69,13 +64,15 @@ bool ObjectTest::clear()
 
 bool ObjectTest::serviceStart()
 {
+    auto &server=QApr::Server::i();
+    auto &listaner=server.colletions().protocol(QRpc::Http);
+    listaner.setPort(9999);
     return service().start();
 }
 
 bool ObjectTest::serviceStop()
 {
     return service().stop();
-
 }
 
 QStringList ObjectTest::arguments()

@@ -41,7 +41,7 @@ public slots:
     void start()
     {
         auto lst=tasks.values();
-        for(auto&task: lst)
+        for(auto &task: lst)
             task->start();
     }
 
@@ -150,7 +150,7 @@ SchedulerAgent::SchedulerAgent(QObject *parent):QThread{nullptr}, PrivateQApr::S
     this->moveToThread(this);
 }
 
-SchedulerAgent &SchedulerAgent::instance()
+SchedulerAgent &SchedulerAgent::i()
 {
     return *staticAgent;
 }

@@ -124,19 +124,19 @@ public:
         if(nameOrder.isEmpty())
             return __return;
 
-        for(auto&item:nameOrder){
+        for(auto &item:nameOrder){
             auto orderName=item.toLower().trimmed();
             auto controller=controllers.value(orderName);
             if(!controller)
                 continue;
             auto list=controllers.values(orderName);
             controllers.remove(orderName);
-            for(auto&v:list)
+            for(auto &v:list)
                 __return.append(v);
         }
         if(!controllers.isEmpty()){
             auto list=controllers.values();
-            for(auto&v:list){
+            for(auto &v:list){
                 qWarning()<<QStringLiteral("Controller without annotation of %1::apiNameOrder").arg(this->parent->metaObject()->className());
                 __return.append(v);
             }
@@ -273,7 +273,7 @@ public:
             }
             auto keys=groups.keys();
             keys.sort();
-            for(auto&key:keys){
+            for(auto &key:keys){
                 auto v=groups.value(key);
                 if(!v) continue;
                 module.group(*v);

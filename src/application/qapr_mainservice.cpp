@@ -36,13 +36,13 @@ int MainService::exec(Q_APR_APP_CLASS &a, int argc, char* argv[])
     const auto &arguments = appInstance.arguments();
 
     if(arguments.contains(QStringLiteral("api")) || arguments.contains(QStringLiteral("ws"))){
-        auto &service = Server::instance();
+        auto &service = Server::i();
         service.start();
         __return = service.isRunning() || __return;
     }
 
     if(arguments.contains(QStringLiteral("job")) || arguments.contains(QStringLiteral("agent"))){
-        auto &service = SchedulerAgent::instance();
+        auto &service = SchedulerAgent::i();
         service.start();
         __return = service.isRunning() || __return;
     }
