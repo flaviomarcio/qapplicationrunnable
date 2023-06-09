@@ -62,10 +62,12 @@ public slots:
         this->timer->stop();
         this->timer->setInterval(this->settings.activityInterval());
 
-        if(this->taskMetaObject.isEmpty())
+        auto taskMetaNames=this->taskMetaObject.keys();
+        if(taskMetaNames.isEmpty())
             return;
 
-        auto taskMetaObject=this->taskMetaObject.values().first();
+        auto taskMetaName=taskMetaNames.join(' ').trimmed();
+        auto taskMetaObject=this->taskMetaObject.value(taskMetaName);
 
         QScopedPointer<QObject> sObj(taskMetaObject->newInstance(Q_ARG(QObject*, this )));
 

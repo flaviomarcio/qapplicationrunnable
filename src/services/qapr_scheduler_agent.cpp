@@ -1,6 +1,7 @@
 #include "./qapr_scheduler_agent.h"
 #include "../application/qapr_macro.h"
 #include "../application/qapr_application.h"
+#include "../../../qstm/src/qstm_util_variant.h"
 #include "./qapr_scheduler.h"
 #include "./qapr_scheduler_task.h"
 #include <QMultiHash>
@@ -11,6 +12,8 @@ namespace QApr {
 
 
 static const auto __services="services";
+static const auto __agent="agent";
+static const auto __default="default";
 
 static auto __make_methodBlackList()
 {
@@ -85,8 +88,14 @@ public slots:
         if(!scheduler)
             return false;
 
-        auto vSettings=QApr::Application::i().manager().settingBody();
-        vSettings=vSettings.value(__services).toHash();
+        auto vSettings=QApr::Application::i().manager().settingBody().value(__services).toHash();
+        {
+            Q_DECLARE_VU;
+            auto vSettingsDefault=vSettings.value(__default).toHash();
+            //auto vSettingsAgent=vSettings.value(__agent).toHash();
+            auto vSettingsService=vSettings.value(method.name()).toHash();
+            vSettings=vu.vMerge(vSettingsDefault, vSettingsService).toHash();
+        }
 
         const auto &annotations = scheduler->annotation(method);
 
@@ -99,7 +108,7 @@ public slots:
         auto scInterval = annotations.find(agent->scInterval()).value();
 
         QStm::Envs envs;
-        envs.customEnvs(vSettings.value(method.name()).toHash());
+        envs.customEnvs(vSettings);
         scEnabled = envs.parser(scEnabled);
         scIntervalLimit = envs.parser(scIntervalLimit);
         scIntervalInitial = envs.parser(scIntervalInitial);

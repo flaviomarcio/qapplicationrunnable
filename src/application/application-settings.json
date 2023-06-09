@@ -49,7 +49,7 @@
    },
    "services":{
       "default":{
-         "protocol":"${APPLICATION_PROTOCOL}",
+         "protocol":"${APR_PROTOCOL}",
          "enabled":true
       },
       "circuit-breaker":{
