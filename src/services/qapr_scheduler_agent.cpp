@@ -88,7 +88,7 @@ public slots:
         if(!scheduler)
             return false;
 
-        auto vSettings=QApr::Application::i().manager().settingBody().value(__services).toHash();
+        auto vSettings=QApr::Application::i().manager().settingBody(__services);
         {
             Q_DECLARE_VU;
             auto vSettingsDefault=vSettings.value(__default).toHash();
