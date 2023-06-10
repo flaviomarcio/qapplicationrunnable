@@ -9,6 +9,7 @@
 //services
 #include "../services/qapr_scheduler_agent.h"
 #include "../services/qapr_scheduler.h"
+#include "../services/qapr_scheduler_db.h"
 #include "../services/qapr_server.h"
 //session
 #include "../sessions/qapr_session.h"

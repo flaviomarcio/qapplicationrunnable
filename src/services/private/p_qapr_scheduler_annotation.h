@@ -14,21 +14,13 @@ namespace PrivateQApr {
 class SchedulerAnnotation: public QAnnotation::Extended
 {
 public:
-    enum Classification { Attribute, CRON };
-    enum Mode{SingleExec, ContinuosExec};
+    enum Classification { Attribute, Task };
     //!
     //! \brief SchedulerAnnotation
     //! \param parent
     //!
-    explicit SchedulerAnnotation(QObject *parent = nullptr);
-    virtual ~SchedulerAnnotation();
-
+    explicit SchedulerAnnotation(QObject *parent = nullptr):QAnnotation::Extended{parent}{}
 public:
-
-    //!
-    //! \brief scObject
-    //!
-    Q_ANNOTATION_DECLARE_FUNC(scObject, Attribute);
 
     //!
     //! \brief scSchedule
@@ -36,38 +28,50 @@ public:
     Q_ANNOTATION_DECLARE_FUNC(scSchedule, Attribute);
 
     //!
-    //! \brief scObject
-    //!
-    Q_ANNOTATION_DECLARE_VALUE(scMode, Attribute, ContinuosExec);
-
-    //!
     //! \brief scDescription
     //!
     Q_ANNOTATION_DECLARE_FUNC(scDescription, Attribute)
 
     //!
-    //! \brief scEnabled
+    //! \brief scTaskEnabled
     //! \return
     //!
-    Q_ANNOTATION_DECLARE_FUNC(scEnabled, Attribute)
+    Q_ANNOTATION_DECLARE_FUNC(scTaskEnabled, Attribute)
 
     //!
-    //! \brief scIntervalInitial
+    //! \brief scExecTimeInitial
     //! \return
     //!
-    Q_ANNOTATION_DECLARE_FUNC(scIntervalInitial, CRON)
+    Q_ANNOTATION_DECLARE_FUNC(scExecTimeInitial, Task)
 
     //!
-    //! \brief scInterval
+    //! \brief scExecTime
     //! \return
     //!
-    Q_ANNOTATION_DECLARE_FUNC(scInterval, CRON)
+    Q_ANNOTATION_DECLARE_FUNC(scExecTime, Task)
 
     //!
-    //! \brief scIntervalLimit
+    //! \brief scExecTimeLimit
     //! \return
     //!
-    Q_ANNOTATION_DECLARE_FUNC(scIntervalLimit, CRON)
+    Q_ANNOTATION_DECLARE_FUNC(scExecTimeLimit, Task)
+
+    //!
+    //! \brief scScope
+    //!
+    Q_ANNOTATION_DECLARE_FUNC(scExecScope, Task);
+
+    //!
+    //! \brief scTaskGroup
+    //! \return
+    //!
+    Q_ANNOTATION_DECLARE_FUNC(scExecGroup, Task)
+
+    //!
+    //! \brief scTaskOrder
+    //! \return
+    //!
+    Q_ANNOTATION_DECLARE_FUNC(scExecOrder, Task)
 
 private:
 };

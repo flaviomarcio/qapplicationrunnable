@@ -18,7 +18,7 @@ public:
 };
 
 
-Scheduler::Scheduler(QObject *parent):QOrm::ObjectDb{parent}, PrivateQApr::SchedulerAnnotation{this}
+Scheduler::Scheduler(QObject *parent):QObject{parent}, PrivateQApr::SchedulerAnnotation{this}
 {
     Q_UNUSED(parent)
     this->p = new SchedulerPvt{this};

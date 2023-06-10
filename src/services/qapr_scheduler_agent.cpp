@@ -12,27 +12,14 @@ namespace QApr {
 
 
 static const auto __services="services";
-static const auto __agent="agent";
 static const auto __default="default";
 
-static auto __make_methodBlackList()
-{
-    QList<QByteArray> __return=QAPR_METHOD_BACK_LIST;
-    auto metaObject=QStm::Object::staticMetaObject;
-    for (int index = 0; index < metaObject.superClass()->methodCount(); ++index){
-        auto method=metaObject.method(index);
-        __return.append(method.name());
-    }
-    return __return;
-}
-
-Q_GLOBAL_STATIC_WITH_ARGS(QList<QByteArray>, methodBlackList, (__make_methodBlackList()));
 Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 
 class SchedulerAgentPvt: public QObject{
 public:
     SchedulerAgent *agent=nullptr;
-    QHash<int, const QMetaObject*> services;
+    QHash<QByteArray, SchedulerScopeGroup*> scope;
     QHash<QByteArray, Schedule*> schedulers;
     QHash<QByteArray, QDateTime> tasksInterval;
     QHash<QUuid, SchedulerTask*> tasks;
@@ -48,22 +35,22 @@ public slots:
     {
         this->free();
 
-        QHashIterator <int, const QMetaObject*> i(this->services);
-        while(i.hasNext()){
-            i.next();
-            const auto metaObject=i.value();
-            auto method=metaObject->method(i.key());
-            scheduleCreate(method, *metaObject);
-        }
+//        QHashIterator <int, const QMetaObject*> i(this->scope);
+//        while(i.hasNext()){
+//            i.next();
+//            const auto metaObject=i.value();
+//            auto method=metaObject->method(i.key());
+//            scheduleCreate(method, *metaObject);
+//        }
 
-        {//start
-            QHashIterator <QUuid, SchedulerTask*> i(this->tasks);
-            while(i.hasNext()){
-                i.next();
-                if(!i.value()->isRunning())
-                    i.value()->start();
-            }
-        }
+//        {//start
+//            QHashIterator <QUuid, SchedulerTask*> i(this->tasks);
+//            while(i.hasNext()){
+//                i.next();
+//                if(!i.value()->isRunning())
+//                    i.value()->start();
+//            }
+//        }
     }
 
     void free()
@@ -102,28 +89,28 @@ public slots:
         if(!annotations.contains(agent->scSchedule()))
             return false;
 
-        auto scEnabled = annotations.find(agent->scEnabled()).value();
-        auto scIntervalLimit = annotations.find(agent->scIntervalLimit()).value();
-        auto scIntervalInitial = annotations.find(agent->scIntervalInitial()).value();
-        auto scInterval = annotations.find(agent->scInterval()).value();
+        auto scTaskEnabled = annotations.find(agent->scTaskEnabled()).value();
+        auto scExecTimeLimit = annotations.find(agent->scExecTimeLimit()).value();
+        auto scExecTimeInitial = annotations.find(agent->scExecTimeInitial()).value();
+        auto scExecTime = annotations.find(agent->scExecTime()).value();
 
         QStm::Envs envs;
         envs.customEnvs(vSettings);
-        scEnabled = envs.parser(scEnabled);
-        scIntervalLimit = envs.parser(scIntervalLimit);
-        scIntervalInitial = envs.parser(scIntervalInitial);
-        scInterval = envs.parser(scInterval);
+        scTaskEnabled = envs.parser(scTaskEnabled);
+        scExecTimeLimit = envs.parser(scExecTimeLimit);
+        scExecTimeInitial = envs.parser(scExecTimeInitial);
+        scExecTime = envs.parser(scExecTime);
 
-        if (scEnabled.isValid() && !scEnabled.toBool())
+        if (scTaskEnabled.isValid() && !scTaskEnabled.toBool())
             return false;
 
         static const auto t10m="10m";
         static const auto t1m="1m";
         static const auto t100ms="100ms";
 
-        scInterval=(scInterval.isValid())?scInterval:t1m;
-        scIntervalInitial=(scIntervalInitial.isValid())?scIntervalInitial:t100ms;
-        scIntervalLimit=(scIntervalLimit.isValid())?scIntervalLimit:t10m;
+        scExecTime=(scExecTime.isValid())?scExecTime:t1m;
+        scExecTimeInitial=(scExecTimeInitial.isValid())?scExecTimeInitial:t100ms;
+        scExecTimeLimit=(scExecTimeLimit.isValid())?scExecTimeLimit:t10m;
 
         auto task=SchedulerTask::builder(this)
                         .name(method.name())
@@ -136,10 +123,10 @@ public slots:
         }
 
         task->settings().clear();
-        task->settings().setActivityInterval(scInterval);
-        task->settings().setActivityIntervalInitial(scIntervalInitial);
-        task->settings().setActivityLimit(scIntervalLimit);
-        task->settings().setEnabled(scEnabled.toBool());
+        task->settings().setActivityInterval(scExecTime);
+        task->settings().setActivityIntervalInitial(scExecTimeInitial);
+        task->settings().setActivityLimit(scExecTimeLimit);
+        task->settings().setEnabled(scTaskEnabled.toBool());
 
         this->tasks.insert(task->uuid(), task);
         return true;
@@ -160,8 +147,7 @@ public slots:
 
         const auto &annotations = scheduler->annotation();
 
-        if(!annotations.contains(agent->scObject()))
-            return false;
+        const auto &scExecScopeClass = annotations.find(agent->scExecScope());
 
         auto vSettings=QApr::Application::i().manager().settingBody();
         vSettings=vSettings.value(__services).toHash();
@@ -172,20 +158,24 @@ public slots:
             if(method.methodType()!=QMetaMethod::Method)
                 continue;
 
-            auto methodName=method.name();
-
-            if(methodBlackList->contains(methodName))
-                continue;
-
             const auto &annotations = scheduler->annotation(method);
 
-            if(!annotations.contains(agent->scSchedule()))
+            if(annotations.isEmpty() || !annotations.contains(agent->scSchedule()))
                 continue;
 
-            this->services.insert(index, metaObject);
+            const auto &scExecScopeMethod = annotations.find(agent->scExecScope());
 
+            if(!scExecScopeMethod.contains(scExecScopeClass))
+                continue;
+
+            const auto &scExecScopeGroup = annotations.find(agent->scExecGroup());
+            auto scopeKey=scExecScopeClass.toValueByteArray()+'_'+scExecScopeGroup.toValueByteArray();
+            auto &scope=this->scope[scopeKey];
+            if(scope==nullptr)
+                scope=new SchedulerScopeGroup(scopeKey, metaObject, this);
+            scope->methods().append(index);
         }
-        return !services.isEmpty();
+        return !scope.isEmpty();
     }
 
 };

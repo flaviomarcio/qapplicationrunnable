@@ -7,6 +7,7 @@
 #include "../application/qapr_global.h"
 #include "../../qstm/src/qstm_macro.h"
 #include "../../qrpc/src/qrpc_service_setting.h"
+#include "./qapr_scheduler_scope_group.h"
 
 namespace QApr{
 class Schedule;
@@ -25,7 +26,13 @@ public:
     //! \brief SchedulerTask
     //! \param parent
     //!
-    Q_INVOKABLE explicit SchedulerTask(QObject *parent=nullptr);
+    explicit SchedulerTask(QObject *parent=nullptr);
+
+    //!
+    //! \brief SchedulerTask
+    //! \param scope
+    //!
+    explicit SchedulerTask(const SchedulerScopeGroup *scope);
 
     //!
     //! \brief run

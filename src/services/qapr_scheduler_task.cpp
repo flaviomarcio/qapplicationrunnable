@@ -1,12 +1,7 @@
 #include "./qapr_scheduler_task.h"
-#include "./qapr_scheduler.h"
 #include "../application/qapr_macro.h"
-#include "../application/qapr_application.h"
 #include "../../qstm/src/qstm_util_variant.h"
-#include "../../qstm/src/qstm_util_formatting.h"
 #include <QTimer>
-#include <QSqlError>
-
 
 namespace QApr {
 
@@ -22,9 +17,8 @@ public:
     QVariantHash connection;
     QVariantHash stats;
     QDateTime lastExec;
-    QMutex mutex;
-
-    explicit SchedulerTaskPvt(SchedulerTask *parent) : QObject{parent}
+    const SchedulerScopeGroup *scope=nullptr;
+    explicit SchedulerTaskPvt(SchedulerTask *parent, const SchedulerScopeGroup *scope) : QObject{parent}, scope{scope}
     {
         this->parent=parent;
     }
@@ -53,54 +47,18 @@ public slots:
 
     void taskRun()
     {
-        if(mutex.tryLock(1))
-            return;
-
-        this->lastExec=QDateTime::currentDateTime();
         aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(this->parent->name());
 
         this->timer->stop();
         this->timer->setInterval(this->settings.activityInterval());
 
-        auto taskMetaNames=this->taskMetaObject.keys();
-        if(taskMetaNames.isEmpty())
-            return;
-
-        auto taskMetaName=taskMetaNames.join(' ').trimmed();
-        auto taskMetaObject=this->taskMetaObject.value(taskMetaName);
-
-        QScopedPointer<QObject> sObj(taskMetaObject->newInstance(Q_ARG(QObject*, this )));
-
-        if(sObj.data()==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler metaObject: [%1], method: [%2]").arg(taskMetaObject->className(), this->taskMetaMethod.name());
-            mutex.unlock();
-            return;
+        if(this->scope==nullptr){
+            aWarning()<<QStringLiteral("Scheduler[%1]: invalid scope").arg(this->parent->name());
         }
-        
-        auto taskObject=dynamic_cast<Scheduler*>(sObj.data());
-
-        if(taskObject==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler object: [%1], method: [%2]").arg(taskMetaObject->className(), this->taskMetaMethod.name());
-            mutex.unlock();
-            return;
+        else{
+            this->lastExec=QDateTime::currentDateTime();
+            this->scope->invoke(this);
         }
-
-        QOrm::ConnectionPool pool(Application::i().connectionManager().pool());
-        if(!settings.connection().isEmpty())
-            pool.from(settings.connection());
-
-        QSqlDatabase db;
-
-        if(!pool.get(db))
-            aWarning()<<tr("%1, no connection db: %2").arg(this->parent->name(), pool.lastError().text());
-
-
-        taskObject->setConnection(db);
-
-        if(!taskMetaMethod.invoke(taskObject, Qt::DirectConnection))
-            aWarning()<<QStringLiteral("invoke method(%1): error==%2").arg(taskMetaMethod.name());
-
-        pool.finish(db);
 
         emit this->parent->taskUpdate(this->parent);
         if(this->timer->interval()>0)
@@ -115,7 +73,13 @@ public slots:
 SchedulerTask::SchedulerTask(QObject *parent):QThread{nullptr}
 {
     Q_UNUSED(parent)
-    this->p = new SchedulerTaskPvt{this};
+    this->p = new SchedulerTaskPvt{this, nullptr};
+    this->moveToThread(this);
+}
+
+SchedulerTask::SchedulerTask(const SchedulerScopeGroup *scope):QThread{nullptr}
+{
+    this->p = new SchedulerTaskPvt{this, scope};
     this->moveToThread(this);
 }
 
@@ -146,9 +110,13 @@ QRpc::ServiceSetting &SchedulerTask::settings() const
 
 QUuid SchedulerTask::uuid() const
 {
-    static const auto __format=QString("%1.%2");
     Q_DECLARE_VU;
-    auto bytes=__format.arg(p->taskMetaObject.keys().join(' '),this->name());
+    const auto keys=p->taskMetaObject.keys();
+    QByteArray bytes;
+    for(auto&v:keys)
+        bytes.append(v+" ");
+    bytes.append('.');
+    bytes.append(this->name());
     return vu.toUuid(bytes);
 }
 
