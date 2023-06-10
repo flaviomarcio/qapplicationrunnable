@@ -55,14 +55,21 @@ public slots:
 
     void free()
     {
-        auto lst=tasks.values();
-        tasks.clear();
-        for(auto &task: lst){
-            task->quit();
-            if(task->wait(1000))
-                delete task;
-            else
-                task->deleteLater();
+        {//tasks
+            auto lst=tasks.values();
+            tasks.clear();
+            for(auto &task: lst){
+                task->quit();
+                if(task->wait(1000))
+                    delete task;
+                else
+                    task->deleteLater();
+            }
+        }
+        {//scope
+            auto lst=scope.values();
+            scope.clear();
+            qDeleteAll(lst);
         }
     }
 
@@ -95,7 +102,10 @@ public slots:
         auto scExecTime = annotations.find(agent->scExecTime()).value();
 
         QStm::Envs envs;
-        envs.customEnvs(vSettings);
+        envs
+            .clearUnfoundEnvs(true)
+            .customEnvs(vSettings);
+
         scTaskEnabled = envs.parser(scTaskEnabled);
         scExecTimeLimit = envs.parser(scExecTimeLimit);
         scExecTimeInitial = envs.parser(scExecTimeInitial);
@@ -145,12 +155,25 @@ public slots:
         if(!scheduler)
             return false;
 
-        const auto &annotations = scheduler->annotation();
+        auto vSettings=QApr::Application::i().manager().settingBody(__services);
+        QStm::Envs envs;
+        envs
+            .clearUnfoundEnvs(true)
+            .customEnvs(vSettings);
 
-        const auto &scExecScopeClass = annotations.find(agent->scExecScope());
-
-        auto vSettings=QApr::Application::i().manager().settingBody();
-        vSettings=vSettings.value(__services).toHash();
+        QByteArray scopeClass;
+        QAnnotation::Annotation scExecScopeClass;
+        {//class annotation
+            const auto &annotations = scheduler->annotation();
+            const auto &scExecScope = annotations.find(agent->scExecScope());
+            scopeClass=envs.parser(scExecScope.value()).toByteArray();
+            auto ann=scExecScope.toHash();
+            ann.insert(QByteArrayLiteral("v"), scopeClass);
+            scExecScopeClass=QAnnotation::Annotation(ann);
+            scopeClass=scopeClass.isEmpty()
+                             ?scopeClass
+                             :scopeClass+"_";
+        }
 
         for (int index = 0; index < metaObject->methodCount(); ++index) {
             auto method=metaObject->method(index);
@@ -160,16 +183,18 @@ public slots:
 
             const auto &annotations = scheduler->annotation(method);
 
-            if(annotations.isEmpty() || !annotations.contains(agent->scSchedule()))
+            if(!annotations.contains(agent->scSchedule()))
                 continue;
 
-            const auto &scExecScopeMethod = annotations.find(agent->scExecScope());
+            if(!scExecScopeClass.isEmpty()){
+                const auto &scExecScopeMethod = annotations.find(agent->scExecScope());
+                if(!scExecScopeMethod.contains(scExecScopeClass))
+                    continue;
 
-            if(!scExecScopeMethod.contains(scExecScopeClass))
-                continue;
+            }
 
-            const auto &scExecScopeGroup = annotations.find(agent->scExecGroup());
-            auto scopeKey=scExecScopeClass.toValueByteArray()+'_'+scExecScopeGroup.toValueByteArray();
+            const auto &scExecGroup = annotations.find(agent->scExecGroup());
+            auto scopeKey=scopeClass+envs.parser(scExecGroup.value()).toByteArray();
             auto &scope=this->scope[scopeKey];
             if(scope==nullptr)
                 scope=new SchedulerScopeGroup(scopeKey, metaObject, this);
