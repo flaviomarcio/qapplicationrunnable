@@ -3,7 +3,7 @@ QT += network
 QT += sql
 
 CONFIG -= c++11
-CONFIG+=c++17
+#CONFIG+=c++17
 CONFIG+=silent
 
 !defined(QTREFORCE_QAPR):QTREFORCE_QAPR=true
