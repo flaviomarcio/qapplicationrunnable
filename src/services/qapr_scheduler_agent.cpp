@@ -12,7 +12,9 @@ namespace QApr {
 
 
 static const auto __services="services";
+static const auto __scheduler="scheduler";
 static const auto __default="default";
+static const auto __scope="scope";
 
 Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 
@@ -31,26 +33,54 @@ public:
 
 public slots:
 
+    static QByteArray scopeName(const QVariant&scope, const QVariant&group)
+    {
+
+        auto sScope=scope.toByteArray().trimmed().toLower();
+        auto sGroup=group.toByteArray().trimmed().toLower();
+
+        if(!sScope.isEmpty() && !sGroup.isEmpty()){
+            static const auto __format=QStringLiteral("%1_%2");
+            return __format.arg(sScope,sGroup).toUtf8();
+        }
+
+        if(!sScope.isEmpty())
+            return sScope;
+
+        return sGroup;
+    }
+
     void start()
     {
         this->free();
 
-//        QHashIterator <int, const QMetaObject*> i(this->scope);
-//        while(i.hasNext()){
-//            i.next();
-//            const auto metaObject=i.value();
-//            auto method=metaObject->method(i.key());
-//            scheduleCreate(method, *metaObject);
-//        }
+        QStm::Envs envs;
+        QByteArray scopeName;
+        {
+            Q_DECLARE_VU;
+            auto &manager=QApr::Application::i().manager();
+            auto vSettingsDefault=manager.settingBody(__default);
+            auto vSettingsScheduler=manager.settingBody(__scheduler);
+            auto vSettings=vu.vMerge(vSettingsDefault, vSettingsScheduler).toHash();
+            scopeName=vSettings.value(__scope).toByteArray().trimmed().toLower();
+        }
 
-//        {//start
-//            QHashIterator <QUuid, SchedulerTask*> i(this->tasks);
-//            while(i.hasNext()){
-//                i.next();
-//                if(!i.value()->isRunning())
-//                    i.value()->start();
-//            }
-//        }
+        QHashIterator <QByteArray, SchedulerScopeGroup*> i(this->scope);
+        while(i.hasNext()){
+            i.next();
+            if(i.value()->scopeName()!=scopeName)
+                continue;
+            scheduleCreate(i.value());
+        }
+
+        {//start
+            QHashIterator <QUuid, SchedulerTask*> i(this->tasks);
+            while(i.hasNext()){
+                i.next();
+                if(!i.value()->isRunning())
+                    i.value()->start();
+            }
+        }
     }
 
     void free()
@@ -73,71 +103,9 @@ public slots:
         }
     }
 
-    bool scheduleCreate(const QMetaMethod &method, const QMetaObject &metaObject)
+    bool scheduleCreate(SchedulerScopeGroup *scope)
     {
-        QScopedPointer<QObject> sObj(metaObject.newInstance(Q_ARG(QObject*, this )));
-        if(!sObj.data())
-            return false;
-        auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
-        if(!scheduler)
-            return false;
-
-        auto vSettings=QApr::Application::i().manager().settingBody(__services);
-        {
-            Q_DECLARE_VU;
-            auto vSettingsDefault=vSettings.value(__default).toHash();
-            //auto vSettingsAgent=vSettings.value(__agent).toHash();
-            auto vSettingsService=vSettings.value(method.name()).toHash();
-            vSettings=vu.vMerge(vSettingsDefault, vSettingsService).toHash();
-        }
-
-        const auto &annotations = scheduler->annotation(method);
-
-        if(!annotations.contains(agent->scSchedule()))
-            return false;
-
-        auto scTaskEnabled = annotations.find(agent->scTaskEnabled()).value();
-        auto scExecTimeLimit = annotations.find(agent->scExecTimeLimit()).value();
-        auto scExecTimeInitial = annotations.find(agent->scExecTimeInitial()).value();
-        auto scExecTime = annotations.find(agent->scExecTime()).value();
-
-        QStm::Envs envs;
-        envs
-            .clearUnfoundEnvs(true)
-            .customEnvs(vSettings);
-
-        scTaskEnabled = envs.parser(scTaskEnabled);
-        scExecTimeLimit = envs.parser(scExecTimeLimit);
-        scExecTimeInitial = envs.parser(scExecTimeInitial);
-        scExecTime = envs.parser(scExecTime);
-
-        if (scTaskEnabled.isValid() && !scTaskEnabled.toBool())
-            return false;
-
-        static const auto t10m="10m";
-        static const auto t1m="1m";
-        static const auto t100ms="100ms";
-
-        scExecTime=(scExecTime.isValid())?scExecTime:t1m;
-        scExecTimeInitial=(scExecTimeInitial.isValid())?scExecTimeInitial:t100ms;
-        scExecTimeLimit=(scExecTimeLimit.isValid())?scExecTimeLimit:t10m;
-
-        auto task=SchedulerTask::builder(this)
-                        .name(method.name())
-                        .taskMetaMethod(method)
-                        .taskMetaObject(metaObject)
-                        .build();
-
-        if(!this->tasks.contains(task->uuid())){
-
-        }
-
-        task->settings().clear();
-        task->settings().setActivityInterval(scExecTime);
-        task->settings().setActivityIntervalInitial(scExecTimeInitial);
-        task->settings().setActivityLimit(scExecTimeLimit);
-        task->settings().setEnabled(scTaskEnabled.toBool());
-
+        auto task=SchedulerTask::builder(scope).build();
         this->tasks.insert(task->uuid(), task);
         return true;
     }
@@ -155,26 +123,6 @@ public slots:
         if(!scheduler)
             return false;
 
-        auto vSettings=QApr::Application::i().manager().settingBody(__services);
-        QStm::Envs envs;
-        envs
-            .clearUnfoundEnvs(true)
-            .customEnvs(vSettings);
-
-        QByteArray scopeClass;
-        QAnnotation::Annotation scExecScopeClass;
-        {//class annotation
-            const auto &annotations = scheduler->annotation();
-            const auto &scExecScope = annotations.find(agent->scExecScope());
-            scopeClass=envs.parser(scExecScope.value()).toByteArray();
-            auto ann=scExecScope.toHash();
-            ann.insert(QByteArrayLiteral("v"), scopeClass);
-            scExecScopeClass=QAnnotation::Annotation(ann);
-            scopeClass=scopeClass.isEmpty()
-                             ?scopeClass
-                             :scopeClass+"_";
-        }
-
         for (int index = 0; index < metaObject->methodCount(); ++index) {
             auto method=metaObject->method(index);
 
@@ -186,18 +134,27 @@ public slots:
             if(!annotations.contains(agent->scSchedule()))
                 continue;
 
-            if(!scExecScopeClass.isEmpty()){
-                const auto &scExecScopeMethod = annotations.find(agent->scExecScope());
-                if(!scExecScopeMethod.contains(scExecScopeClass))
-                    continue;
-
-            }
-
+            const auto &scExecScope = annotations.find(agent->scExecScope());
             const auto &scExecGroup = annotations.find(agent->scExecGroup());
-            auto scopeKey=scopeClass+envs.parser(scExecGroup.value()).toByteArray();
+            const auto scopeKey=scopeName(scExecScope.value(), scExecGroup.value());
             auto &scope=this->scope[scopeKey];
             if(scope==nullptr)
-                scope=new SchedulerScopeGroup(scopeKey, metaObject, this);
+                scope=new SchedulerScopeGroup(scExecScope.toValueByteArray(), scExecGroup.toValueByteArray(), metaObject, this);
+
+            scope->settings(
+                [](const QMetaMethod &method){
+
+                    auto &manager=QApr::Application::i().manager();
+                    Q_DECLARE_VU;
+                    auto vSettingsDefault=manager.settingBody(__default);
+                    auto vSettingsScheduler=manager.settingBody(__scheduler);
+                    auto vSettingsMethod=manager.settingBody(method.name());
+                    auto vSettings=vSettingsDefault;
+                    vSettings=vu.vMerge(vSettings, vSettingsScheduler).toHash();
+                    vSettings=vu.vMerge(vSettings, vSettingsMethod).toHash();
+                    return vSettings;
+                }
+                );
             scope->methods().append(index);
         }
         return !scope.isEmpty();

@@ -56,6 +56,9 @@
          "activityLimit":"${APPLICATION_CIRCUIT_BREAKER_INTERVAL}",
          "enabled":"${APPLICATION_CIRCUIT_BREAKER_ENABLED}"
       },
+      "scheduler":{
+         "scope":"${SCH_SCOPE}"
+      },
       "token":{
          "activityLimit":"1y",
          "variables":{

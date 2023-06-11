@@ -6,7 +6,6 @@
 #include <QMetaMethod>
 #include "../application/qapr_global.h"
 #include "../../qstm/src/qstm_macro.h"
-#include "../../qrpc/src/qrpc_service_setting.h"
 #include "./qapr_scheduler_scope_group.h"
 
 namespace QApr{
@@ -19,7 +18,7 @@ class SchedulerTaskPvt;
 class Q_APR_EXPORT SchedulerTask : public QThread
 {
     Q_OBJECT
-    Q_STM_DECLARE_BUILDER(SchedulerTask)
+    Q_STM_DECLARE_BUILDER(SchedulerTask,SchedulerScopeGroup)
 public:
 
     //!
@@ -40,47 +39,10 @@ public:
     void run() override;
 
     //!
-    //! \brief settings
-    //! \return
-    //!
-    QRpc::ServiceSetting &settings() const;
-
-    //!
     //! \brief uuid
     //! \return
     //!
-    QUuid uuid() const;
-
-    //!
-    //! \brief name
-    //! \return
-    //!
-    QByteArray name() const;
-    SchedulerTask &name(const QVariant &newName);
-    SchedulerTask &resetName();
-
-    //!
-    //! \brief connection
-    //! \return
-    //!
-    QVariantHash connection() const;
-    void connection(const QVariantHash &newConnection);
-    void resetConnection();
-
-    //!
-    //! \brief taskMetaObject
-    //! \return
-    //!
-    SchedulerTask &taskMetaObject(const QMetaObject &newTaskMetaObject);
-    SchedulerTask &resetTaskMetaObject();
-
-    //!
-    //! \brief taskMetaMethod
-    //! \return
-    //!
-    QMetaMethod taskMetaMethod() const;
-    SchedulerTask &taskMetaMethod(const QMetaMethod &newTaskMetaMethod);
-    SchedulerTask &resetTaskMetaMethod();
+    QUuid &uuid() const;
 
 signals:
     void taskStarted(SchedulerTask *parent);
