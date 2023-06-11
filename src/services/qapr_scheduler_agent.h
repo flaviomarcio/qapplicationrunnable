@@ -10,7 +10,7 @@
 #define QAPR_SCHEDULE_OBJECT(CLASS)\
 
 #define QAPR_SCHEDULE_REGISTER(CLASS)\
-static const auto CLASS##SchedulerRegistered=QApr::SchedulerAgent::i().serviceRegister(CLASS::staticMetaObject);
+static const auto CLASS##SchedulerRegistered=QApr::SchedulerAgent::reg(CLASS::staticMetaObject);
 
 namespace QApr{
 class SchedulerAgentPvt;
@@ -58,7 +58,7 @@ public:
     //! \param service
     //! \return
     //!
-    virtual bool serviceRegister(const QMetaObject &metaObject);
+    static bool reg(const QMetaObject &metaObject);
 
 private:
     SchedulerAgentPvt *p=nullptr;

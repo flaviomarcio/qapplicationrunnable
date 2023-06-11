@@ -13,8 +13,8 @@ public:
     QRpc::ServiceSetting settings;
     QVariantHash stats;
     QDateTime lastExec;
-    const SchedulerScopeGroup *scope=nullptr;
-    explicit SchedulerTaskPvt(SchedulerTask *parent, const SchedulerScopeGroup *scope)
+    SchedulerScopeGroup *scope=nullptr;
+    explicit SchedulerTaskPvt(SchedulerTask *parent, SchedulerScopeGroup *scope)
         :
         QObject{parent},
         parent{parent},
@@ -47,25 +47,24 @@ public slots:
 
     void taskRun()
     {
-        aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(this->scope->scopeName());
+        aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(scope->scope());
 
         this->timer->stop();
         this->timer->setInterval(this->settings.activityInterval());
 
-        if(this->scope==nullptr){
-            aWarning()<<QStringLiteral("Scheduler[%1]: invalid scope").arg(this->scope->scopeName());
+        if(scope==nullptr){
+            aWarning()<<QStringLiteral("Scheduler[%1]: invalid scope").arg(this->scope->scope());
         }
         else{
             this->lastExec=QDateTime::currentDateTime();
-            this->scope->invoke(this);
+            scope->invoke();
         }
 
-        emit this->parent->taskUpdate(this->parent);
         if(this->timer->interval()>0)
             this->timer->start();
 
         auto totalTime=QDateTime::currentDateTime().toMSecsSinceEpoch()-this->lastExec.toMSecsSinceEpoch();
-        aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->scope->scopeName(), QString::number(totalTime));
+        aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->scope->scope(), QString::number(totalTime));
     }
 
 };
@@ -77,7 +76,7 @@ SchedulerTask::SchedulerTask(QObject *parent):QThread{nullptr}
     this->moveToThread(this);
 }
 
-SchedulerTask::SchedulerTask(const SchedulerScopeGroup *scope):QThread{nullptr}
+SchedulerTask::SchedulerTask(SchedulerScopeGroup *scope):QThread{nullptr}
 {
     this->p = new SchedulerTaskPvt{this, scope};
     this->moveToThread(this);
@@ -85,26 +84,24 @@ SchedulerTask::SchedulerTask(const SchedulerScopeGroup *scope):QThread{nullptr}
 
 void SchedulerTask::run()
 {
-    this->setObjectName(QString("SchTsk_%1").arg(p->scope->scopeName()));
-    emit this->taskStarted(this);
+    this->setObjectName(QString("SchTsk_%1").arg(p->scope->scope()));
 #ifdef QAPR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
     p->timer=p->newTimer();
     if(!p->timer || (p->timer->interval()<=0)){
-        aDebug()<<QStringLiteral("Scheduler[%1]: interval is 0").arg(p->scope->scopeName());
-        aDebug()<<QStringLiteral("Scheduler[%1]: stoped").arg(p->scope->scopeName());
+        aDebug()<<QStringLiteral("Scheduler[%1]: interval is 0").arg(p->scope->scope());
+        aDebug()<<QStringLiteral("Scheduler[%1]: stoped").arg(p->scope->scope());
     }
     else{
         p->timer->start();
-        aDebug()<<QStringLiteral("Scheduler[%1]: running").arg(p->scope->scopeName());
+        aDebug()<<QStringLiteral("Scheduler[%1]: running").arg(p->scope->scope());
         this->exec();
     }
     p->freeTimer();
-    emit this->taskFinished(this);
 }
 
-QUuid &SchedulerTask::uuid() const
+const QUuid &SchedulerTask::uuid() const
 {
     return p->scope->uuid();
 }

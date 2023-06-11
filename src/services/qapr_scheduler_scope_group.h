@@ -4,12 +4,13 @@
 #include <QUuid>
 #include <QObject>
 #include <QVector>
+#include <QDateTime>
+#include <QVariant>
 
 namespace QApr {
 
 class SchedulerScopeGroupPvt;
-
-typedef std::function<QVariantHash(const QMetaMethod &method)> SchedulerScopeSettingMethod;
+class Scheduler;
 
 //!
 //! \brief The SchedulerScopeGroup class
@@ -23,51 +24,51 @@ public:
     //! \param parent
     //!
     explicit SchedulerScopeGroup(QObject *parent=nullptr);
-    explicit SchedulerScopeGroup(const QByteArray &scopeName, const QByteArray &groupName, const QMetaObject *scopeMetaObject, QObject *parent=nullptr);
+private:
+    explicit SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &scopeMetaObject, QObject *parent=nullptr);
+public:
+    enum InvokeState{
+        Stated, Fail, SuccessFul
+    };
+    Q_ENUM(InvokeState)
+    //!
+    //! \brief import
+    //! \param metaObject
+    //!
+    static void reg(const QMetaObject &metaObject);
+
+    //!
+    //! \brief scopes
+    //! \return
+    //!
+    static const QVector<SchedulerScopeGroup *> &scopes();
 
     //!
     //! \brief uuid
     //! \return
     //!
-    QUuid &uuid()const;
+    const QUuid &uuid()const;
 
     //!
-    //! \brief scopeName
+    //! \brief scope
     //! \return
     //!
-    QByteArray &scopeName() const;
+    const QString &scope() const;
 
     //!
-    //! \brief groupName
+    //! \brief group
     //! \return
     //!
-    QByteArray &groupName() const;
-
-    //!
-    //! \brief scopeMetaObject
-    //! \return
-    //!
-    const QMetaObject *scopeMetaObject() const;
-
-    //!
-    //! \brief methods
-    //! \return
-    //!
-    QVector<int> &methods() const;
-
-    //!
-    //! \brief settings
-    //! \return
-    //!
-    SchedulerScopeSettingMethod settings();
-    SchedulerScopeGroup &settings(const SchedulerScopeSettingMethod &settings);
+    const QString &group() const;
 
     //!
     //! \brief invoke
     //! \param parent
     //!
-    void invoke(QObject *parent=nullptr) const;
+    void invoke();
 
+signals:
+    void invokeState(QUuid stackId, QDateTime dt, QByteArray methodName, int state);
 private:
     SchedulerScopeGroupPvt *p=nullptr;
 };

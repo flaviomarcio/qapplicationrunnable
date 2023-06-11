@@ -2,7 +2,6 @@
 #include "../application/qapr_macro.h"
 #include "../application/qapr_application.h"
 #include "../../../qstm/src/qstm_util_variant.h"
-#include "./qapr_scheduler.h"
 #include "./qapr_scheduler_task.h"
 #include <QMultiHash>
 #include <QMutex>
@@ -21,9 +20,7 @@ Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 class SchedulerAgentPvt: public QObject{
 public:
     SchedulerAgent *agent=nullptr;
-    QHash<QByteArray, SchedulerScopeGroup*> scope;
-    QHash<QByteArray, Schedule*> schedulers;
-    QHash<QByteArray, QDateTime> tasksInterval;
+    QHash<QUuid, QDateTime> tasksInterval;
     QHash<QUuid, SchedulerTask*> tasks;
 
     explicit SchedulerAgentPvt(SchedulerAgent *parent) : QObject{parent}, agent{parent}
@@ -33,44 +30,24 @@ public:
 
 public slots:
 
-    static QByteArray scopeName(const QVariant&scope, const QVariant&group)
-    {
-
-        auto sScope=scope.toByteArray().trimmed().toLower();
-        auto sGroup=group.toByteArray().trimmed().toLower();
-
-        if(!sScope.isEmpty() && !sGroup.isEmpty()){
-            static const auto __format=QStringLiteral("%1_%2");
-            return __format.arg(sScope,sGroup).toUtf8();
-        }
-
-        if(!sScope.isEmpty())
-            return sScope;
-
-        return sGroup;
-    }
-
     void start()
     {
         this->free();
 
         QStm::Envs envs;
-        QByteArray scopeName;
+        QStringList scopeName;
         {
             Q_DECLARE_VU;
             auto &manager=QApr::Application::i().manager();
             auto vSettingsDefault=manager.settingBody(__default);
             auto vSettingsScheduler=manager.settingBody(__scheduler);
             auto vSettings=vu.vMerge(vSettingsDefault, vSettingsScheduler).toHash();
-            scopeName=vSettings.value(__scope).toByteArray().trimmed().toLower();
+            scopeName=vSettings.value(__scope).toStringList();
         }
 
-        QHashIterator <QByteArray, SchedulerScopeGroup*> i(this->scope);
-        while(i.hasNext()){
-            i.next();
-            if(i.value()->scopeName()!=scopeName)
-                continue;
-            scheduleCreate(i.value());
+        for(auto&scope:SchedulerScopeGroup::scopes()){
+            auto task=SchedulerTask::builder(scope).build();
+            this->tasks.insert(task->uuid(), task);
         }
 
         {//start
@@ -96,68 +73,6 @@ public slots:
                     task->deleteLater();
             }
         }
-        {//scope
-            auto lst=scope.values();
-            scope.clear();
-            qDeleteAll(lst);
-        }
-    }
-
-    bool scheduleCreate(SchedulerScopeGroup *scope)
-    {
-        auto task=SchedulerTask::builder(scope).build();
-        this->tasks.insert(task->uuid(), task);
-        return true;
-    }
-
-
-    bool serviceRegister(const QMetaObject *metaObject)
-    {
-        if (!metaObject->inherits(&Scheduler::staticMetaObject))
-            return false;
-
-        QScopedPointer<QObject> sObj(metaObject->newInstance(Q_ARG(QObject*, this )));
-        if(!sObj.data())
-            return false;
-        auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
-        if(!scheduler)
-            return false;
-
-        for (int index = 0; index < metaObject->methodCount(); ++index) {
-            auto method=metaObject->method(index);
-
-            if(method.methodType()!=QMetaMethod::Method)
-                continue;
-
-            const auto &annotations = scheduler->annotation(method);
-
-            if(!annotations.contains(agent->scSchedule()))
-                continue;
-
-            const auto &scExecScope = annotations.find(agent->scExecScope());
-            const auto &scExecGroup = annotations.find(agent->scExecGroup());
-            const auto scopeKey=scopeName(scExecScope.value(), scExecGroup.value());
-            auto &scope=this->scope[scopeKey];
-            if(scope==nullptr)
-                scope=new SchedulerScopeGroup(scExecScope.toValueByteArray(), scExecGroup.toValueByteArray(), metaObject, this);
-
-            scope->settings(
-                [](const QMetaMethod &method){
-
-                    auto &manager=QApr::Application::i().manager();
-                    Q_DECLARE_VU;
-                    auto vSettingsDefault=manager.settingBody(__default);
-                    auto vSettingsScheduler=manager.settingBody(__scheduler);
-                    auto vSettingsMethod=manager.settingBody(method.name());
-                    auto vSettings=vSettingsDefault;
-                    vSettings=vu.vMerge(vSettings, vSettingsScheduler).toHash();
-                    vSettings=vu.vMerge(vSettings, vSettingsMethod).toHash();
-                    return vSettings;
-                }
-                );
-            scope->methods().append(index);
-        }
-        return !scope.isEmpty();
     }
 
 };
@@ -202,9 +117,10 @@ bool SchedulerAgent::stop()
     return true;
 }
 
-bool SchedulerAgent::serviceRegister(const QMetaObject &metaObject)
+bool SchedulerAgent::reg(const QMetaObject &metaObject)
 {
-    return p->serviceRegister(&metaObject);
+    SchedulerScopeGroup::reg(metaObject);
+    return true;
 }
 
 }

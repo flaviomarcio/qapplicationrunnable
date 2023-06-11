@@ -46,23 +46,39 @@ public:
     //! \brief settings
     //! \return
     //!
-    QRpc::ServiceSetting &settings() const;
+    const QRpc::ServiceSetting &settings() const;
 
     //!
-    //! \brief beforeExec
+    //! \brief invokeBefore
     //! \param scope
     //! \param method
     //! \return
     //!
-    virtual bool beforeExec(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
+    virtual bool invokeBefore(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
 
     //!
-    //! \brief afterExec
+    //! \brief invokeFail
     //! \param scope
     //! \param method
     //! \return
     //!
-    virtual bool afterExec(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
+    virtual bool invokeFail(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
+
+    //!
+    //! \brief invokeAfter
+    //! \param scope
+    //! \param method
+    //! \return
+    //!
+    virtual bool invokeAfter(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
+
+    //!
+    //! \brief invoke
+    //! \param scope
+    //! \param method
+    //! \return
+    //!
+    virtual bool invoke(const SchedulerScopeGroup *scope, QMetaMethod &method);
 
 private:
     SchedulerPvt *p=nullptr;

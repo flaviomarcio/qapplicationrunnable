@@ -31,7 +31,7 @@ public:
     //! \brief SchedulerTask
     //! \param scope
     //!
-    explicit SchedulerTask(const SchedulerScopeGroup *scope);
+    explicit SchedulerTask(SchedulerScopeGroup *scope);
 
     //!
     //! \brief run
@@ -42,12 +42,8 @@ public:
     //! \brief uuid
     //! \return
     //!
-    QUuid &uuid() const;
+    const QUuid &uuid() const;
 
-signals:
-    void taskStarted(SchedulerTask *parent);
-    void taskUpdate(SchedulerTask *parent);
-    void taskFinished(SchedulerTask *parent);
 private:
     SchedulerTaskPvt *p=nullptr;
 };

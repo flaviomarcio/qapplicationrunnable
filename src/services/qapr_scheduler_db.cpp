@@ -33,7 +33,7 @@ SchedulerDB::SchedulerDB(QObject *parent):
 
 }
 
-bool SchedulerDB::beforeExec(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method)
+bool SchedulerDB::invokeBefore(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method)
 {
     Q_UNUSED(scope)
     Q_UNUSED(method)

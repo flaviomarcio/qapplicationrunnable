@@ -22,8 +22,8 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit SchedulerDB(QObject *parent=nullptr);
-
-    virtual bool beforeExec(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method);
+    
+    virtual bool invokeBefore(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method);
 private:
     SchedulerDBPvt *p=nullptr;
 };
