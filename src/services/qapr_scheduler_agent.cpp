@@ -176,13 +176,13 @@ SchedulerAgent &SchedulerAgent::i()
 
 void SchedulerAgent::run()
 {
-    aDebug()<<QStringLiteral("Scheduler running");
+    aInfo()<<QStringLiteral("%1 started").arg(this->metaObject()->className());
     QTimer::singleShot(100,this,[this](){
         p->start();
     });
     this->exec();
     p->free();
-    aDebug()<<QStringLiteral("Scheduler finished");
+    aInfo()<<QStringLiteral("%1 finished").arg(this->metaObject()->className());
  }
 
 bool SchedulerAgent::start()
