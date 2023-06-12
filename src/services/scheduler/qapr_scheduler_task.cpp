@@ -23,7 +23,7 @@ public:
 
     }
 
-    void freeTimer()
+    void timerStop()
     {
         if(this->timer==nullptr)
             return;
@@ -34,23 +34,24 @@ public:
     }
 
 
-    QTimer *newTimer()
+    void timerStart()
     {
-        freeTimer();
-        auto timer=new QTimer();
-        timer->setInterval(this->settings.activityIntervalInitial());
-        QObject::connect(timer, &QTimer::timeout, this, &SchedulerTaskPvt::taskRun);
-        return timer;
+        timerStop();
+        if(timer==nullptr)
+            timer=new QTimer();
+        auto interval=this->settings.activityInterval();
+        if(interval>0){
+            timer->setInterval(interval);
+            QObject::connect(timer, &QTimer::timeout, this, &SchedulerTaskPvt::taskRun);
+        }
     }
 
 public slots:
 
     void taskRun()
     {
+        this->timerStop();
         aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(scope->scope());
-
-        this->timer->stop();
-        this->timer->setInterval(this->settings.activityInterval());
 
         if(scope==nullptr){
             aWarning()<<QStringLiteral("Scheduler[%1]: invalid scope").arg(this->scope->scope());
@@ -59,11 +60,8 @@ public slots:
             this->lastExec=QDateTime::currentDateTime();
             scope->invoke();
         }
-
-        if(this->timer->interval()>0)
-            this->timer->start();
-
         auto totalTime=QDateTime::currentDateTime().toMSecsSinceEpoch()-this->lastExec.toMSecsSinceEpoch();
+        this->timerStart();
         aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->scope->scope(), QString::number(totalTime));
     }
 
@@ -88,17 +86,20 @@ void SchedulerTask::run()
 #ifdef QAPR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
-    p->timer=p->newTimer();
-    if(!p->timer || (p->timer->interval()<=0)){
-        aDebug()<<QStringLiteral("Scheduler[%1]: interval is 0").arg(p->scope->scope());
-        aDebug()<<QStringLiteral("Scheduler[%1]: stoped").arg(p->scope->scope());
+    auto interval=p->settings.activityInterval();
+    if(interval<=0){
+        aDebug()<<QStringLiteral("Scope:[%1-%2]: interval: %3, state: stoped").arg(p->scope->scope(), p->scope->group()).arg(interval);
     }
     else{
-        p->timer->start();
-        aDebug()<<QStringLiteral("Scheduler[%1]: running").arg(p->scope->scope());
+        auto intervalInitial=p->settings.activityIntervalInitial();
+        intervalInitial=(intervalInitial>0)?intervalInitial:100;
+        QTimer::singleShot(intervalInitial, this, [this](){
+            p->taskRun();
+        });
+        aDebug()<<QStringLiteral("Scope:[%1,%2]: initialStart: %3, state: running ").arg(p->scope->scope(), p->scope->group()).arg(intervalInitial);
         this->exec();
     }
-    p->freeTimer();
+    p->timerStop();
 }
 
 const QUuid &SchedulerTask::uuid() const

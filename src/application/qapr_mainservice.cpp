@@ -8,8 +8,8 @@
 #include <QCoreApplication>
 #endif
 #include "./qapr_application.h"
-#include "../services/qapr_server.h"
-#include "../services/qapr_scheduler_agent.h"
+#include "../services/servers/qapr_server.h"
+#include "../services/scheduler/qapr_scheduler_agent.h"
 
 namespace QApr {
 
@@ -41,7 +41,7 @@ int MainService::exec(Q_APR_APP_CLASS &a, int argc, char* argv[])
         __return = service.isRunning() || __return;
     }
 
-    if(arguments.contains(QStringLiteral("job")) || arguments.contains(QStringLiteral("agent"))){
+    if(arguments.contains(QStringLiteral("scheduler"))){
         auto &service = SchedulerAgent::i();
         service.start();
         __return = service.isRunning() || __return;

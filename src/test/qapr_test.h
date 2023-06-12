@@ -15,7 +15,7 @@
 #else
 #include <gtest/gtest.h>
 #endif
-#include "../../src/services/qapr_server.h"
+#include "../../src/services/servers/qapr_server.h"
 
 namespace QApr{
 

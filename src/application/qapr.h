@@ -7,10 +7,10 @@
 #include "../application/qapr_mainservice.h"
 #include "../application/qapr_application.h"
 //services
-#include "../services/qapr_scheduler_agent.h"
-#include "../services/qapr_scheduler.h"
-#include "../services/qapr_scheduler_db.h"
-#include "../services/qapr_server.h"
+#include "../services/scheduler/qapr_scheduler_agent.h"
+#include "../services/scheduler/qapr_scheduler.h"
+#include "../services/scheduler/qapr_scheduler_db.h"
+#include "../services/servers/qapr_server.h"
 //session
 #include "../sessions/qapr_session.h"
 #include "../sessions/qapr_session_credential.h"

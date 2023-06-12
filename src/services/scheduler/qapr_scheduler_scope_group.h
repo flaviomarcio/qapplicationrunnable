@@ -62,6 +62,13 @@ public:
     const QString &group() const;
 
     //!
+    //! \brief isScope
+    //! \param scope
+    //! \return
+    //!
+    bool isScope(const QStringList &scope)const;
+
+    //!
     //! \brief invoke
     //! \param parent
     //!

@@ -199,6 +199,7 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
                 if(scope==nullptr){
                     scope=new SchedulerScopeGroup(scopeUuid, scopeName, groupName,  metaObject);
                     scopeCache->insert(scope->uuid(), scope);
+                    scopeList->append(scope);
                 }
 
                 QString sortTag=(scExecOrder>=0)
@@ -231,6 +232,17 @@ const QString &SchedulerScopeGroup::scope() const
 const QString &SchedulerScopeGroup::group() const
 {
     return p->group;
+}
+
+bool SchedulerScopeGroup::isScope(const QStringList &scope) const
+{
+    if(scope.isEmpty() && this->scope().isEmpty())
+        return true;
+
+    if(scope.contains(this->scope(), Qt::CaseInsensitive))
+        return true;
+
+    return {};
 }
 
 void SchedulerScopeGroup::invoke()
