@@ -9,8 +9,6 @@
 
 namespace QApr {
 
-
-static const auto __services="services";
 static const auto __scheduler="scheduler";
 static const auto __default="default";
 static const auto __scope="scope";
