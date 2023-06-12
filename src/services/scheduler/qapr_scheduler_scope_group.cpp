@@ -254,6 +254,7 @@ void SchedulerScopeGroup::invoke()
         auto method=p->metaObject.method(p->methods.value(key));
         if(!method.isValid())
             continue;
+
         methodList.append(method);
     }
 
@@ -274,11 +275,25 @@ void SchedulerScopeGroup::invoke()
             return;
         }
 
-        emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), Stated);
-        if(!scheduler->invoke(this, method))
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), Fail);
-        else
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SuccessFul);
+        emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), STARTED);
+        switch (scheduler->invoke(this, method)) {
+        case Scheduler::SUCCESSFUL:
+            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SUCCESSFUL);
+            break;
+        case Scheduler::FAIL:
+            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), FAIL);
+            break;
+        case Scheduler::SKIPPED:
+            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SKIPPED);
+            break;
+        case Scheduler::NOTHING:
+            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), NOTHING);
+            break;
+        default:
+            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), NOTHING);
+            break;
+        }
+
 
     }
 }

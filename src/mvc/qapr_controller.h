@@ -22,13 +22,6 @@ public:
     Q_INVOKABLE explicit Controller(QObject *parent = nullptr);
 
     //!
-    //! \brief Controller
-    //! \param connection
-    //! \param parent
-    //!
-    Q_INVOKABLE explicit Controller(const QSqlDatabase&connection, QObject *parent = nullptr);
-
-    //!
     //! \brief resultInfo
     //! \return
     //!

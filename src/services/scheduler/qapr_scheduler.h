@@ -21,7 +21,7 @@ private: Q_ANNOTATION(METHOD,\
                     QVariantList({scSchedule()}) + QVariant(ANNOTATIONS).toList()\
                 )\
 )\
-public: Q_INVOKABLE void METHOD()
+public: Q_INVOKABLE InvokeReturn METHOD()
 
 #define Q_APR_SCHEDULE_CONSTRUCTOR(CLASS, ANNOTATIONS) \
 Q_ANNOTATION(CLASS, QVariant(ANNOTATIONS).toList()) \
@@ -36,6 +36,11 @@ class Q_APR_EXPORT Scheduler : public QObject, public PrivateQApr::SchedulerAnno
 {
     Q_OBJECT
 public:
+    enum InvokeReturn{
+        NOTHING, SUCCESSFUL, SKIPPED, FAIL
+    };
+    Q_ENUM(InvokeReturn)
+
     //!
     //! \brief Scheduler
     //! \param parent
@@ -73,12 +78,20 @@ public:
     virtual bool invokeAfter(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
 
     //!
+    //! \brief canInvoke
+    //! \param scope
+    //! \param method
+    //! \return
+    //!
+    virtual bool canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method);
+
+    //!
     //! \brief invoke
     //! \param scope
     //! \param method
     //! \return
     //!
-    virtual bool invoke(const SchedulerScopeGroup *scope, QMetaMethod &method);
+    virtual InvokeReturn invoke(const SchedulerScopeGroup *scope, QMetaMethod &method);
 
 private:
     SchedulerPvt *p=nullptr;

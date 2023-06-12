@@ -33,10 +33,10 @@ public:
     Q_ANNOTATION_DECLARE_FUNC(scDescription, Attribute)
 
     //!
-    //! \brief scTaskEnabled
+    //! \brief scEnabled
     //! \return
     //!
-    Q_ANNOTATION_DECLARE_FUNC(scTaskEnabled, Attribute)
+    Q_ANNOTATION_DECLARE_FUNC(scEnabled, Attribute)
 
     //!
     //! \brief scExecTimeInitial
@@ -57,18 +57,18 @@ public:
     Q_ANNOTATION_DECLARE_FUNC(scExecTimeLimit, Task)
 
     //!
-    //! \brief scScope
+    //! \brief scExecScope
     //!
     Q_ANNOTATION_DECLARE_FUNC(scExecScope, Task);
 
     //!
-    //! \brief scTaskGroup
+    //! \brief scExecGroup
     //! \return
     //!
     Q_ANNOTATION_DECLARE_FUNC(scExecGroup, Task)
 
     //!
-    //! \brief scTaskOrder
+    //! \brief scExecOrder
     //! \return
     //!
     Q_ANNOTATION_DECLARE_FUNC(scExecOrder, Task)

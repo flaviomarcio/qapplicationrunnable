@@ -10,7 +10,8 @@
 namespace QApr {
 
 static const auto __scheduler="scheduler";
-static const auto __scope="scope";
+//static const auto __scope="scope";
+//static const auto __enabled="enabled";
 
 Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
 
@@ -20,21 +21,21 @@ public:
     QHash<QUuid, QDateTime> tasksInterval;
     QHash<QUuid, SchedulerTask*> tasks;
 
-    explicit SchedulerAgentPvt(SchedulerAgent *parent) : QObject{parent}, agent{parent}
+    QStm::SettingBase settingScheduler;
+
+    explicit SchedulerAgentPvt(SchedulerAgent *parent) : QObject{parent}, agent{parent}, settingScheduler{parent}
     {
+        Q_DECLARE_VU;
+        auto &manager=QApr::Application::i().manager();
+        auto vSetting=manager.settingBody(__scheduler);
+        settingScheduler.fromHash(vSetting);
     }
 
 public slots:
 
     void start()
     {
-        QStringList scopeList;
-        {//envs
-            Q_DECLARE_VU;
-            auto &manager=QApr::Application::i().manager();
-            auto vSettings=manager.settingBody(__scheduler);
-            scopeList=vu.toStringList(vSettings.value(__scope));
-        }
+        const auto &scopeList=settingScheduler.scope();
 
         //create
         for(auto &scope:SchedulerScopeGroup::scopes()){
@@ -98,6 +99,8 @@ SchedulerAgent &SchedulerAgent::i()
 
 void SchedulerAgent::run()
 {
+    if(!p->settingScheduler.enabled())
+        return;
     aInfo()<<QStringLiteral("%1 started").arg(this->metaObject()->className());
     QTimer::singleShot(100,this,[this](){
         p->start();

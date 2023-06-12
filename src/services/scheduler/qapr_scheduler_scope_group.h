@@ -28,7 +28,7 @@ private:
     explicit SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &scopeMetaObject, QObject *parent=nullptr);
 public:
     enum InvokeState{
-        Stated, Fail, SuccessFul
+        NOTHING, STARTED, FAIL, SUCCESSFUL, SKIPPED
     };
     Q_ENUM(InvokeState)
     //!

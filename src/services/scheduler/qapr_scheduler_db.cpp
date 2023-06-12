@@ -16,21 +16,17 @@ public:
     SchedulerDB *parent = nullptr;
     QStm::SettingBase settings;
     QOrm::ConnectionPool pool;
-    explicit SchedulerDBPvt(SchedulerDB *parent=nullptr):
+    explicit SchedulerDBPvt(SchedulerDB *parent=nullptr)
+        :QObject{parent},
         parent{parent},
         pool(QApr::Application::i().connectionManager().pool())
     {
     }
-
-
 };
 
-SchedulerDB::SchedulerDB(QObject *parent):
-    QApr::Scheduler{parent},
-    QOrm::ObjectDbExtension{this},
-    p(new SchedulerDBPvt{this})
+SchedulerDB::SchedulerDB(QObject *parent)
+    :QApr::Scheduler{parent}, QOrm::ObjectDbExtension{parent}, p{new SchedulerDBPvt{this}}
 {
-
 }
 
 bool SchedulerDB::invokeBefore(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method)
@@ -41,6 +37,11 @@ bool SchedulerDB::invokeBefore(const QApr::SchedulerScopeGroup *scope, QMetaMeth
     if(!p->pool.get(db))
         aWarning()<<tr("%1, no connection db: %2").arg(method.name(), p->pool.lastError().text());
     return this->setConnection(db);
+}
+
+QByteArray SchedulerDB::connectionId() const
+{
+    return QOrm::ObjectDbExtension::connectionId();
 }
 
 }

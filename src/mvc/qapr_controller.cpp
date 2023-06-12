@@ -11,9 +11,8 @@ public:
     Interface *request=nullptr;
     QVariantHash accountModel;
 
-    explicit ControllerPvt(Controller*parent):QObject{parent}
+    explicit ControllerPvt(Controller*parent):QObject{parent},parent{parent}
     {
-        this->parent=parent;
     }
 
     Interface *req()
@@ -37,14 +36,9 @@ public:
     }
 };
 
-Controller::Controller(QObject *parent) : QOrm::Controller(parent)
+Controller::Controller(QObject *parent)
+    : QOrm::Controller{parent}, p{new ControllerPvt{this}}
 {
-    this->p=new ControllerPvt{this};
-}
-
-Controller::Controller(const QSqlDatabase &connection, QObject *parent) : QOrm::Controller(connection, parent)
-{
-    this->p=new ControllerPvt{this};
 }
 
 const QVariant Controller::resultInfo()

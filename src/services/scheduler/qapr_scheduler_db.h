@@ -22,8 +22,21 @@ public:
     //! \param parent
     //!
     Q_INVOKABLE explicit SchedulerDB(QObject *parent=nullptr);
-    
+
+    //!
+    //! \brief invokeBefore
+    //! \param scope
+    //! \param method
+    //! \return
+    //!
     virtual bool invokeBefore(const QApr::SchedulerScopeGroup *scope, QMetaMethod &method);
+
+    //!
+    //! \brief connectionId
+    //! \return
+    //!
+    Q_INVOKABLE QByteArray connectionId() const;
+
 private:
     SchedulerDBPvt *p=nullptr;
 };

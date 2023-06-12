@@ -16,19 +16,24 @@ class SchedulerPvt:public QObject{
 public:
     Scheduler *parent = nullptr;
     QStm::SettingBase settings;
-    explicit SchedulerPvt(Scheduler *parent):QObject{parent}, parent{parent}, settings{parent}
+    QStm::Envs env;
+    explicit SchedulerPvt(Scheduler *parent):QObject{parent}, parent{parent}, settings{this},env{this}
     {
 
     }
 
-    QVariantHash readSettings(const QMetaMethod &method)
+    void readSettings(const QMetaMethod &method)
     {
         Q_DECLARE_VU;
         auto &manager=QApr::Application::i().manager();
-        auto vSettingsScheduler=manager.settingBody(__scheduler);
-        auto vSettingsMethod=manager.settingBody(method.name().toLower());
-        auto vSettings=vu.vMerge(vSettingsScheduler, vSettingsMethod).toHash();
-        return vSettings;
+        auto vSettings=manager.settingBody(method.name());
+
+        this->settings
+            .clear()
+            .fromHash(vSettings);
+
+        this->env
+            .customEnvs(vSettings);
     }
 };
 
@@ -42,10 +47,28 @@ const QStm::SettingBase &Scheduler::settings()const
     return p->settings;
 }
 
-bool Scheduler::invoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
+bool Scheduler::canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
 {
+    Q_UNUSED(scope)
+
+    p->readSettings(method);
+
+    const auto &annotations = this->annotation(method);
+    auto scEnabled=annotations.find(this->scEnabled()).value();
+    scEnabled=p->env.parser(scEnabled);
+
+    if(!scEnabled.toBool())
+        return {};
+    return true;
+}
+
+Scheduler::InvokeReturn Scheduler::invoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
+{
+    if(!this->canInvoke(scope, method))
+        return SKIPPED;
+
     aInfo()<<QStringLiteral("scope:%1, group: %2, method: %3 : start").arg(scope->scope(), scope->group(), method.name());
-    p->settings.fromHash(p->readSettings(method));
+
     QString message;
     bool __return=false;
     if(!this->invokeBefore(scope, method))
@@ -62,7 +85,9 @@ bool Scheduler::invoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
         __return=true;
     }
     aInfo()<<QStringLiteral("scope:%1, group: %2, method: %3 : %4").arg(scope->scope(), scope->group(), method.name(), message);
-    return __return;
+    return __return
+               ?SUCCESSFUL
+               :FAIL;
 }
 
 }
