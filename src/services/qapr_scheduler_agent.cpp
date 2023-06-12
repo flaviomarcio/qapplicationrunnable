@@ -25,7 +25,6 @@ public:
 
     explicit SchedulerAgentPvt(SchedulerAgent *parent) : QObject{parent}, agent{parent}
     {
-        this->agent=parent;
     }
 
 public slots:
@@ -62,16 +61,15 @@ public slots:
 
     void free()
     {
-        {//tasks
-            auto lst=tasks.values();
-            tasks.clear();
-            for(auto &task: lst){
-                task->quit();
-                if(task->wait(1000))
-                    delete task;
-                else
-                    task->deleteLater();
-            }
+        //tasks
+        auto lst=tasks.values();
+        tasks.clear();
+        for(auto &task: lst){
+            task->quit();
+            if(task->wait(1000))
+                delete task;
+            else
+                task->deleteLater();
         }
     }
 
