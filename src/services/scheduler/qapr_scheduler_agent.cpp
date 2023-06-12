@@ -10,7 +10,6 @@
 namespace QApr {
 
 static const auto __scheduler="scheduler";
-static const auto __default="default";
 static const auto __scope="scope";
 
 Q_GLOBAL_STATIC(SchedulerAgent, staticAgent);
@@ -29,17 +28,11 @@ public slots:
 
     void start()
     {
-        this->free();
-
         QStringList scopeList;
         {//envs
             Q_DECLARE_VU;
             auto &manager=QApr::Application::i().manager();
-            auto vSettingsDefault=manager.settingBody(__default);
-            auto vSettingsScheduler=manager.settingBody(__scheduler);
-            auto vSettings=vu.vMerge(vSettingsDefault, vSettingsScheduler).toHash();
-            QStm::Envs envs(vSettings);
-            vSettings=envs.parser(vSettings).toHash();
+            auto vSettings=manager.settingBody(__scheduler);
             scopeList=vu.toStringList(vSettings.value(__scope));
         }
 
@@ -47,8 +40,23 @@ public slots:
         for(auto &scope:SchedulerScopeGroup::scopes()){
             if(!scope->isScope(scopeList))
                 continue;
-            auto task=SchedulerTask::builder(scope).build();
-            this->tasks.insert(task->uuid(), task);
+
+            auto task=this->tasks.value(scope->uuid());
+
+            if(task && task->isRunning())
+                continue;
+
+            if(task){
+                task->quit();
+                if(task->wait(1000))
+                    delete task;
+                else
+                    task->deleteLater();
+                task=nullptr;
+            }
+
+            task=SchedulerTask::builder(scope).build();
+            this->tasks.insert(scope->uuid(), task);
         }
 
         {//start
@@ -77,10 +85,9 @@ public slots:
 
 };
 
-SchedulerAgent::SchedulerAgent(QObject *parent):QThread{nullptr}, PrivateQApr::SchedulerAnnotation{this}
+SchedulerAgent::SchedulerAgent(QObject *parent):QThread{nullptr}, PrivateQApr::SchedulerAnnotation{this},p{new SchedulerAgentPvt{this}}
 {
     Q_UNUSED(parent)
-    this->p = new SchedulerAgentPvt{this};
     this->moveToThread(this);
 }
 

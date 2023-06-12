@@ -44,6 +44,11 @@ public:
     //!
     const QUuid &uuid() const;
 
+    //!
+    //! \brief start
+    //!
+    bool start();
+
 private:
     SchedulerTaskPvt *p=nullptr;
 };

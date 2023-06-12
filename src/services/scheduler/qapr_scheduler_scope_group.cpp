@@ -275,7 +275,7 @@ void SchedulerScopeGroup::invoke()
         }
 
         emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), Stated);
-        if(scheduler->invoke(this, method))
+        if(!scheduler->invoke(this, method))
             emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), Fail);
         else
             emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SuccessFul);

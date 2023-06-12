@@ -8,7 +8,7 @@
 #include "../application/qapr_global.h"
 #include "./qapr_scheduler_scope_group.h"
 #include "./private/p_qapr_scheduler_annotation.h"
-#include "../../../qstm/src/qstm_setting_manager.h"
+#include "../../../qstm/src/qstm_setting_base.h"
 
 namespace QApr {
 class SchedulerTask;

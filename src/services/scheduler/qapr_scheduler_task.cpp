@@ -14,13 +14,16 @@ public:
     QVariantHash stats;
     QDateTime lastExec;
     SchedulerScopeGroup *scope=nullptr;
+    QUuid uuid;
     explicit SchedulerTaskPvt(SchedulerTask *parent, SchedulerScopeGroup *scope)
         :
         QObject{parent},
         parent{parent},
-        scope{scope}
+        scope{scope},
+        uuid{scope->uuid()}
     {
-
+        if(scope)
+            this->setObjectName(QString("SchTsk_%1_%2").arg(scope->scope(), scope->group()));
     }
 
     void timerStop()
@@ -37,13 +40,15 @@ public:
     void timerStart()
     {
         timerStop();
-        if(timer==nullptr)
-            timer=new QTimer();
         auto interval=this->settings.activityInterval();
-        if(interval>0){
-            timer->setInterval(interval);
-            QObject::connect(timer, &QTimer::timeout, this, &SchedulerTaskPvt::taskRun);
-        }
+        if(interval<=0)
+            return;
+
+        timer=new QTimer();
+        timer->setInterval(interval);
+        QObject::connect(timer, &QTimer::timeout, this, &SchedulerTaskPvt::taskRun);
+        timer->start();
+
     }
 
 public slots:
@@ -67,22 +72,19 @@ public slots:
 
 };
 
-SchedulerTask::SchedulerTask(QObject *parent):QThread{nullptr}
+SchedulerTask::SchedulerTask(QObject *parent):QThread{nullptr},p{new SchedulerTaskPvt{this, nullptr}}
 {
     Q_UNUSED(parent)
-    this->p = new SchedulerTaskPvt{this, nullptr};
     this->moveToThread(this);
 }
 
-SchedulerTask::SchedulerTask(SchedulerScopeGroup *scope):QThread{nullptr}
+SchedulerTask::SchedulerTask(SchedulerScopeGroup *scope):QThread{nullptr},p{new SchedulerTaskPvt{this, scope}}
 {
-    this->p = new SchedulerTaskPvt{this, scope};
     this->moveToThread(this);
 }
 
 void SchedulerTask::run()
 {
-    this->setObjectName(QString("SchTsk_%1").arg(p->scope->scope()));
 #ifdef QAPR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
@@ -104,7 +106,15 @@ void SchedulerTask::run()
 
 const QUuid &SchedulerTask::uuid() const
 {
-    return p->scope->uuid();
+    return p->uuid;
+}
+
+bool SchedulerTask::start()
+{
+    QThread::start();
+    while (this->eventDispatcher() == nullptr)
+        QThread::msleep(1);
+    return true;
 }
 
 }
