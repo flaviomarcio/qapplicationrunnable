@@ -252,13 +252,13 @@ void SchedulerScopeGroup::invoke()
         QScopedPointer<QObject> sObj(p->metaObject.newInstance(Q_ARG(QObject*, nullptr)));
 
         if(sObj.data()==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler object: [%1], scope: [%2], group: [%2]").arg(p->metaObject.className(), this->scope(), this->group());
+            aWarning()<<tr("%1, Invalid Scheduler object: [%2], scope: [%3], group: [%4").arg(p->metaObject.className(), this->scope(), this->group());
             return;
         }
         auto scheduler=dynamic_cast<Scheduler*>(sObj.data());
 
         if(scheduler==nullptr){
-            aWarning()<<tr("%1, Invalid Scheduler object: [%1], scope: [%2], group: [%2]").arg(p->metaObject.className(), this->scope(), this->group());
+            aWarning()<<tr("%1, Invalid Scheduler object: [%2], scope: [%3], group: [%4]").arg(p->metaObject.className(), this->scope(), this->group());
             return;
         }
 
