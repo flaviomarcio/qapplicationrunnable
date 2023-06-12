@@ -11,17 +11,17 @@
 
 namespace QApr {
 
-Q_GLOBAL_STATIC(QString, applicationSettingDir)
 Q_GLOBAL_STATIC(Application, staticInstance);
-Q_GLOBAL_STATIC(QStm::SettingBase, circuitBreakerSettings);
+Q_GLOBAL_STATIC(QVariantHash, circuitBreakerSettings);
 
 static const auto __circuit_breaker="circuit-breaker";
 static const auto __connection="connection";
+static const auto __enabled="enabled";
 
 static void startCircuitBreaker()
 {
     auto &manager=staticInstance->manager();
-    circuitBreakerSettings->fromHash(manager.settingBody(__circuit_breaker));
+    *circuitBreakerSettings=manager.settingBody(__circuit_breaker);
 }
 
 static void startSettings()
@@ -101,22 +101,25 @@ Q_APR_STARTUP_FUNCTION(init)
 class ApplicationPvt:public QObject
 {
 public:
-    Application *application=nullptr;
-    QStm::SettingFile settingFile;
+    Application *parent=nullptr;
     QVariantHash arguments;
+    QStm::SettingFile settingFile;
+    Settings settings;
     QStm::SettingManager manager;
     QOrm::ConnectionManager connectionManager;
-    Settings settings;
     QApr::CircuitBreaker circuitBreaker;
     QStm::Envs envs;
 
-    explicit ApplicationPvt(Application*parent=nullptr)
+    explicit ApplicationPvt(Application *parent=nullptr)
         :
-        QObject{parent}
+        QObject{parent},
+        parent{parent},
+        settingFile{parent},
+        settings{parent},
+        manager{parent},
+        connectionManager{parent},
+        circuitBreaker{*circuitBreakerSettings, parent}
     {
-        if(applicationSettingDir->isEmpty())
-            *applicationSettingDir=QStringLiteral("%1/%2").arg(settings_HOME_DIR, qApp->applicationName().toLower());
-        this->application=parent;
     }
 
     ~ApplicationPvt()
@@ -179,71 +182,6 @@ public:
         return this->settingFile;
     }
 
-//    static void resourceExtract()
-//    {
-//        QDir dirHome(*applicationSettingDir);
-//        if(!dirHome.exists())
-//            dirHome.mkpath(*applicationSettingDir);
-
-//        if(!dirHome.exists())
-//            return;
-
-//        auto findFile=[](QStringList &outPut, const QString &ext){
-//            auto filter=QStringList{QString("*.%1").arg(ext)};
-//            auto sufix=QString{"-settings.%1"}.arg(ext);
-//            auto __listPath=QStringList{":",":/qapr"};
-//            for(auto &path:__listPath){
-//                QDir dir(path);
-//                dir.setNameFilters(filter);
-//                for(auto &info:dir.entryInfoList()){
-//                    QFile fileSrc(info.filePath());
-
-//                    if (!fileSrc.fileName().endsWith(sufix))
-//                        continue;
-
-//                    if(fileSrc.exists())
-//                        outPut.append(fileSrc.fileName());
-//                }
-//            }
-//            return !outPut.isEmpty();
-//        };
-
-//        QStringList fileList;
-
-//        if(!findFile(fileList, "json"))
-//            return;
-
-//        findFile(fileList, "env");
-
-//        for(auto &filePath: fileList){
-//            auto fileName=filePath.split("/").last();
-//            QFile fileSrc(filePath);
-//            QFile fileDst(QStringLiteral("%1/%2").arg(*applicationSettingDir, fileName));
-
-//            if(fileDst.exists())
-//                continue;
-
-//            if(!fileSrc.open(fileSrc.ReadOnly)){
-//#if Q_RPC_LOG
-//                aWarning()<<QStringLiteral("No open file:")<<fileSrc.fileName()<<QStringLiteral(", error: ")<<fileSrc.errorString();
-//#endif
-//                continue;
-//            }
-//            if(!fileDst.open(fileDst.Truncate | fileDst.Unbuffered | fileDst.WriteOnly)){
-//#if Q_RPC_LOG
-//                aWarning()<<QStringLiteral("No open file:")<<fileDst.fileName()<<QStringLiteral(", error: ")<<fileDst.errorString();
-//#endif
-//                fileSrc.close();
-//                continue;
-//            }
-
-//            fileDst.write(fileSrc.readAll());
-//            fileDst.flush();
-//            fileDst.close();
-//            fileSrc.close();
-//        }
-//    }
-
     QVariantHash &getArguments()
     {
         if(!arguments.isEmpty())
@@ -281,9 +219,8 @@ public:
 
     void circuitBreakerStart()
     {
-        if(!circuitBreakerSettings->enabled())
+        if(!circuitBreakerSettings->value(__enabled).toBool())
             return;
-        this->circuitBreaker.setSettings(circuitBreakerSettings->toHash());
         if(this->circuitBreaker.start())
             this->circuitBreaker.print();
     }

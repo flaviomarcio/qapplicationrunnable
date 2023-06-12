@@ -4,9 +4,6 @@ QT += network
 #INCLUDEPATH+=$$PWD
 
 HEADERS += \
-    $$PWD/private/p_qapr_circuit_breaker.h \
-    $$PWD/private/p_qapr_log_telegram.h \
-    $$PWD/private/p_qapr_log_elk.h \
     $$PWD/qapr.h \
     $$PWD/qapr_app_startup.h \
     $$PWD/qapr_consts.h \
@@ -22,9 +19,6 @@ HEADERS += \
 
 
 SOURCES += \
-    $$PWD/private/p_qapr_circuit_breaker.cpp \
-    $$PWD/private/p_qapr_log_elk.cpp \
-    $$PWD/private/p_qapr_log_telegram.cpp \
     $$PWD/qapr_app_startup.cpp \
     $$PWD/qapr_host.cpp \
     $$PWD/qapr_circuit_breaker.cpp \

@@ -16,27 +16,7 @@ public:
     //! \brief CircuitBreaker
     //! \param parent
     //!
-    Q_INVOKABLE explicit CircuitBreaker(QObject *parent = nullptr);
-
-    //!
-    //! \brief settings
-    //! \return
-    //!
-    QVariantHash settings()const;
-
-    //!
-    //! \brief settings
-    //! \param v
-    //! \return
-    //!
-    CircuitBreaker&settings(const QVariantHash &v);
-
-    //!
-    //! \brief setSettings
-    //! \param v
-    //! \return
-    //!
-    CircuitBreaker&setSettings(const QVariantHash &v);
+    explicit CircuitBreaker(const QVariantHash &vSetting, QObject *parent = nullptr);
 
     //!
     //! \brief start
