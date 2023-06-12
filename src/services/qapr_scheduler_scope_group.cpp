@@ -36,6 +36,7 @@ public:
     {
         QObject::connect(parent, &SchedulerScopeGroup::invokeState, this, &SchedulerScopeGroupPvt::invokeState);
     }
+
     explicit SchedulerScopeGroupPvt(SchedulerScopeGroup *parent, const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &metaObject)
         :QObject{parent}, parent{parent}, uuid{uuid}, scope{scope.trimmed().toLower()}, group{group.trimmed().toLower()}, metaObject{metaObject}
     {
@@ -45,6 +46,25 @@ public:
     ~SchedulerScopeGroupPvt()
     {
         QObject::disconnect(parent, &SchedulerScopeGroup::invokeState, this, &SchedulerScopeGroupPvt::invokeState);
+    }
+
+    static QUuid toMd5Uuid(const QByteArray &md5)
+    {
+        QByteArray suuid;
+        auto hashMD5=QString(md5).replace(QStringLiteral("-"),"").replace(QStringLiteral("{"),"").replace(QStringLiteral("}"),"");
+        if(hashMD5.length()==32){
+            int i=0;
+            for(auto &c:hashMD5){
+                ++i;
+                suuid.append(c.toLatin1());
+                if(i==8 || i==12 || i==16 || i==20)
+                    suuid.append(QByteArrayLiteral("-"));
+            }
+            static const auto __format=QStringLiteral("{%1}");
+            auto uuid=QUuid::fromString(__format.arg(suuid));
+            return uuid;
+        }
+        return {};
     }
 
     static QUuid scopeUuid(const QString &scope, const QString &group)
@@ -58,18 +78,14 @@ public:
 
         QStringList listEnv;
         if(!sScope.isEmpty() && !sGroup.isEmpty())
-            listEnv<<sScope<<sGroup;
+            listEnv={sScope, sGroup};
         else if(!sScope.isEmpty())
             listEnv={sScope};
         else if(!sGroup.isEmpty())
             listEnv={sGroup};
         else
             return QUuid::createUuid();
-
-        QString bytes=listEnv.join('.');
-        static const auto __format=QStringLiteral("{%1}");
-        QString suuid=__format.arg(QCryptographicHash::hash(bytes.toUtf8(), QCryptographicHash::Md5).toHex());
-        return QUuid(suuid);
+        return toMd5Uuid(QCryptographicHash::hash(listEnv.join('.').toUtf8(), QCryptographicHash::Md5).toHex());
     }
 
 private slots:
@@ -155,25 +171,28 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
         if(method.methodType()!=QMetaMethod::Method)
             continue;
 
+        const auto &annotations = scheduler->annotation(method);
+
+        if(!annotations.contains(scheduler->scSchedule()))
+            continue;
+
         methodList.append(method);
     }
 
     for( auto &method: methodList){
         const auto &annotations = scheduler->annotation(method);
 
-        if(!annotations.contains(scheduler->scSchedule()))
-            continue;
-
-        auto scExecScope = annotations.find(scheduler->scExecScope()).toValueStringList();
-        auto scExecGroup = annotations.find(scheduler->scExecGroup()).toValueStringList();
-        auto scExecOrder = annotations.find(scheduler->scExecOrder()).toValueInt();
+        auto scExecScope = annotations.find(scheduler->scExecScope()).toValueStringList(__default);
+        auto scExecGroup = annotations.find(scheduler->scExecGroup()).toValueStringList(__default);
+        auto scExecOrder = annotations.find(scheduler->scExecOrder()).toValueInt(-1);
 
         static const auto __formatOrder=QStringLiteral("%1-%2-%3");
-
+        static const auto __a="a-";
+        static const auto __b="b-";
         for(auto &scopeName:scExecScope){
-            scopeName=scopeName.trimmed().isEmpty()?__default:scopeName.trimmed().toLower();
+            scopeName=scopeName.toLower();
             for(auto &groupName:scExecGroup){
-                groupName=groupName.trimmed().isEmpty()?__default:groupName.trimmed().toLower();
+                groupName=groupName.toLower();
 
                 auto scopeUuid=SchedulerScopeGroupPvt::scopeUuid(scopeName, groupName);
                 auto scope=scopeCache->value(scopeUuid);
@@ -182,7 +201,11 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
                     scopeCache->insert(scope->uuid(), scope);
                 }
 
-                auto sortName=__formatOrder.arg( scopeName, groupName, QString::number(scExecOrder).rightJustified(11,'0') ).toLower();
+                QString sortTag=(scExecOrder>=0)
+                                      ?__a+QString::number(scExecOrder).rightJustified(11,'0')
+                                      :__b+method.name().toLower();
+
+                auto sortName=__formatOrder.arg( scopeName, groupName, sortTag).toLower();
                 if(!scope->p->methods.contains(sortName))
                     scope->p->methods.insert(sortName, method.methodIndex());
             }
