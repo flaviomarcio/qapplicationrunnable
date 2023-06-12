@@ -8,7 +8,7 @@
 #include "../application/qapr_global.h"
 #include "./qapr_scheduler_scope_group.h"
 #include "./private/p_qapr_scheduler_annotation.h"
-#include "../../../qrpc/src/qrpc_service_setting.h"
+#include "../../../qstm/src/qstm_setting_manager.h"
 
 namespace QApr {
 class SchedulerTask;
@@ -46,7 +46,7 @@ public:
     //! \brief settings
     //! \return
     //!
-    const QRpc::ServiceSetting &settings() const;
+    const QStm::SettingBase &settings() const;
 
     //!
     //! \brief invokeBefore

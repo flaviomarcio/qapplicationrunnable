@@ -2,14 +2,13 @@
 
 #include <QCoreApplication>
 #include <QObject>
-#include "../../../qrpc/src/qrpc_setting_manager.h"
+#include "../../../qstm/src/qstm_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "../../../qstm/src/qstm_envs.h"
+#include "../../../qstm/src/qstm_setting_file.h"
 #include "./qapr_global.h"
-#include "./qapr_setting_file.h"
 #include "./qapr_circuit_breaker.h"
 #include "./qapr_settings.h"
-#include "./qapr_setting_file.h"
 
 namespace QApr {
 class ApplicationPvt;
@@ -27,13 +26,13 @@ public:
     //! \brief resourceSettings
     //! \return
     //!
-    virtual const SettingFile &resourceSettings();
+    virtual const QStm::SettingFile &resourceSettings();
 
     //!
     //! \brief manager
     //! \return
     //!configuracoes para servicos
-    virtual QRpc::SettingManager &manager();
+    virtual QStm::SettingManager &manager();
 
     //!
     //! \brief connectionManager

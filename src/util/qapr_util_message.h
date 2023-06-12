@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../qrpc/src/qrpc_service_setting.h"
+#include "../../../qstm/src/qstm_setting_manager.h"
 #include "../application/qapr_global.h"
 
 namespace QApr {
@@ -27,7 +27,7 @@ public:
     //! \param attachment
     //! \return
     //!
-    ResultValue &send(const QRpc::ServiceSetting &setting,
+    ResultValue &send(const QStm::SettingBase &setting,
                       const QUuid &serviceToken,
                       const QByteArray &serviceType,
                       const QString &to,
@@ -42,7 +42,7 @@ public:
     //! \param body
     //! \return
     //!
-    ResultValue &sendSMS(const QRpc::ServiceSetting &setting,
+    ResultValue &sendSMS(const QStm::SettingBase &setting,
                          const QUuid &serviceToken,
                          const QString &to,
                          const QString &body);
@@ -55,7 +55,7 @@ public:
     //! \param body
     //! \return
     //!
-    ResultValue &sendPushNotify(const QRpc::ServiceSetting &setting,
+    ResultValue &sendPushNotify(const QStm::SettingBase &setting,
                                 const QUuid &serviceToken,
                                 const QString &to,
                                 const QString &body);
@@ -68,7 +68,7 @@ public:
     //! \param body
     //! \return
     //!
-    ResultValue &sendTelegram(const QRpc::ServiceSetting &setting,
+    ResultValue &sendTelegram(const QStm::SettingBase &setting,
                               const QUuid &serviceToken,
                               const QString &to,
                               const QString &body);
@@ -81,7 +81,7 @@ public:
     //! \param body
     //! \return
     //!
-    ResultValue &sendEmail(const QRpc::ServiceSetting &setting,
+    ResultValue &sendEmail(const QStm::SettingBase &setting,
                            const QUuid &serviceToken,
                            const QString &to,
                            const QString &body);
@@ -94,7 +94,7 @@ public:
     //! \param body
     //! \return
     //!
-    ResultValue &sendWhatsApp(const QRpc::ServiceSetting &setting,
+    ResultValue &sendWhatsApp(const QStm::SettingBase &setting,
                               const QUuid &serviceToken,
                               const QString &to,
                               const QString &body);
@@ -105,7 +105,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &send(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &send(const QStm::SettingBase &setting, const QVariant &message);
 
     //!
     //! \brief sendSMS
@@ -113,7 +113,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &sendSMS(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &sendSMS(const QStm::SettingBase &setting, const QVariant &message);
 
     //!
     //! \brief sendPushNotify
@@ -121,7 +121,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &sendPushNotify(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &sendPushNotify(const QStm::SettingBase &setting, const QVariant &message);
 
     //!
     //! \brief sendTelegram
@@ -129,7 +129,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &sendTelegram(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &sendTelegram(const QStm::SettingBase &setting, const QVariant &message);
 
     //!
     //! \brief sendEmail
@@ -137,7 +137,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &sendEmail(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &sendEmail(const QStm::SettingBase &setting, const QVariant &message);
 
     //!
     //! \brief sendWhatsApp
@@ -145,7 +145,7 @@ public:
     //! \param message
     //! \return
     //!
-    ResultValue &sendWhatsApp(const QRpc::ServiceSetting &setting, const QVariant &message);
+    ResultValue &sendWhatsApp(const QStm::SettingBase &setting, const QVariant &message);
 };
 
 } // namespace QApr

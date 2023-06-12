@@ -13,14 +13,15 @@ namespace QApr {
 
 Q_GLOBAL_STATIC(QString, applicationSettingDir)
 Q_GLOBAL_STATIC(Application, staticInstance);
-Q_GLOBAL_STATIC(QRpc::ServiceSetting, circuitBreakerSettings);
+Q_GLOBAL_STATIC(QStm::SettingBase, circuitBreakerSettings);
 
 static const auto __circuit_breaker="circuit-breaker";
+static const auto __connection="connection";
 
 static void startCircuitBreaker()
 {
     auto &manager=staticInstance->manager();
-    *circuitBreakerSettings=manager.setting(__circuit_breaker);
+    circuitBreakerSettings->fromHash(manager.settingBody(__circuit_breaker));
 }
 
 static void startSettings()
@@ -49,7 +50,8 @@ static void startSettings()
 
         {//application settings
             i.settings().setValues(vSettings);
-            if(!i.connectionManager().load(vSettings)){
+            auto vConnection=vSettings.value(__connection).toHash();
+            if(!i.connectionManager().load(vConnection)){
                 aWarning()<<QObject::tr("Connection manager is not loaded for %1").arg(settingFile.setting().join(','));
                 return;
             }
@@ -100,9 +102,9 @@ class ApplicationPvt:public QObject
 {
 public:
     Application *application=nullptr;
-    SettingFile settingFile;
+    QStm::SettingFile settingFile;
     QVariantHash arguments;
-    QRpc::SettingManager manager;
+    QStm::SettingManager manager;
     QOrm::ConnectionManager connectionManager;
     Settings settings;
     QApr::CircuitBreaker circuitBreaker;
@@ -122,7 +124,7 @@ public:
         circuitBreaker.stop();
     }
 
-    const SettingFile &resourceSettings()
+    const QStm::SettingFile &resourceSettings()
     {
         if(!settingFile.setting().isEmpty())
             return this->settingFile;
@@ -292,12 +294,12 @@ Application::Application(QObject *parent) : QObject{parent}
     this->p=new ApplicationPvt{this};
 }
 
-const SettingFile &Application::resourceSettings()
+const QStm::SettingFile &Application::resourceSettings()
 {
     return p->resourceSettings();
 }
 
-QRpc::SettingManager &Application::manager()
+QStm::SettingManager &Application::manager()
 {
     return p->manager;
 }

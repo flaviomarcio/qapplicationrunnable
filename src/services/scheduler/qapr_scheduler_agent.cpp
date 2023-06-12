@@ -31,17 +31,19 @@ public slots:
     {
         this->free();
 
-        QStm::Envs envs;
         QStringList scopeList;
-        {
+        {//envs
             Q_DECLARE_VU;
             auto &manager=QApr::Application::i().manager();
             auto vSettingsDefault=manager.settingBody(__default);
             auto vSettingsScheduler=manager.settingBody(__scheduler);
             auto vSettings=vu.vMerge(vSettingsDefault, vSettingsScheduler).toHash();
+            QStm::Envs envs(vSettings);
+            vSettings=envs.parser(vSettings).toHash();
             scopeList=vu.toStringList(vSettings.value(__scope));
         }
 
+        //create
         for(auto &scope:SchedulerScopeGroup::scopes()){
             if(!scope->isScope(scopeList))
                 continue;

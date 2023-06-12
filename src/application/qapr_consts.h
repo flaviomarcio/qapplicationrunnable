@@ -23,7 +23,7 @@ static staticType&instance(){\
     static staticType*_##staticType=nullptr;\
     if(_##staticType==nullptr)\
         _##staticType=new staticType(nullptr);\
-    return*_##staticType;\
+    return *_##staticType;\
 }
 
 

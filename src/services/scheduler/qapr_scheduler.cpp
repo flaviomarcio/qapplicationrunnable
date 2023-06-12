@@ -16,7 +16,7 @@ static const auto __scheduler="scheduler";
 class SchedulerPvt:public QObject{
 public:
     Scheduler *parent = nullptr;
-    QRpc::ServiceSetting settings;
+    QStm::SettingBase settings;
     explicit SchedulerPvt(Scheduler *parent=nullptr):QObject{parent}
     {
         this->parent=parent;
@@ -43,7 +43,7 @@ Scheduler::Scheduler(QObject *parent):QObject{parent}, PrivateQApr::SchedulerAnn
     this->p = new SchedulerPvt{this};
 }
 
-const QRpc::ServiceSetting &Scheduler::settings()const
+const QStm::SettingBase &Scheduler::settings()const
 {
     return p->settings;
 }
@@ -51,7 +51,7 @@ const QRpc::ServiceSetting &Scheduler::settings()const
 bool Scheduler::invoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
 {
     aInfo()<<QStringLiteral("scope:%1, group: %2, method: %3 : start").arg(scope->scope(), scope->group(), method.name());
-    p->settings=p->readSettings(method);
+    p->settings.fromHash(p->readSettings(method));
     QString message;
     bool __return=false;
     if(!this->invokeBefore(scope, method))

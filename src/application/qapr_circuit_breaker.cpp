@@ -46,7 +46,7 @@ void CircuitBreaker::print()const
     Q_DECLARE_VU;
     aInfo()<<QStringLiteral(".");
     QStm::SettingBase settingService;
-    settingService=p->setting;
+    settingService.fromHash(p->setting);
     settingService.print();
 }
 

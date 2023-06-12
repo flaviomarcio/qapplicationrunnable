@@ -14,12 +14,12 @@ Session::Session(QObject *parent) : QStm::Object{parent}, p_credential{parent}
 
 Session &Session::instance()
 {
-    return*dynamic_cast<Session*>(this->session);
+    return *dynamic_cast<Session*>(this->session);
 }
 
 Session &Session::i()
 {
-    return*dynamic_cast<Session*>(this->session);
+    return *dynamic_cast<Session*>(this->session);
 }
 
 SessionCredential &Session::credential()

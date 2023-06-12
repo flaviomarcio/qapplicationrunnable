@@ -14,7 +14,7 @@ namespace QApr{
 class SchedulerDBPvt:public QObject{
 public:
     SchedulerDB *parent = nullptr;
-    QRpc::ServiceSetting settings;
+    QStm::SettingBase settings;
     QOrm::ConnectionPool pool;
     explicit SchedulerDBPvt(SchedulerDB *parent=nullptr):
         parent{parent},

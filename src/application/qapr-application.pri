@@ -17,7 +17,6 @@ HEADERS += \
     $$PWD/qapr_runnable.h \
     $$PWD/qapr_mainservice.h \
     $$PWD/qapr_application.h \
-    $$PWD/qapr_setting_file.h \
     $$PWD/qapr_settings.h \
     $$PWD/qapr_startup.h
 

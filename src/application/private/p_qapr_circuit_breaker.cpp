@@ -14,7 +14,7 @@ CircuitBreakerPvt::~CircuitBreakerPvt()
 
 bool CircuitBreakerPvt::start()
 {
-    settingService<<this->setting;
+    settingService.fromHash(this->setting);
     if(!settingService.enabled())
         return this->stop();
 

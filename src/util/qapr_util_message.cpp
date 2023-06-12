@@ -9,7 +9,7 @@ namespace QApr {
 
 //enum MessageType{dsMail=1, dsSms=2, dsPushNotification=4, dsTelegram=8, dsWhatsApp=16};
 
-static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant &vMsg)
+static bool sendMessage(const QStm::SettingBase &setting, const QVariant &vMsg)
 {
     QRpc::Request request;
     request = setting;
@@ -47,7 +47,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting, const QVariant &vMs
     return response.isOk();
 }
 
-static bool sendMessage(const QRpc::ServiceSetting &setting,
+static bool sendMessage(const QStm::SettingBase &setting,
                         const QUuid &serviceToken,
                         const QString &type,
                         const QString &to,
@@ -81,7 +81,7 @@ static bool sendMessage(const QRpc::ServiceSetting &setting,
 
 UtilMessage::UtilMessage(QObject *parent) : QStm::Object{parent} {}
 
-ResultValue &UtilMessage::send(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::send(const QStm::SettingBase &setting,
                                const QUuid &serviceToken,
                                const QByteArray &serviceType,
                                const QString &to,
@@ -94,7 +94,7 @@ ResultValue &UtilMessage::send(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendSMS(const QStm::SettingBase &setting,
                                   const QUuid &serviceToken,
                                   const QString &to,
                                   const QString &body)
@@ -105,7 +105,7 @@ ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendPushNotify(const QStm::SettingBase &setting,
                                          const QUuid &serviceToken,
                                          const QString &to,
                                          const QString &body)
@@ -117,7 +117,7 @@ ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendTelegram(const QStm::SettingBase &setting,
                                        const QUuid &serviceToken,
                                        const QString &to,
                                        const QString &body)
@@ -128,7 +128,7 @@ ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendEmail(const QStm::SettingBase &setting,
                                     const QUuid &serviceToken,
                                     const QString &to,
                                     const QString &body)
@@ -139,7 +139,7 @@ ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendWhatsApp(const QStm::SettingBase &setting,
                                        const QUuid &serviceToken,
                                        const QString &to,
                                        const QString &body)
@@ -150,14 +150,14 @@ ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::send(const QRpc::ServiceSetting &setting, const QVariant &message)
+ResultValue &UtilMessage::send(const QStm::SettingBase &setting, const QVariant &message)
 {
     if (!sendMessage(setting, message))
         return this->lr().setCritical("No send message");
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting, const QVariant &message)
+ResultValue &UtilMessage::sendSMS(const QStm::SettingBase &setting, const QVariant &message)
 {
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("sms"))))
@@ -165,7 +165,7 @@ ResultValue &UtilMessage::sendSMS(const QRpc::ServiceSetting &setting, const QVa
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
+ResultValue &UtilMessage::sendPushNotify(const QStm::SettingBase &setting,
                                          const QVariant &message)
 {
     QStm::Message msg(message);
@@ -174,7 +174,7 @@ ResultValue &UtilMessage::sendPushNotify(const QRpc::ServiceSetting &setting,
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting, const QVariant &message)
+ResultValue &UtilMessage::sendTelegram(const QStm::SettingBase &setting, const QVariant &message)
 {
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("telegram"))))
@@ -182,7 +182,7 @@ ResultValue &UtilMessage::sendTelegram(const QRpc::ServiceSetting &setting, cons
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting, const QVariant &message)
+ResultValue &UtilMessage::sendEmail(const QStm::SettingBase &setting, const QVariant &message)
 {
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("email"))))
@@ -190,7 +190,7 @@ ResultValue &UtilMessage::sendEmail(const QRpc::ServiceSetting &setting, const Q
     return this->lr();
 }
 
-ResultValue &UtilMessage::sendWhatsApp(const QRpc::ServiceSetting &setting, const QVariant &message)
+ResultValue &UtilMessage::sendWhatsApp(const QStm::SettingBase &setting, const QVariant &message)
 {
     QStm::Message msg(message);
     if (!sendMessage(setting, msg.setType(QStringLiteral("whatsApp"))))

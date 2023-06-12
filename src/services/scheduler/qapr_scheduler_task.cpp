@@ -1,6 +1,6 @@
 #include "./qapr_scheduler_task.h"
 #include "../application/qapr_macro.h"
-#include "../../qrpc/src/qrpc_service_setting.h"
+#include "../../qstm/src/qstm_setting_base.h"
 #include <QTimer>
 
 namespace QApr {
@@ -10,7 +10,7 @@ public:
 
     SchedulerTask *parent=nullptr;
     QTimer *timer=nullptr;
-    QRpc::ServiceSetting settings;
+    QStm::SettingBase settings;
     QVariantHash stats;
     QDateTime lastExec;
     SchedulerScopeGroup *scope=nullptr;
