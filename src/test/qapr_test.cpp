@@ -1,5 +1,6 @@
 #include "./qapr_test.h"
 
+#include "../../../qstm/src/qstm_util_hash.h"
 #include "../../../qstm/src/qstm_util_variant.h"
 
 #ifdef QTREFORCE_QAPR
@@ -114,20 +115,20 @@ QByteArray ObjectTest::toByteArray(const QVariant &v)
 
 QByteArray ObjectTest::toMd5(const QVariant &v)
 {
-    Q_DECLARE_VU;
-    return vu.toMd5(v);
+    Q_DECLARE_HU;
+    return hu.toMd5(v);
 }
 
 QUuid ObjectTest::toMd5Uuid(const QVariant &v)
 {
-    Q_DECLARE_VU;
-    return vu.toMd5Uuid(v);
+    Q_DECLARE_HU;
+    return hu.toMd5Uuid(v);
 }
 
 QUuid ObjectTest::toUUID(const QVariant &v)
 {
-    Q_DECLARE_VU;
-    return vu.toUuid(v);
+    Q_DECLARE_HU;
+    return hu.toUuid(v);
 }
 
 QVariant ObjectTest::toVar(const QVariant &v)
