@@ -13,7 +13,6 @@
 
 namespace QApr{
 
-#ifdef QT_TESTLIB_LIB
 class ObjectTestPvt:public QObject{
 public:
     ObjectTest *parent=nullptr;
@@ -21,18 +20,12 @@ public:
     {
     }
 };
-#endif
 
-#ifdef QT_TESTLIB_LIB
 ObjectTest::ObjectTest(QObject *parent):QObject{parent}, p{new ObjectTestPvt{this}}
-#else
-ObjectTest::ObjectTest()
-#endif
 {
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }
 
-#ifdef QTREFORCE_QAPR
 QApr::Server &ObjectTest::service()
 {
     auto &service=QApr::Server::i();
@@ -40,7 +33,6 @@ QApr::Server &ObjectTest::service()
     http.setPort(9999);
     return service;
 }
-#endif
 
 void ObjectTest::configure()
 {
@@ -125,7 +117,7 @@ QUuid ObjectTest::toMd5Uuid(const QVariant &v)
     return hu.toMd5Uuid(v);
 }
 
-QUuid ObjectTest::toUUID(const QVariant &v)
+QUuid ObjectTest::toUuid(const QVariant &v)
 {
     Q_DECLARE_HU;
     return hu.toUuid(v);
