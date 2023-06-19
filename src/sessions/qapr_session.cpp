@@ -2,7 +2,7 @@
 
 namespace QApr {
 
-typedef QHash<QThread*, QObject*> StaticSessionInstances;
+typedef QHash<QThread*, QObject *> StaticSessionInstances;
 
 Q_GLOBAL_STATIC(StaticSessionInstances, static_session_instance);
 Q_GLOBAL_STATIC(QMutex, static_session_instance_mutex)

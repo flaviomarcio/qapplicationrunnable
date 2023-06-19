@@ -100,7 +100,7 @@ public:
             auto metaClassName=m->className();
             if(this->staticMetaObject.className()==metaClassName)
                 continue;
-            QObject *object=m->newInstance(Q_ARG(QObject*, nullptr ));
+            QObject *object=m->newInstance(Q_ARG(QObject *, nullptr ));
             if(!object){
                 aWarning()<<QString("%1: fail on newInstance").arg(metaClassName, QRpc::Controller::staticMetaObject.className());
                 continue;

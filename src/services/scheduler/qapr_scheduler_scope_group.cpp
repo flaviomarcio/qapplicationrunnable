@@ -157,7 +157,7 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
     if (!metaObject.inherits(&Scheduler::staticMetaObject))
         return;
 
-    QScopedPointer<QObject> sObj(metaObject.newInstance(Q_ARG(QObject*, nullptr)));
+    QScopedPointer<QObject> sObj(metaObject.newInstance(Q_ARG(QObject *, nullptr)));
     if(!sObj.data())
         return;
 
@@ -275,7 +275,7 @@ void SchedulerScopeGroup::invoke()
 
     for(auto method: methodList){
 
-        QScopedPointer<QObject> sObj(p->metaObject.newInstance(Q_ARG(QObject*, nullptr)));
+        QScopedPointer<QObject> sObj(p->metaObject.newInstance(Q_ARG(QObject *, nullptr)));
 
         if(sObj.data()==nullptr){
             aWarning()<<tr("%1, Invalid Scheduler object: [%2], scope: [%3], group: [%4").arg(p->metaObject.className(), this->scope(), this->group());
