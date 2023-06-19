@@ -3,7 +3,6 @@
 #include "../application/qapr_global.h"
 #include "../application/qapr_circuit_breaker.h"
 #include "../application/qapr_macro.h"
-#include "../application/qapr_runnable.h"
 #include "../application/qapr_mainservice.h"
 #include "../application/qapr_application.h"
 //services
