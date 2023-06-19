@@ -1,5 +1,3 @@
-INCLUDEPATH+=$$PWD
-
 HEADERS += \
     $$PWD/qapr_controller.h
 

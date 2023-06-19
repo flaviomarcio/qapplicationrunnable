@@ -1,7 +1,7 @@
 #include "qapr_interface_printer.h"
-#include <QtReforce/QStm>
-#include <QtReforce/QApr>
-#include <QtReforce/QRpc>
+#include "../../../qrpc/src/qrpc_request.h"
+#include "../mvc/qapr_controller.h"
+#include "../application/qapr_application.h"
 
 namespace QApr {
 
@@ -27,9 +27,8 @@ private:
     QRpc::Request requestService, requestSession;
 };
 
-InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}
+InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}, p{new InterfacePrinterPvt{this}}
 {
-    this->p=new InterfacePrinterPvt{this};
 }
 
 QVariant InterfacePrinter::execute()
