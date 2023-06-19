@@ -1,6 +1,5 @@
 #include "./qapr_mainservice.h"
 #include <QProcess>
-#include <QDir>
 
 #ifdef QT_GUI_LIB
 #include <QGuiApplication>
