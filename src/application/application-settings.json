@@ -106,7 +106,7 @@
             }
          }
       },
-      "agent":{
+      "scheduler":{
          "enabled":"${AGT_ENABLED}",
          "protocol":"${AGT_PROTOCOL}",
          "hostName":"${AGT_DNS}",

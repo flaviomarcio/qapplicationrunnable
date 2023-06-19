@@ -10,8 +10,6 @@
 
 namespace QApr{
 
-static const auto __scheduler="scheduler";
-
 class SchedulerPvt:public QObject{
 public:
     Scheduler *parent = nullptr;

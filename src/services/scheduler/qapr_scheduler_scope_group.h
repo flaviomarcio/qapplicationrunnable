@@ -25,7 +25,7 @@ public:
     //!
     explicit SchedulerScopeGroup(QObject *parent=nullptr);
 private:
-    explicit SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &scopeMetaObject, QObject *parent=nullptr);
+    explicit SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, bool synchronize,const QMetaObject &scopeMetaObject, QObject *parent=nullptr);
 public:
     enum InvokeState{
         NOTHING, STARTED, FAIL, SUCCESSFUL, SKIPPED
@@ -60,6 +60,12 @@ public:
     //! \return
     //!
     const QString &group() const;
+
+    //!
+    //! \brief synchronize
+    //! \return
+    //!
+    bool synchronize();
 
     //!
     //! \brief isScope

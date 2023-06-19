@@ -27,6 +27,7 @@ public:
     SchedulerScopeGroup *parent=nullptr;
     const QUuid uuid;
     const QString scope, group;
+    bool synchronize=false;
     const QMetaObject metaObject;
     QHash<QString, int> methods;
     QVariantHash stackStats;
@@ -37,8 +38,8 @@ public:
         QObject::connect(parent, &SchedulerScopeGroup::invokeState, this, &SchedulerScopeGroupPvt::invokeState);
     }
 
-    explicit SchedulerScopeGroupPvt(SchedulerScopeGroup *parent, const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &metaObject)
-        :QObject{parent}, parent{parent}, uuid{uuid}, scope{scope.trimmed().toLower()}, group{group.trimmed().toLower()}, metaObject{metaObject}
+    explicit SchedulerScopeGroupPvt(SchedulerScopeGroup *parent, const QUuid &uuid, const QString &scope, const QString &group, bool synchronize, const QMetaObject &metaObject)
+        :QObject{parent}, parent{parent}, uuid{uuid}, scope{scope.trimmed().toLower()}, group{group.trimmed().toLower()}, synchronize{synchronize}, metaObject{metaObject}
     {
         QObject::connect(parent, &SchedulerScopeGroup::invokeState, this, &SchedulerScopeGroupPvt::invokeState);
     }
@@ -146,8 +147,8 @@ SchedulerScopeGroup::SchedulerScopeGroup(QObject *parent)
 {
 }
 
-SchedulerScopeGroup::SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, const QMetaObject &metaObject, QObject *parent)
-    : QObject{parent}, p{new SchedulerScopeGroupPvt{this, uuid, scope, group, metaObject}}
+SchedulerScopeGroup::SchedulerScopeGroup(const QUuid &uuid, const QString &scope, const QString &group, bool synchronize, const QMetaObject &metaObject, QObject *parent)
+    : QObject{parent}, p{new SchedulerScopeGroupPvt{this, uuid, scope, group, synchronize, metaObject}}
 {
 }
 
@@ -164,7 +165,14 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
     if(!scheduler)
         return;
 
+    bool scSynchronize=false;
+    {
+        const auto &annotations = scheduler->annotation();
+        scSynchronize=annotations.find(scheduler->scSynchronize()).toValueBool(false);
+    }
+
     QVector<QMetaMethod> methodList;
+
     for (int index = 0; index < metaObject.methodCount(); ++index) {
         auto method=metaObject.method(index);
 
@@ -197,7 +205,7 @@ void SchedulerScopeGroup::reg(const QMetaObject &metaObject)
                 auto scopeUuid=SchedulerScopeGroupPvt::scopeUuid(scopeName, groupName);
                 auto scope=scopeCache->value(scopeUuid);
                 if(scope==nullptr){
-                    scope=new SchedulerScopeGroup(scopeUuid, scopeName, groupName,  metaObject);
+                    scope=new SchedulerScopeGroup(scopeUuid, scopeName, groupName, scSynchronize, metaObject);
                     scopeCache->insert(scope->uuid(), scope);
                     scopeList->append(scope);
                 }
@@ -232,6 +240,11 @@ const QString &SchedulerScopeGroup::scope() const
 const QString &SchedulerScopeGroup::group() const
 {
     return p->group;
+}
+
+bool SchedulerScopeGroup::synchronize()
+{
+    return p->synchronize;
 }
 
 bool SchedulerScopeGroup::isScope(const QStringList &scope) const

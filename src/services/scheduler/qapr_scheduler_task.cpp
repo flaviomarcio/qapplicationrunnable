@@ -5,22 +5,26 @@
 
 namespace QApr {
 
+Q_GLOBAL_STATIC(QMutex, staticMutexSynchronize)
+
 class SchedulerTaskPvt: public QObject{
 public:
 
     SchedulerTask *parent=nullptr;
+    SchedulerScopeGroup *scope=nullptr;
+    QUuid uuid;
     QTimer *timer=nullptr;
     QStm::SettingBase settings;
     QVariantHash stats;
     QDateTime lastExec;
-    SchedulerScopeGroup *scope=nullptr;
-    QUuid uuid;
+    bool synchronize=false;
     explicit SchedulerTaskPvt(SchedulerTask *parent, SchedulerScopeGroup *scope)
         :
         QObject{parent},
         parent{parent},
         scope{scope},
-        uuid{scope->uuid()}
+        uuid{scope->uuid()},
+        synchronize(scope->synchronize())
     {
         if(scope)
             this->setObjectName(QString("SchTsk_%1_%2").arg(scope->scope(), scope->group()));
@@ -55,6 +59,8 @@ public slots:
 
     void taskRun()
     {
+        if(this->synchronize)
+            staticMutexSynchronize->lock();
         this->timerStop();
         aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(scope->scope());
 
@@ -68,6 +74,8 @@ public slots:
         auto totalTime=QDateTime::currentDateTime().toMSecsSinceEpoch()-this->lastExec.toMSecsSinceEpoch();
         this->timerStart();
         aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->scope->scope(), QString::number(totalTime));
+        if(this->synchronize)
+            staticMutexSynchronize->unlock();
     }
 
 };

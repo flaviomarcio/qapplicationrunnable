@@ -39,6 +39,12 @@ public:
     Q_ANNOTATION_DECLARE_FUNC(scEnabled, Attribute)
 
     //!
+    //! \brief scSynchronize
+    //! \return
+    //!
+    Q_ANNOTATION_DECLARE_FUNC(scSynchronize, Attribute)
+
+    //!
     //! \brief scExecTimeInitial
     //! \return
     //!
