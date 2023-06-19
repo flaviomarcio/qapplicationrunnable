@@ -2,14 +2,9 @@
 
 #include "../../../qstm/src/qstm_util_hash.h"
 #include "../../../qstm/src/qstm_util_variant.h"
-
-#ifdef QTREFORCE_QAPR
-#include <QtReforce/QApr>
-#endif
-
-#ifdef QTREFORCE_QRPC
-#include <QtReforce/QRpc>
-#endif
+#include "../../../qrpc/src/qrpc_server.h"
+#include "../../../qrpc/src/qrpc_listen_protocol.h"
+#include "../application/qapr.h"
 
 namespace QApr{
 
