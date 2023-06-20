@@ -96,7 +96,7 @@ SchedulerTask::SchedulerTask(SchedulerScopeGroup *scope):QThread{nullptr},p{new 
 
 void SchedulerTask::run()
 {
-#ifdef QAPR_LOG_VERBOSE
+#ifdef Q_APR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
     auto interval=p->settings.activityInterval();

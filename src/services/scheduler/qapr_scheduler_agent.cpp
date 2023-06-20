@@ -112,7 +112,7 @@ void SchedulerAgent::run()
 
 bool SchedulerAgent::start()
 {
-#ifdef QAPR_LOG_VERBOSE
+#ifdef Q_APR_LOG_VERBOSE
     aWarning()<<QStringLiteral("started");
 #endif
     QThread::start();

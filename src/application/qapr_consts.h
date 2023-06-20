@@ -7,7 +7,6 @@
 #include <QDir>
 #include <QThread>
 
-
 #define settings_HOME_DIR QStringLiteral("%1/qtreforce.files").arg(QDir::homePath())
 
 #ifdef QAPR_APP_TESTS
