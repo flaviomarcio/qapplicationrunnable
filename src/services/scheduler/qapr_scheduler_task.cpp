@@ -1,7 +1,9 @@
 #include "./qapr_scheduler_task.h"
 #include "../application/qapr_macro.h"
 #include "../../qstm/src/qstm_setting_base.h"
+#include <QUuid>
 #include <QTimer>
+#include <QMutex>
 
 namespace QApr {
 
@@ -12,7 +14,7 @@ public:
 
     SchedulerTask *parent=nullptr;
     SchedulerScopeGroup *scope=nullptr;
-    QUuid uuid;
+    QUuid uuid={};
     QTimer *timer=nullptr;
     QStm::SettingBase settings;
     QVariantHash stats;
@@ -23,11 +25,12 @@ public:
         QObject{parent},
         parent{parent},
         scope{scope},
-        uuid{scope->uuid()},
-        synchronize(scope->synchronize())
+        synchronize(scope?scope->synchronize():false)
     {
-        if(scope)
+        if(scope){
+            this->uuid=scope->uuid();
             this->setObjectName(QString("SchTsk_%1_%2").arg(scope->scope(), scope->group()));
+        }
     }
 
     void timerStop()
