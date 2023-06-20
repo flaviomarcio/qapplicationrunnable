@@ -7,9 +7,10 @@ namespace QApr {
 
 class InterfacePrinterPvt:public QObject{
 public:
-    explicit InterfacePrinterPvt(InterfacePrinter *parent):QObject{parent}, requestService{parent}
+    InterfacePrinter *parent=nullptr;
+    QRpc::Request requestService, requestSession;
+    explicit InterfacePrinterPvt(InterfacePrinter *parent):QObject{parent}, parent{parent}, requestService{parent}
     {
-        this->parent=parent;
     }
 
     QRpc::Request &req()
@@ -22,9 +23,6 @@ public:
         this->requestSession.header().setRawHeader(headers);
         return this->requestSession;
     }
-private:
-    InterfacePrinter *parent=nullptr;
-    QRpc::Request requestService, requestSession;
 };
 
 InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}, p{new InterfacePrinterPvt{this}}
@@ -34,7 +32,7 @@ InterfacePrinter::InterfacePrinter(QObject *parent) : QRpc::Controller{parent}, 
 QVariant InterfacePrinter::execute()
 {
     QApr::Controller controller{this};
-    static const auto __path="/v1/service/maker/execute";
+    static const auto __path="/service/maker/execute";
     QRPC_V_SET_BODY(body);
 
     auto &req=p->req();
