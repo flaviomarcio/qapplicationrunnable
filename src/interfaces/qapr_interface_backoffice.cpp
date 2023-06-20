@@ -1,13 +1,13 @@
 #include "./qapr_interface_backoffice.h"
 #include "../../../qorm/src/qorm_transaction.h"
 #include "../../../qstm/src/qstm_envs.h"
+#include "../../../qstm/src/qstm_util_variant.h"
 #include "../application/qapr_startup.h"
 #include "../application/qapr_macro.h"
 #ifdef QTREFORCE_QMFE
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr_application.h"
 #endif
-#include <QStm>
 
 namespace QApr {
 
