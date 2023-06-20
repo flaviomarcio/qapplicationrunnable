@@ -71,6 +71,7 @@ static void startSettings()
             auto &envs=i.envs();
             if(!vEnvs.isEmpty()){
                 envs
+                    .reset()
                     .systemEnvs(vEnvs)
                     .customEnvs(vEnvs);
             }
