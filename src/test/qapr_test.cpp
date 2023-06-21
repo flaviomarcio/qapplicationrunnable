@@ -1,5 +1,4 @@
 #include "./qapr_test.h"
-
 #include "../../../qstm/src/qstm_util_hash.h"
 #include "../../../qstm/src/qstm_util_variant.h"
 #include "../application/qapr.h"
@@ -16,7 +15,7 @@ public:
 
 ObjectTest::ObjectTest(QObject *parent):QObject{parent}, p{new ObjectTestPvt{this}}
 {
-    QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
+
 }
 
 void ObjectTest::configure()
