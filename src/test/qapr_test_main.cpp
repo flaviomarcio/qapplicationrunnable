@@ -29,7 +29,7 @@ void TestMain::execute()
 
 }
 
-void TestMain::internalExecute()
+void TestMain::run()
 {
     this->configure();
 

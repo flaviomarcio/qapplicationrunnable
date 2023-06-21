@@ -52,7 +52,10 @@ public:
 
 private slots:
 
-    void internalExecute();
+    //!
+    //! \brief run
+    //!
+    void run();
 
 };
 
