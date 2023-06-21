@@ -57,7 +57,30 @@
          "enabled":"${APPLICATION_CIRCUIT_BREAKER_ENABLED}"
       },
       "scheduler":{
-         "scope":"${SCH_SCOPE}"
+         "scope":"${SCH_SCOPE}",
+         "enabled":"${AGT_ENABLED}",
+         "protocol":"${AGT_PROTOCOL}",
+         "hostName":"${AGT_DNS}",
+         "port":"${AGT_PORT}",
+         "headers":{
+            "Content-Type":"application/json",
+            "authorization":"Service ${AGT_AUTH}"
+         },
+         "basePath":"${AGT_CONTEXT_PATH}"
+      },
+      "agent":{
+         "enabled":"${AGT_ENABLED}",
+         "protocol":"${AGT_PROTOCOL}",
+         "hostName":"${AGT_DNS}",
+         "port":"${AGT_PORT}",
+         "headers":{
+            "Content-Type":"application/json",
+            "authorization":"Service ${AGT_AUTH}"
+         },
+         "basePath":"${AGT_CONTEXT_PATH}",
+         "variables":{
+            "strategy_uuid":"{a6992776-1931-4995-9f3c-57b03e9c30e2}"
+         }
       },
       "token":{
          "activityLimit":"1y",
@@ -104,20 +127,6 @@
                   "number":"6545"
                }
             }
-         }
-      },
-      "scheduler":{
-         "enabled":"${AGT_ENABLED}",
-         "protocol":"${AGT_PROTOCOL}",
-         "hostName":"${AGT_DNS}",
-         "port":"${AGT_PORT}",
-         "headers":{
-            "Content-Type":"application/json",
-            "authorization":"Service ${AGT_AUTH}"
-         },
-         "basePath":"${AGT_CONTEXT_PATH}",
-         "variables":{
-            "strategy_uuid":"{a6992776-1931-4995-9f3c-57b03e9c30e2}"
          }
       },
       "payment":{
