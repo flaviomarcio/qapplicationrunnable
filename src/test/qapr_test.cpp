@@ -29,6 +29,11 @@ void ObjectTest::deconfigure()
 
 void ObjectTest::execute()
 {
+    qInfo()<<"";
+    qInfo()<<"";
+    aInfo()<<"test started, class:"<<this->metaObject()->className();
+    qInfo()<<"";
+    qInfo()<<"";
     static const QByteArray prefix="test_";
 
     this->configure();
@@ -49,6 +54,11 @@ void ObjectTest::execute()
     }
 
     this->deconfigure();
+    qInfo()<<"";
+    qInfo()<<"";
+    aInfo()<<"test finished, class:"<<this->metaObject()->className();
+    qInfo()<<"";
+    qInfo()<<"";
 }
 
 bool ObjectTest::clear()
