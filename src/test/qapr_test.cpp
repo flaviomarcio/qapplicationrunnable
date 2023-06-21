@@ -2,8 +2,6 @@
 
 #include "../../../qstm/src/qstm_util_hash.h"
 #include "../../../qstm/src/qstm_util_variant.h"
-#include "../../../qrpc/src/qrpc_server.h"
-#include "../../../qrpc/src/qrpc_listen_protocol.h"
 #include "../application/qapr.h"
 
 namespace QApr{
@@ -21,22 +19,12 @@ ObjectTest::ObjectTest(QObject *parent):QObject{parent}, p{new ObjectTestPvt{thi
     QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
 }
 
-QApr::Server &ObjectTest::service()
-{
-    auto &service=QApr::Server::i();
-    auto &http = service.colletions().protocol(QRpc::Http);
-    http.setPort(9999);
-    return service;
-}
-
 void ObjectTest::configure()
 {
-    QVERIFY(this->serviceStart());
 }
 
 void ObjectTest::deconfigure()
 {
-    QVERIFY(this->serviceStop());
 }
 
 void ObjectTest::execute()
@@ -66,27 +54,6 @@ void ObjectTest::execute()
 bool ObjectTest::clear()
 {
     return true;
-}
-
-bool ObjectTest::serviceStart()
-{
-#ifdef QTREFORCE_QAPR
-    auto &server=QApr::Server::i();
-    auto &listaner=server.colletions().protocol(QRpc::Http);
-    listaner.setPort(9999);
-    return service().start();
-#else
-    return false;
-#endif
-}
-
-bool ObjectTest::serviceStop()
-{
-#ifdef QTREFORCE_QAPR
-    return service().stop();
-#else
-    return false;
-#endif
 }
 
 QStringList ObjectTest::arguments()

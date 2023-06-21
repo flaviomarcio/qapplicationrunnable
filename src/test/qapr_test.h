@@ -11,13 +11,12 @@
 #include <QLocale>
 #include <QJsonDocument>
 #include <QTest>
-#include "../../src/services/servers/qapr_server.h"
 
 namespace QApr{
 
-#define QAPR_OBJECT_TEST(OBJECT) \
+#define Q_APR_OBJECT_TEST(OBJECT) \
 public:\
-Q_INVOKABLE explicit OBJECT(QObject *parent=nullptr):ObjectTest{parent}{};
+Q_INVOKABLE explicit OBJECT(QObject *parent=nullptr):QApr::ObjectTest{parent}{};
 
 class ObjectTestPvt;
 
@@ -28,12 +27,6 @@ class ObjectTest : public QObject{
     Q_OBJECT
 public:
     Q_INVOKABLE explicit ObjectTest(QObject *parent=nullptr);
-
-    //!
-    //! \brief service
-    //! \return
-    //!
-    static QApr::Server &service();
 
     //!
     //! \brief clear
@@ -54,74 +47,62 @@ public:
     //!
     //! \brief execute
     //!
-    virtual void execute();
-
-    //!
-    //! \brief serviceStart
-    //! \return
-    //!
-    virtual bool serviceStart();
-
-    //!
-    //! \brief serviceStop
-    //! \return
-    //!
-    virtual bool serviceStop();
+    void execute();
 
     //!
     //! \brief arguments
     //! \return
     //!
-    virtual QStringList arguments();
+    QStringList arguments();
 
     //!
     //! \brief toByteArray
     //! \param v
     //! \return
     //!
-    static QByteArray toByteArray(const QVariant &v);
+    QByteArray toByteArray(const QVariant &v);
 
     //!
     //! \brief toMd5
     //! \param v
     //! \return
     //!
-    static QByteArray toMd5(const QVariant &v);
+    QByteArray toMd5(const QVariant &v);
 
     //!
     //! \brief toMd5Uuid
     //! \param v
     //! \return
     //!
-    static QUuid toMd5Uuid(const QVariant &v);
+    QUuid toMd5Uuid(const QVariant &v);
 
     //!
     //! \brief toUuid
     //! \param v
     //! \return
     //!
-    static QUuid toUuid(const QVariant &v);
+    QUuid toUuid(const QVariant &v);
 
     //!
     //! \brief toVar
     //! \param v
     //! \return
     //!
-    static QVariant toVar(const QVariant &v);
+    QVariant toVar(const QVariant &v);
 
     //!
     //! \brief toVarObject
     //! \param v
     //! \return
     //!
-    static QVariant toVarObject(const QVariant &v);
+    QVariant toVarObject(const QVariant &v);
 
     //!
     //! \brief fakeBody
     //! \param maxloop
     //! \return
     //!
-    static QByteArray fakeBody(int maxloop=1);;
+    QByteArray fakeBody(int maxloop=1);;
 
 private:
     ObjectTestPvt *p=nullptr;

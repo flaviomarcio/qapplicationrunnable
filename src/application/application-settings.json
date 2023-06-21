@@ -4,7 +4,7 @@
    ],
    "protocol":{
       "default":{
-         "minThreads":1,
+         "minThreads":4,
          "maxThreads":2000,
          "cleanupInterval":1000,
          "readTimeout":60000,

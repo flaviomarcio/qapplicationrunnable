@@ -28,4 +28,5 @@
 
 #ifdef QAPR_TEST
 #include "../test/qapr_test.h"
+#include "../test/qapr_test_main.h"
 #endif
