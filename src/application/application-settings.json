@@ -1,7 +1,5 @@
 {
-   "arguments":[
-      "ws"
-   ],
+   "arguments":"${APPLICATION_ARGS}",
    "protocol":{
       "default":{
          "minThreads":4,

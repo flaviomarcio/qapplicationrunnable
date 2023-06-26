@@ -188,21 +188,25 @@ public:
         if(!arguments.isEmpty())
             return arguments;
 
-        for(auto &v:qApp->arguments()){
-            auto l=v.split(QStringLiteral("="));
-            if(l.isEmpty())
-                continue;
+        auto args=qApp->arguments();
+        if(args.size()>1){
+            args.remove(0);//file path
+            for(auto &v:args){
+                auto l=v.split(QStringLiteral("="));
+                if(l.isEmpty())
+                    continue;
 
-            if(l.size()==1){
-                auto key=l.first();
+                if(l.size()==1){
+                    auto key=l.first();
+                    auto value=l.last();
+                    arguments.insert(key, value);
+                    continue;
+                }
+
+                auto key=l.first().toLower();
                 auto value=l.last();
                 arguments.insert(key, value);
-                continue;
             }
-
-            auto key=l.first().toLower();
-            auto value=l.last();
-            arguments.insert(key, value);
         }
 
         QHashIterator<QString, QVariant> i(manager.arguments());
