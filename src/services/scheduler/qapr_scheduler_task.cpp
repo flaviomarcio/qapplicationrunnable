@@ -1,4 +1,5 @@
 #include "./qapr_scheduler_task.h"
+#include "../application/qapr_consts.h"
 #include "../application/qapr_macro.h"
 #include "../../qstm/src/qstm_setting_base.h"
 #include <QUuid>
@@ -65,8 +66,9 @@ public slots:
         if(this->synchronize)
             staticMutexSynchronize->lock();
         this->timerStop();
+#ifdef Q_APR_LOG
         aInfo()<<QStringLiteral("Scheduler[%1]: started").arg(scope->scope());
-
+#endif
         if(scope==nullptr){
             aWarning()<<QStringLiteral("Scheduler[%1]: invalid scope").arg(this->scope->scope());
         }
@@ -76,7 +78,9 @@ public slots:
         }
         auto totalTime=QDateTime::currentDateTime().toMSecsSinceEpoch()-this->lastExec.toMSecsSinceEpoch();
         this->timerStart();
+#ifdef Q_APR_LOG
         aInfo()<<QStringLiteral("Scheduler[%1]: finished, total-time[%2 ms]").arg(this->scope->scope(), QString::number(totalTime));
+#endif
         if(this->synchronize)
             staticMutexSynchronize->unlock();
     }

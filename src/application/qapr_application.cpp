@@ -202,10 +202,16 @@ public:
                     arguments.insert(key, value);
                     continue;
                 }
-
-                auto key=l.first().toLower();
-                auto value=l.last();
-                arguments.insert(key, value);
+                else if(l.count()==2){
+                    auto key=l.first().toLower();
+                    auto value=l.last();
+                    arguments.insert(key, value);
+                }
+                else{
+                    auto key=l.takeFirst().toLower();
+                    auto value=l.join('=');
+                    arguments.insert(key, value);
+                }
             }
         }
 

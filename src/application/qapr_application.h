@@ -13,6 +13,8 @@
 namespace QApr {
 class ApplicationPvt;
 
+#define qAprApp QApr::Application::i()
+
 //!
 //! \brief The Application class
 //!

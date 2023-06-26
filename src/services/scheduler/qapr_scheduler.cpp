@@ -45,7 +45,7 @@ const QStm::SettingBase &Scheduler::settings()const
     return p->settings;
 }
 
-bool Scheduler::canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
+bool Scheduler::canEnabled(const SchedulerScopeGroup *scope, QMetaMethod &method)
 {
     Q_UNUSED(scope)
 
@@ -60,8 +60,18 @@ bool Scheduler::canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
     return true;
 }
 
+bool Scheduler::canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
+{
+    Q_UNUSED(scope)
+    Q_UNUSED(method)
+    return true;
+}
+
 Scheduler::InvokeReturn Scheduler::invoke(const SchedulerScopeGroup *scope, QMetaMethod &method)
 {
+    if(!this->canEnabled(scope, method))
+        return DISABLED;
+
     if(!this->canInvoke(scope, method))
         return SKIPPED;
 

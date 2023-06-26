@@ -1,5 +1,6 @@
 #include "qapr_scheduler_scope_group.h"
 #include "qapr_scheduler.h"
+#include "../application/qapr_consts.h"
 #include "../application/qapr_macro.h"
 #include <QCryptographicHash>
 #include <QMetaMethod>
@@ -289,25 +290,25 @@ void SchedulerScopeGroup::invoke()
         }
 
         emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), STARTED);
-        switch (scheduler->invoke(this, method)) {
+
+        static QMetaEnum metaEnum=QMetaEnum::fromType<Scheduler::InvokeReturn>();
+
+        Scheduler::InvokeReturn invokeReturn=scheduler->invoke(this, method);
+        switch (invokeReturn) {
         case Scheduler::SUCCESSFUL:
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SUCCESSFUL);
-            break;
         case Scheduler::FAIL:
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), FAIL);
-            break;
-        case Scheduler::SKIPPED:
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), SKIPPED);
-            break;
-        case Scheduler::NOTHING:
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), NOTHING);
-            break;
-        default:
-            emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), NOTHING);
+        case Scheduler::DISABLED:
+        {
+            static const auto __format=QStringLiteral("scope: %1, method: %2, state: %3");
+#ifdef Q_APR_LOG
+            aInfo()<<__format.arg(this->scope(),method.name(), metaEnum.valueToKey(invokeReturn));
+#endif
             break;
         }
-
-
+        default:
+            break;
+        }
+        emit invokeState(stackId, QDateTime::currentDateTime(), method.name(), invokeReturn);
     }
 }
 

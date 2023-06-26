@@ -37,7 +37,7 @@ class Q_APR_EXPORT Scheduler : public QObject, public PrivateQApr::SchedulerAnno
     Q_OBJECT
 public:
     enum InvokeReturn{
-        NOTHING, SUCCESSFUL, SKIPPED, FAIL
+        NOTHING, SUCCESSFUL, DISABLED, SKIPPED, FAIL
     };
     Q_ENUM(InvokeReturn)
 
@@ -78,11 +78,19 @@ public:
     virtual bool invokeAfter(const SchedulerScopeGroup *scope, QMetaMethod &method){Q_UNUSED(scope); Q_UNUSED(method); return true;}
 
     //!
-    //! \brief canInvoke
+    //! \brief canEnabled
     //! \param scope
     //! \param method
     //! \return
     //!
+    virtual bool canEnabled(const SchedulerScopeGroup *scope, QMetaMethod &method);
+
+    //!
+    //! \brief canInvoke
+    //! \param scope
+    //! \param method
+    //! \return
+    //!    
     virtual bool canInvoke(const SchedulerScopeGroup *scope, QMetaMethod &method);
 
     //!
