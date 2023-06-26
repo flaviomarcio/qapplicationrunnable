@@ -36,7 +36,7 @@ QVariant InterfacePrinter::execute()
     QRPC_V_SET_BODY(body);
 
     auto &req=p->req();
-    req.call(QRpc::Post, __path, body);
+    req.call(QRpc::Types::Post, __path, body);
 
     if(!req.response().isOk()){
         auto &resultInfo=controller.lr().resultInfo();

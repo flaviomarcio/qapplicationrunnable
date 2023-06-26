@@ -56,15 +56,15 @@
       },
       "scheduler":{
          "scope":"${SCH_SCOPE}",
-         "enabled":"${AGT_ENABLED}",
-         "protocol":"${AGT_PROTOCOL}",
-         "hostName":"${AGT_DNS}",
-         "port":"${AGT_PORT}",
+         "enabled":"${SCH_ENABLED}",
+         "protocol":"${SCH_PROTOCOL}",
+         "hostName":"${SCH_DNS}",
+         "port":"${SCH_PORT}",
          "headers":{
             "Content-Type":"application/json",
-            "authorization":"Service ${AGT_AUTH}"
+            "authorization":"Service ${SCH_AUTH}"
          },
-         "basePath":"${AGT_CONTEXT_PATH}"
+         "basePath":"${SCH_CONTEXT_PATH}"
       },
       "agent":{
          "enabled":"${AGT_ENABLED}",

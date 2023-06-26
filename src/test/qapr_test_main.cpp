@@ -42,8 +42,10 @@ bool TestMain::serviceStart()
 {
 #ifdef QTREFORCE_QAPR
     auto &server=QApr::Server::i();
-    auto &listaner=server.colletions().protocol(QRpc::Http);
-    listaner.setPort(9999);
+    auto listaner=server.colletions().protocol(QRpc::Types::Http);
+    if(!listaner)
+        return false;
+    listaner->setPort(9999);
     auto __return=server.start();
     QThread::msleep(2000);
     return __return;

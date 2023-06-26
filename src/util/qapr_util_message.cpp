@@ -61,7 +61,7 @@ static bool sendMessage(const QStm::SettingBase &setting,
     QRpc::Request request;
     request = setting;
     if (!serviceToken.isNull())
-        request.header().setAuthorization(QRpc::Service, serviceToken);
+        request.header().setAuthorization(QRpc::Types::Service, serviceToken);
     QVariantHash map;
     map.insert(QStringLiteral("uuid"), uuid);
     map.insert(QStringLiteral("type"), type);
