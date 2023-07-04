@@ -2,6 +2,7 @@
 #include "../../../qorm/src/qorm_transaction.h"
 #include "../../../qstm/src/qstm_envs.h"
 #include "../../../qstm/src/qstm_util_variant.h"
+#include "../../../qstm/src/qstm_network_types.h"
 #include "../application/qapr_startup.h"
 #include "../application/qapr_macro.h"
 #ifdef QTREFORCE_QMFE
@@ -120,7 +121,7 @@ public:
         }
 
         auto &ann = this->parent->annotation();
-        auto nameOrder=ann.find(apiNameOrder).toValueStringVector();
+        auto nameOrder=ann.find(apiNameOrder).toValueByteArrayList();
         if(nameOrder.isEmpty())
             return __return;
 
@@ -197,7 +198,7 @@ public:
             staticInfoCache->append(info);
         }
         qDeleteAll(controllers);
-        Q_SORT(staticInfoCache, [](const ControllerInfo &d1, const ControllerInfo &d2){ return d1.order<d2.order;});
+        std::sort(staticInfoCache->begin(), staticInfoCache->end(), [](const ControllerInfo &d1, const ControllerInfo &d2){ return d1.order<d2.order;});
     }
 
     QMfe::Access &initAccess(){
