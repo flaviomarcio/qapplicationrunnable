@@ -17,7 +17,7 @@ public:
     {
         static const auto __settings="printservice";
         auto &manager=QApr::Application::i().manager();
-        auto &settingAcl=manager.setting(__settings);
+        auto settingAcl=manager.setting(__settings);
         requestSession=settingAcl;
         auto headers=parent->request().requestHeader();
         this->requestSession.header().setRawHeader(headers);
