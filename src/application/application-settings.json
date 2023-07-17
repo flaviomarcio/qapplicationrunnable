@@ -20,6 +20,7 @@
    },
    "apr":{
       "version":"1.0.0",
+      "envFile":"${APR_ENVFILE}",
       "host":{
          "protocol":"${APR_PROTOCOL}",
          "hostName":"${APR_DNS}",

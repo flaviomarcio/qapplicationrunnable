@@ -43,18 +43,19 @@ Host *Settings::host()
     return &_host;
 }
 
-void Settings::setHost(Host *newHost)
+Settings &Settings::setHost(Host *newHost)
 {
     Q_UNUSED(newHost)
 //    if (_host == newHost)
 //        return;
 //    _host = newHost;
 //    emit hostChanged();
+    return *this;
 }
 
-void Settings::resetHost()
+Settings &Settings::resetHost()
 {
-    setHost({});
+    return setHost({});
 }
 
 const QString &Settings::version() const
@@ -62,17 +63,37 @@ const QString &Settings::version() const
     return _version;
 }
 
-void Settings::setVersion(const QString &newVersion)
+Settings &Settings::setVersion(const QString &newVersion)
 {
     if (_version == newVersion)
-        return;
+        return *this;
     _version = newVersion;
     emit versionChanged();
+    return *this;
 }
 
-void Settings::resetVersion()
+Settings &Settings::resetVersion()
 {
-    setVersion({});
+    return setVersion({});
+}
+
+const QString &Settings::envFile() const
+{
+    return this->_envFile;
+}
+
+Settings &Settings::setEnvFile(const QString &newVersion)
+{
+    if (_version == newVersion)
+        return *this;
+    _version = newVersion;
+    emit versionChanged();
+    return *this;
+}
+
+Settings &Settings::resetEnvFile()
+{
+    return this->setEnvFile({});
 }
 
 } // namespace QApr

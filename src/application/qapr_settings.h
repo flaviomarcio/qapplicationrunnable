@@ -14,6 +14,7 @@ class Q_STM_EXPORT Settings : public QStm::ObjectWrapper
     Q_STM_OBJECT_WRAPPER(Settings)
     Q_PROPERTY(Host *host READ host WRITE setHost RESET resetHost NOTIFY hostChanged)
     Q_PROPERTY(QString version READ version WRITE setVersion RESET resetVersion NOTIFY versionChanged)
+    Q_PROPERTY(QString envFile READ envFile WRITE setEnvFile RESET resetenvFile NOTIFY envFileChanged)
 public:
 
     //!
@@ -34,24 +35,34 @@ public:
     //! \return
     //!
     Host *host();
-    void setHost(Host *newHost);
-    void resetHost();
+    Settings &setHost(Host *newHost);
+    Settings &resetHost();
 
     //!
     //! \brief version
     //! \return
     //!
     const QString &version() const;
-    void setVersion(const QString &newVersion);
-    void resetVersion();
+    Settings &setVersion(const QString &newVersion);
+    Settings &resetVersion();
+
+    //!
+    //! \brief envFile
+    //! \return
+    //!
+    const QString &envFile() const;
+    Settings &setEnvFile(const QString &newVersion);
+    Settings &resetEnvFile();
 
 
 private:
     Host _host;
     QString _version;
+    QString _envFile;
 signals:
     void hostChanged();
     void versionChanged();
+    void envFileChanged();
 };
 
 } // namespace QMFE
