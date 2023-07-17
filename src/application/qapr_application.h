@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QObject>
+#include <QMutex>
 #include "../../../qstm/src/qstm_setting_manager.h"
 #include "../../../qorm/src/qorm_connection_manager.h"
 #include "../../../qstm/src/qstm_envs.h"
@@ -14,6 +15,7 @@ namespace QApr {
 class ApplicationPvt;
 
 #define qAprApp QApr::Application::i()
+#define qAprCnn QApr::Application::i().connectionManager()
 
 //!
 //! \brief The Application class
@@ -23,6 +25,12 @@ class Q_APR_EXPORT Application : public QObject
     Q_OBJECT
 public:
     Q_INVOKABLE explicit Application(QObject *parent = nullptr);
+
+    //!
+    //! \brief lockedWait
+    //! \return
+    //!
+    static bool lockedWait();
 
     //!
     //! \brief resourceSettings
@@ -41,12 +49,6 @@ public:
     //! \return
     //! configuracoes para conexoes com bancos de dados
     virtual QOrm::ConnectionManager &connectionManager();
-
-    //!
-    //! \brief pool
-    //! \return
-    //!
-    virtual QOrm::ConnectionPool &pool();
 
     //!
     //! \brief envs

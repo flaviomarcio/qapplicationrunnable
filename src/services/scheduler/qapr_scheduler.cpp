@@ -23,7 +23,7 @@ public:
     void readSettings(const QMetaMethod &method)
     {
         Q_DECLARE_VU;
-        auto &manager=QApr::Application::i().manager();
+        auto &manager=qAprApp.manager();
         auto vSettings=manager.settingBody(method.name());
 
         this->settings

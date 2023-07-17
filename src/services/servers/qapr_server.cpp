@@ -7,7 +7,7 @@ Q_GLOBAL_STATIC(Server, staticServer)
 
 Server::Server(QObject *parent) : QRpc::Server{parent}
 {
-    const auto &vSettings=QApr::Application::i().manager().settingBody();
+    const auto &vSettings=qAprApp.manager().settingBody();
     this->load(vSettings);
 }
 

@@ -26,7 +26,7 @@ public:
     explicit SchedulerAgentPvt(SchedulerAgent *parent) : QObject{parent}, agent{parent}, settingScheduler{parent}
     {
         Q_DECLARE_VU;
-        auto &manager=QApr::Application::i().manager();
+        auto &manager=qAprApp.manager();
         auto vSetting=manager.settingBody(__scheduler);
         settingScheduler.fromHash(vSetting);
     }

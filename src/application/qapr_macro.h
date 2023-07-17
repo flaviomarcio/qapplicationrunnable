@@ -51,7 +51,7 @@ Q_INVOKABLE virtual QVariant businessCheck() \
 
 #define QAPR_CRUD_BLOCK_MAKER_ARGS(parent, crudBlock)\
 QOrm::CRUDBlock crudBlock(parent); \
-crudBlock.host(QApr::Application::i().settings().host()->toHash()); \
+crudBlock.host(qAprApp.settings().host()->toHash()); \
 auto irq=parent->irq();\
 if(irq!=nullptr)\
     crudBlock.host().addHeaders(irq->request().authorizationHeaders());\

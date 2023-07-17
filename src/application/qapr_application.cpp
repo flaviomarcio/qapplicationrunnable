@@ -11,6 +11,15 @@
 
 namespace QApr {
 
+QMutex *makeLockedMutex()
+{
+    auto mutex=new QMutex();
+    mutex->lock();
+    return mutex;
+}
+
+static QMutex *lockedMutex=makeLockedMutex();
+
 Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QVariantHash, circuitBreakerSettings);
 
@@ -83,6 +92,8 @@ static void startSettings()
 
     if(!settingFile.envs().isEmpty())
         aWarning() << QObject::tr("loaded envs: %1").arg(settingFile.envs().join(','));
+
+    lockedMutex->unlock();
 }
 
 static void startUp(Application &i)
@@ -237,9 +248,15 @@ public:
     }
 };
 
-Application::Application(QObject *parent) : QObject{parent}
+Application::Application(QObject *parent) : QObject{parent}, p{new ApplicationPvt{this}}
 {
-    this->p=new ApplicationPvt{this};
+
+}
+
+bool Application::lockedWait()
+{
+    QMutexLocker locker(lockedMutex);
+    return true;
 }
 
 const QStm::SettingFile &Application::resourceSettings()
@@ -257,10 +274,10 @@ QOrm::ConnectionManager &Application::connectionManager()
     return p->connectionManager;
 }
 
-QOrm::ConnectionPool &Application::pool()
-{
-    return p->connectionManager.pool();
-}
+//QOrm::ConnectionPool &Application::pool()
+//{
+//    return p->connectionManager.pool();
+//}
 
 QStm::Envs &Application::envs()const
 {

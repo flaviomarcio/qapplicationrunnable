@@ -1,6 +1,8 @@
 #include "./qapr_interface.h"
 #include "../../../qorm/src/qorm_transaction.h"
+#include "../../../qorm/src/qorm_connection_pool.h"
 #include "../application/qapr_application.h"
+#include "../sessions/qapr_session.h"
 #include "../sessions/qapr_session.h"
 
 namespace QApr {
@@ -17,7 +19,7 @@ public:
     explicit InterfacePvt(QRpc::Controller *parent)
         : QObject{parent},
           transaction{parent},
-          pool{QApr::Application::i().pool()},
+          pool{qAprCnn.setting()},
           session{parent}
     {
         this->parent = parent;
@@ -33,9 +35,8 @@ public:
 };
 
 Interface::Interface(QObject *parent)
-    : QRpc::Controller(parent), QAprPrivate::InterfaceAnnotations{this}
+    : QRpc::Controller(parent), QAprPrivate::InterfaceAnnotations{this}, p{new InterfacePvt{this}}
 {
-    this->p = new InterfacePvt{this};
 }
 
 QVariant Interface::check()

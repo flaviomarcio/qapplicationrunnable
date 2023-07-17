@@ -19,7 +19,7 @@ public:
     explicit SchedulerDBPvt(SchedulerDB *parent=nullptr)
         :QObject{parent},
         parent{parent},
-        pool(QApr::Application::i().connectionManager().pool())
+        pool(qAprCnn.setting())
     {
     }
 };

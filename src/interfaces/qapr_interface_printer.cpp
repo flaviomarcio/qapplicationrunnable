@@ -16,7 +16,7 @@ public:
     QRpc::Request &req()
     {
         static const auto __settings="printservice";
-        auto &manager=QApr::Application::i().manager();
+        auto &manager=qAprApp.manager();
         auto settingAcl=manager.setting(__settings);
         requestSession=settingAcl;
         auto headers=parent->request().requestHeader();

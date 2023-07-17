@@ -1,7 +1,4 @@
 #include "qapr_test_main.h"
-
-//#include "../../../qstm/src/qstm_util_hash.h"
-//#include "../../../qstm/src/qstm_util_variant.h"
 #include "../../../qrpc/src/qrpc_listen_protocol.h"
 #include "../../../qrpc/src/qrpc_server.h"
 #include "../application/qapr.h"
@@ -31,6 +28,7 @@ void TestMain::execute()
 
 void TestMain::run()
 {
+    QApr::Application::lockedWait();
     this->configure();
 
     this->execute();
