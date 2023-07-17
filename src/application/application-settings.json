@@ -107,7 +107,7 @@
             "authorization":"Service ${MSG_AUTH}"
          },
          "basePath":"${MSG_CONTEXT_PATH}",
-         "configs":{
+         "configurations":{
             "code":{
                "logMessage":true,
                "enabled":true,

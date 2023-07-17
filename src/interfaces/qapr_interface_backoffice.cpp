@@ -207,7 +207,7 @@ public:
 
         auto &request=this->parent->request();
 
-        const auto &host=QApr::Application::i().settings().host();
+        const auto &host=qAprApp.settings().host();
         auto LOCAL_APR_PROTOCOL=APR_PROTOCOL->isEmpty()?host->protocol():(*APR_PROTOCOL);
         auto LOCAL_APR_DNS=APR_DNS->isEmpty()?host->hostName():(*APR_DNS);
         auto LOCAL_APR_PORT=APR_PORT<=0?host->port():(APR_PORT);
