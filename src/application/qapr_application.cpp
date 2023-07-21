@@ -180,6 +180,7 @@ public:
 
         auto fileSetting=findFile("json");
         auto fileEnv=findFile("env");
+        fileEnv.append(settings.envFile());
 
         if(fileSetting.isEmpty()){
             aWarning()<<"Application settings not found";
@@ -188,7 +189,7 @@ public:
         else{
             this->settingFile
                 .setting(fileSetting)
-                .envs(fileEnv);
+                .envsAdd(fileEnv);
         }
 
         return this->settingFile;
