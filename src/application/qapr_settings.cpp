@@ -4,9 +4,21 @@
 
 namespace QApr {
 static const auto __apr="apr";
-Settings::Settings(QObject *parent): QStm::ObjectWrapper{parent}
-{
 
+class SettingsPvt:public QObject{
+public:
+    Settings *parent=nullptr;
+    QString name;
+    Host host;
+    QString version;
+    QString envFile;
+    explicit SettingsPvt(Settings *parent):QObject{parent},parent{parent},host{parent}
+    {
+    }
+};
+
+Settings::Settings(QObject *parent): QStm::ObjectWrapper{parent}, p{new SettingsPvt{this}}
+{
 }
 
 bool Settings::setValues(const QVariant &v)
@@ -41,33 +53,34 @@ bool Settings::setValues(const QVariant &v)
 
 QString Settings::name() const
 {
-    return qAprApp.envs().parser(_name).toString();
+    return qAprApp.envs().parser(p->name).toString();
 }
 
-void Settings::setName(const QString &newName)
+Settings &Settings::setName(const QString &newName)
 {
-    if(this->_name==newName)
-        return;
-    this->_name=newName.trimmed();
+    if(this->p->name==newName)
+        return *this;
+    this->p->name=newName.trimmed();
     emit nameChanged();
+    return *this;
 }
 
-void Settings::resetName()
+Settings &Settings::resetName()
 {
-
+    return this->setName({});
 }
 
 Host *Settings::host()
 {
-    return &_host;
+    return &p->host;
 }
 
 Settings &Settings::setHost(Host *newHost)
 {
     Q_UNUSED(newHost)
-//    if (_host == newHost)
+//    if (p->host == newHost)
 //        return;
-//    _host = newHost;
+//    p->host = newHost;
 //    emit hostChanged();
     return *this;
 }
@@ -77,16 +90,16 @@ Settings &Settings::resetHost()
     return setHost({});
 }
 
-QString Settings::version() const
+const QString Settings::version() const
 {
-    return qAprApp.envs().parser(_version).toString();
+    return qAprApp.envs().parser(p->version).toString();
 }
 
 Settings &Settings::setVersion(const QString &newVersion)
 {
-    if (_version == newVersion)
+    if (p->version == newVersion)
         return *this;
-    _version = newVersion;
+    p->version = newVersion;
     emit versionChanged();
     return *this;
 }
@@ -96,16 +109,16 @@ Settings &Settings::resetVersion()
     return setVersion({});
 }
 
-const QString &Settings::envFile() const
+const QString Settings::envFile() const
 {
-    return this->_envFile;
+    return qAprApp.envs().parser(p->envFile).toString();
 }
 
 Settings &Settings::setEnvFile(const QString &newVersion)
 {
-    if (_version == newVersion)
+    if (p->version == newVersion)
         return *this;
-    _version = newVersion;
+    p->version = newVersion;
     emit versionChanged();
     return *this;
 }

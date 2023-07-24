@@ -4,7 +4,7 @@
 #include "./qapr_host.h"
 
 namespace QApr {
-
+class SettingsPvt;
 //!
 //! \brief The Settings class
 //!
@@ -36,8 +36,8 @@ public:
     //! \return
     //!
     QString name() const;
-    void setName(const QString &newName);
-    void resetName();
+    Settings &setName(const QString &newName);
+    Settings &resetName();
 
     //!
     //! \brief host
@@ -51,7 +51,7 @@ public:
     //! \brief version
     //! \return
     //!
-    const QString &version() const;
+    const QString version() const;
     Settings &setVersion(const QString &newVersion);
     Settings &resetVersion();
 
@@ -59,15 +59,12 @@ public:
     //! \brief envFile
     //! \return
     //!
-    const QString &envFile() const;
+    const QString envFile() const;
     Settings &setEnvFile(const QString &newVersion);
     Settings &resetEnvFile();
 
 private:
-    QString _name;
-    Host _host;
-    QString _version;
-    QString _envFile;
+    SettingsPvt *p=nullptr;
 signals:
     void nameChanged();
     void hostChanged();
