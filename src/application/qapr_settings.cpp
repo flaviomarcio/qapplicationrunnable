@@ -1,4 +1,5 @@
 #include "./qapr_settings.h"
+#include "./qapr_application.h"
 #include "../../../qstm/src/qstm_envs.h"
 
 namespace QApr {
@@ -38,6 +39,24 @@ bool Settings::setValues(const QVariant &v)
     return {};
 }
 
+QString Settings::name() const
+{
+    return qAprApp.envs().parser(_name).toString();
+}
+
+void Settings::setName(const QString &newName)
+{
+    if(this->_name==newName)
+        return;
+    this->_name=newName.trimmed();
+    emit nameChanged();
+}
+
+void Settings::resetName()
+{
+
+}
+
 Host *Settings::host()
 {
     return &_host;
@@ -57,9 +76,9 @@ void Settings::resetHost()
     setHost({});
 }
 
-const QString &Settings::version() const
+QString Settings::version() const
 {
-    return _version;
+    return qAprApp.envs().parser(_version).toString();
 }
 
 void Settings::setVersion(const QString &newVersion)

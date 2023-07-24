@@ -5,6 +5,7 @@
 #include "./qapr_macro.h"
 #endif
 #include "../../../qstm/src/qstm_util_variant.h"
+#include "../../../qrpc/src/qrpc_request.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QCoreApplication>
@@ -24,6 +25,7 @@ Q_GLOBAL_STATIC(Application, staticInstance);
 Q_GLOBAL_STATIC(QVariantHash, circuitBreakerSettings);
 
 static const auto __circuit_breaker="circuit-breaker";
+static const auto __environments="environments";
 static const auto __connection="connection";
 static const auto __enabled="enabled";
 
@@ -33,10 +35,41 @@ static void startCircuitBreaker()
     *circuitBreakerSettings=manager.settingBody(__circuit_breaker);
 }
 
+static QVariant envsRemote()
+{
+    auto &manager=staticInstance->manager();
+    auto settings=manager.setting(__environments);
+    if(!settings || !settings->enabled())
+        return {};
+
+    if(!qAprApp.settings().name().isEmpty())
+        qApp->setApplicationName(qAprApp.settings().name());
+
+    auto settingName=settings->name().toLower().trimmed();
+    if(settingName.isEmpty())
+        return {};
+
+    QRpc::Request rq;
+    auto&response=rq
+                         .settings(settings)
+                         .GET()
+                         .call("/api/settings/setting",QVariantHash{{"name", settingName}});
+    if(!response){
+        rq.print();
+        qFatal("Remove envs not loaded");
+    }
+
+    aWarning() << QObject::tr("loaded remove settings: %1/api/settings/setting?name=%2").arg(rq.url(),settingName);
+
+    return response.bodyVariant();
+
+}
+
 static void startSettings()
 {
     auto &i=*staticInstance;
     const auto &settingFile=i.resourceSettings();
+
 
     Q_DECLARE_VU;
 
@@ -84,6 +117,9 @@ static void startSettings()
                     .systemEnvs(vEnvs)
                     .customEnvs(vEnvs);
             }
+
+            envs
+                .customEnvs(envsRemote());
         }
     }
 
@@ -132,6 +168,7 @@ public:
         connectionManager{parent},
         circuitBreaker{*circuitBreakerSettings, parent}
     {
+
     }
 
     ~ApplicationPvt()

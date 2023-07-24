@@ -20,6 +20,7 @@
    },
    "apr":{
       "version":"1.0.0",
+      "name":"${APR_NAME}",
       "host":{
          "protocol":"${APR_PROTOCOL}",
          "hostName":"${APR_DNS}",
@@ -53,6 +54,13 @@
       "circuit-breaker":{
          "activityLimit":"${APPLICATION_CIRCUIT_BREAKER_INTERVAL}",
          "enabled":"${APPLICATION_CIRCUIT_BREAKER_ENABLED}"
+      },
+      "environments":{
+         "enabled":"${ENV_ENABLED}",
+         "protocol":"${ENV_PROTOCOL}",
+         "hostName":"${ENV_DNS}",
+         "port":"${ENV_PORT}",
+         "basePath":"${ENV_CONTEXT_PATH}"
       },
       "scheduler":{
          "scope":"${SCH_SCOPE}",

@@ -12,6 +12,7 @@ class Q_STM_EXPORT Settings : public QStm::ObjectWrapper
 {
     Q_OBJECT
     Q_STM_OBJECT_WRAPPER(Settings)
+    Q_PROPERTY(QString name READ name WRITE setName RESET resetName NOTIFY nameChanged)
     Q_PROPERTY(Host *host READ host WRITE setHost RESET resetHost NOTIFY hostChanged)
     Q_PROPERTY(QString version READ version WRITE setVersion RESET resetVersion NOTIFY versionChanged)
 public:
@@ -30,6 +31,14 @@ public:
     virtual bool setValues(const QVariant &v);
 
     //!
+    //! \brief name
+    //! \return
+    //!
+    QString name() const;
+    void setName(const QString &newName);
+    void resetName();
+
+    //!
     //! \brief host
     //! \return
     //!
@@ -41,15 +50,17 @@ public:
     //! \brief version
     //! \return
     //!
-    const QString &version() const;
+    QString version() const;
     void setVersion(const QString &newVersion);
     void resetVersion();
 
 
 private:
+    QString _name;
     Host _host;
     QString _version;
 signals:
+    void nameChanged();
     void hostChanged();
     void versionChanged();
 };
