@@ -74,13 +74,12 @@ public:
     QOrm::Transaction transaction;
     QVariantHash modules;
     explicit InterfaceBackOfficePvt(QRpc::Controller *parent)
-        : QObject{parent},
+        : QObject{parent}, parent{parent},
 #ifdef QTREFORCE_QRMK
           access{parent},
       #endif
           transaction{parent}
     {
-        this->parent = parent;
     }
 
     virtual ~InterfaceBackOfficePvt()
@@ -293,9 +292,8 @@ public:
 #endif
 };
 
-InterfaceBackOffice::InterfaceBackOffice(QObject *parent) : QApr::Interface{parent}
+InterfaceBackOffice::InterfaceBackOffice(QObject *parent) : QApr::Interface{parent}, p{new InterfaceBackOfficePvt{this}}
 {
-    this->p = new InterfaceBackOfficePvt{this};
 }
 
 #ifdef QTREFORCE_QMFE

@@ -61,14 +61,14 @@ public:
     //! \brief uuid
     //! \return
     //!generic uuid for identification
-    virtual QUuid &uuid() const;
+    virtual QUuid &id() const;
 
     //!
     //! \brief setUuid
     //! \param value
     //! \return
     //!
-    virtual SessionCredential &setUuid(const QUuid &value);
+    virtual SessionCredential &setId(const QUuid &value);
 
 
     //!
@@ -83,33 +83,7 @@ public:
     //! \return
     //!account identification
     virtual QUuid accountUuid()const;
-    virtual SessionCredential &set_account_uuid(const QVariant &uuid);
-
-    //!
-    //! \brief sessionUuid
-    //! \return
-    //!
-    virtual QUuid sessionUuid()const;
-
-    //!
-    //! \brief setSessionUuid
-    //! \param uuid
-    //! \return
-    //!
-    virtual SessionCredential &setSessionUuid(const QVariant &uuid);
-
-    //!
-    //! \brief serviceUuid
-    //! \return
-    //!service identification
-    virtual QUuid serviceUuid()const;
-
-    //!
-    //! \brief setServiceUuid
-    //! \param uuid
-    //! \return
-    //!
-    virtual SessionCredential &setServiceUuid(const QVariant &uuid);
+    virtual SessionCredential &setAccountUuid(const QVariant &uuid);
 
     //!
     //! \brief profile

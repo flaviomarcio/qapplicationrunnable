@@ -90,20 +90,14 @@
          }
       },
       "token":{
-         "activityLimit":"1y",
-         "variables":{
-            "secret":"ZG1Mx0OD-Uw^OW>Yw"
-         }
+         "activityLimit":"1y"
       },
       "acl":{
          "enabled":"${ACL_ENABLED}",
          "protocol":"${ACL_PROTOCOL}",
          "hostName":"${ACL_DNS}",
          "port":"${ACL_PORT}",
-         "headers":{
-            "Content-Type":"application/json",
-            "authorization":"Service ${ACL_AUTH}"
-         },
+         "headers":{"Content-Type":"application/json"},
          "basePath":"${ACL_CONTEXT_PATH}"
       },
       "message":{
