@@ -53,10 +53,10 @@ static QVariant envsRemote()
     auto&response=rq
                          .settings(settings)
                          .GET()
-                         .call("/api/settings/setting",QVariantHash{{"name", settingName}});
+                         .call("/settings/setting",QVariantHash{{"name", settingName}});
     if(!response){
         rq.print();
-        qFatal("Remove envs not loaded");
+        qFatal("envs not loaded");
     }
 
     aWarning() << QObject::tr("loaded remove settings: %1/api/settings/setting?name=%2").arg(rq.url(),settingName);
