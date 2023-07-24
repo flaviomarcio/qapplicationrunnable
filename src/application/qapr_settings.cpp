@@ -77,17 +77,18 @@ Host *Settings::host()
 
 Settings &Settings::setHost(Host *newHost)
 {
-    Q_UNUSED(newHost)
-//    if (p->host == newHost)
-//        return;
-//    p->host = newHost;
-//    emit hostChanged();
+    p->host.clear();
+    if(newHost)
+        p->host.readFrom(newHost);
+    emit hostChanged();
     return *this;
 }
 
 Settings &Settings::resetHost()
 {
-    return setHost({});
+    p->host.clear();
+    emit hostChanged();
+    return *this;
 }
 
 const QString Settings::version() const
