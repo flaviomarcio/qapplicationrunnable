@@ -15,7 +15,7 @@ class Q_STM_EXPORT Settings : public QStm::ObjectWrapper
     Q_PROPERTY(QString name READ name WRITE setName RESET resetName NOTIFY nameChanged)
     Q_PROPERTY(Host *host READ host WRITE setHost RESET resetHost NOTIFY hostChanged)
     Q_PROPERTY(QString version READ version WRITE setVersion RESET resetVersion NOTIFY versionChanged)
-    Q_PROPERTY(QString envFile READ envFile WRITE setEnvFile RESET resetenvFile NOTIFY envFileChanged)
+    Q_PROPERTY(QString envFile READ envFile WRITE setEnvFile RESET resetEnvFile NOTIFY envFileChanged)
 public:
 
     //!
