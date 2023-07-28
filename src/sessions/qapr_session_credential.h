@@ -68,22 +68,15 @@ public:
     //! \param value
     //! \return
     //!
-    virtual SessionCredential &setId(const QUuid &value);
+    virtual SessionCredential &setId(const QVariant &value);
 
 
     //!
-    //! \brief domainUuid
+    //! \brief scopeId
     //! \return
-    //!isolation level for systems
-    virtual QUuid domainUuid()const;
-    virtual SessionCredential &setDomainUuid(const QVariant &uuid);
-
     //!
-    //! \brief accountUuid
-    //! \return
-    //!account identification
-    virtual QUuid accountUuid()const;
-    virtual SessionCredential &setAccountUuid(const QVariant &uuid);
+    virtual QUuid scopeId()const;
+    virtual SessionCredential &setScopeId(const QVariant &uuid);
 
     //!
     //! \brief profile

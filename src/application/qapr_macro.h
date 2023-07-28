@@ -63,3 +63,8 @@ QOrm::CRUDBlock::makeBlock(crudBlock, vBody)
 crudBlock.type(Q_ORM_REPORTFORM);crudBlock
 
 #define QAPR_TEST_RUNNER(CLASS){CLASS var; var.execute();}
+
+#define QAPR_RETURN_ERROR() { \
+    this->rq().co(controller.lr().sc()); \
+    QRPC_RETURN_ERROR() \
+}

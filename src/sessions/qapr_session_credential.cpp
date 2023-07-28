@@ -3,8 +3,8 @@
 
 namespace QApr {
 
-static auto const __account_uuid="accountUuid";
-static auto const __domain_uuid="domainUuid";
+static auto const __id="id";
+static auto const __scopeId="scopeId";
 static auto const __profile="profile";
 static auto const __session="session";
 static auto const __token="token";
@@ -15,9 +15,8 @@ public:
     SessionCredential *parent=nullptr;
     QVariantHash body;
     QUuid id;
+    QUuid scopeId;
     QVariantHash permits;
-    QUuid accountUuid;
-    QUuid domainUuid;
     QVariant profile;
     QVariant session;
     QVariant token;
@@ -40,8 +39,8 @@ SessionCredential &SessionCredential::setBody(const QVariantHash &value)
 {
     p->body=value;
     Q_DECLARE_VU;
-    p->accountUuid=vu.toUuid(value.value(__account_uuid));
-    p->domainUuid=vu.toUuid(value.value(__domain_uuid));
+    p->id=vu.toUuid(value.value(__id));
+    p->scopeId=vu.toUuid(value.value(__scopeId));
     p->profile=value.value(__profile);
     p->session=value.value(__session);
     p->token=value.value(__token);
@@ -53,7 +52,7 @@ QVariantHash SessionCredential::toVariant() const
 {
     QVariantHash vHash{
          {QT_STRINGIFY(id), this->id()}
-        ,{QT_STRINGIFY(accountUuid), this->accountUuid()}
+        ,{QT_STRINGIFY(scopeId), this->scopeId()}
         ,{QT_STRINGIFY(profile), this->profile()}
         ,{QT_STRINGIFY(session), this->session()}
         ,{QT_STRINGIFY(permits), this->permits()}
@@ -64,7 +63,7 @@ QVariantHash SessionCredential::toVariant() const
 bool SessionCredential::isValid() const
 {
     auto &credentials=*this;
-    if(!credentials.id().isNull() && p->token.isValid() && !p->token.isNull())
+    if(credentials.id().isNull() || !p->token.isValid() || p->token.isNull())
         return {};
     return true;
 }
@@ -85,33 +84,22 @@ QUuid &SessionCredential::id() const
     return p->id;
 }
 
-SessionCredential &SessionCredential::setId(const QUuid &value)
+SessionCredential &SessionCredential::setId(const QVariant &value)
 {
-    p->id = value;
+    Q_DECLARE_VU;
+    p->id = vu.toUuid(value);
     return *this;
 }
 
-QUuid SessionCredential::domainUuid() const
+QUuid SessionCredential::scopeId() const
 {
-    return p->domainUuid;
+    return p->scopeId;
 }
 
-SessionCredential &SessionCredential::setDomainUuid(const QVariant &uuid)
+SessionCredential &SessionCredential::setScopeId(const QVariant &uuid)
 {
     Q_DECLARE_VU;
-    p->domainUuid=vu.toUuid(uuid);
-    return *this;
-}
-
-QUuid SessionCredential::accountUuid() const
-{
-    return p->accountUuid;
-}
-
-SessionCredential &SessionCredential::setAccountUuid(const QVariant &uuid)
-{
-    Q_DECLARE_VU;
-    p->accountUuid=vu.toUuid(uuid);
+    p->scopeId=vu.toUuid(uuid);
     return *this;
 }
 
