@@ -69,26 +69,28 @@ equals(QAPR_MVC,true):          DEFINES+=QAPR_MVC
 equals(QAPR_UTIL,true):         DEFINES+=QAPR_UTIL
 equals(QAPR_TEST,true):         DEFINES+=QAPR_TEST
 
+!equals(QTREFORCE_NO_MESSAGE,true) {
+    message(" ")
+    message(-QTREFORCE QAPR-MODULES-DEFINITION-ACCEPT)
+    message("   -QAPR_APP_TYPE: "$$QAPR_APP_TYPE)
+    equals(QAPR_APP_API,true)      {message("      +QAPR_APP_API............ accepted") } else { message("      +QAPR_APP_API............ ignored") }
+    equals(QAPR_APP_SERVICE,true)  {message("      +QAPR_APP_SERVICE........ accepted") } else { message("      +QAPR_APP_SERVICE........ ignored") }
+    equals(QAPR_APP_TESTS,true)    {message("      +QAPR_APP_TESTS.......... accepted") } else { message("      +QAPR_APP_TESTS.......... ignored") }
+    message("   -MODULES")
+    equals(QAPR_APPLICATION,true)  {message("      +QAPR_APPLICATION........ accepted") } else { message("      +QAPR_APPLICATION........ ignored") }
+    equals(QAPR_SERVICES,true)     {message("      +QAPR_SERVICES........... accepted") } else { message("      +QAPR_SERVICES........... ignored") }
+    equals(QAPR_SESSIONS,true)     {message("      +QAPR_SESSIONS........... accepted") } else { message("      +QAPR_SESSIONS........... ignored") }
+    equals(QAPR_INTERFACES,true)   {message("      +QAPR_INTERFACES......... accepted") } else { message("      +QAPR_INTERFACES......... ignored") }
+    equals(QAPR_MVC,true)          {message("      +QAPR_MVC................ accepted") } else { message("      +QAPR_MVC................ ignored") }
+    equals(QAPR_UTIL,true)         {message("      +QAPR_UTIL............... accepted") } else { message("      +QAPR_UTIL............... ignored") }
+    equals(QAPR_TEST,true)         {message("      +QAPR_TEST............... accepted") } else { message("      +QAPR_TEST............... ignored") }
+    message("   -SOURCES")
+    equals(QAPR_APPLICATION,true):  message("      +QAPR_APPLICATION........" $$QAPR_APPLICATION_SOURCE)
+    equals(QAPR_SERVICES,true):     message("      +QAPR_SERVICES..........." $$QAPR_SERVICES_SOURCE)
+    equals(QAPR_SESSIONS,true):     message("      +QAPR_SESSIONS..........." $$QAPR_SESSIONS_SOURCE)
+    equals(QAPR_INTERFACES,true):   message("      +QAPR_INTERFACES........." $$QAPR_INTERFACES_SOURCE)
+    equals(QAPR_MVC,true):          message("      +QAPR_MVC................" $$QAPR_MVC_SOURCE)
+    equals(QAPR_UTIL,true):         message("      +QAPR_UTIL..............." $$QAPR_UTIL_SOURCE)
+    equals(QAPR_TEST,true):         message("      +QAPR_UTIL..............." $$QAPR_TEST_SOURCE)
 
-message(" ")
-message(-QTREFORCE QAPR-MODULES-DEFINITION-ACCEPT)
-message("   -QAPR_APP_TYPE: "$$QAPR_APP_TYPE)
-equals(QAPR_APP_API,true)      {message("      +QAPR_APP_API............ accepted") } else { message("      +QAPR_APP_API............ ignored") }
-equals(QAPR_APP_SERVICE,true)  {message("      +QAPR_APP_SERVICE........ accepted") } else { message("      +QAPR_APP_SERVICE........ ignored") }
-equals(QAPR_APP_TESTS,true)    {message("      +QAPR_APP_TESTS.......... accepted") } else { message("      +QAPR_APP_TESTS.......... ignored") }
-message("   -MODULES")
-equals(QAPR_APPLICATION,true)  {message("      +QAPR_APPLICATION........ accepted") } else { message("      +QAPR_APPLICATION........ ignored") }
-equals(QAPR_SERVICES,true)     {message("      +QAPR_SERVICES........... accepted") } else { message("      +QAPR_SERVICES........... ignored") }
-equals(QAPR_SESSIONS,true)     {message("      +QAPR_SESSIONS........... accepted") } else { message("      +QAPR_SESSIONS........... ignored") }
-equals(QAPR_INTERFACES,true)   {message("      +QAPR_INTERFACES......... accepted") } else { message("      +QAPR_INTERFACES......... ignored") }
-equals(QAPR_MVC,true)          {message("      +QAPR_MVC................ accepted") } else { message("      +QAPR_MVC................ ignored") }
-equals(QAPR_UTIL,true)         {message("      +QAPR_UTIL............... accepted") } else { message("      +QAPR_UTIL............... ignored") }
-equals(QAPR_TEST,true)         {message("      +QAPR_TEST............... accepted") } else { message("      +QAPR_TEST............... ignored") }
-message("   -SOURCES")
-equals(QAPR_APPLICATION,true):  message("      +QAPR_APPLICATION........" $$QAPR_APPLICATION_SOURCE)
-equals(QAPR_SERVICES,true):     message("      +QAPR_SERVICES..........." $$QAPR_SERVICES_SOURCE)
-equals(QAPR_SESSIONS,true):     message("      +QAPR_SESSIONS..........." $$QAPR_SESSIONS_SOURCE)
-equals(QAPR_INTERFACES,true):   message("      +QAPR_INTERFACES........." $$QAPR_INTERFACES_SOURCE)
-equals(QAPR_MVC,true):          message("      +QAPR_MVC................" $$QAPR_MVC_SOURCE)
-equals(QAPR_UTIL,true):         message("      +QAPR_UTIL..............." $$QAPR_UTIL_SOURCE)
-equals(QAPR_TEST,true):         message("      +QAPR_UTIL..............." $$QAPR_TEST_SOURCE)
+}
