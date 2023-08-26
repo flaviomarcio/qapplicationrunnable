@@ -49,6 +49,11 @@ static QVariant envsRemote()
     if(settingName.isEmpty())
         return {};
 
+    qInfo()<<QByteArray("stringToBase64").toBase64();
+
+    if(!settings->enabled())
+        return {};
+
     QRpc::Request rq;
     auto&response=rq
                          .settings(settings)
