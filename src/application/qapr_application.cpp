@@ -49,8 +49,6 @@ static QVariant envsRemote()
     if(settingName.isEmpty())
         return {};
 
-    qInfo()<<QByteArray("stringToBase64").toBase64();
-
     if(!settings->enabled())
         return {};
 

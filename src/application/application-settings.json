@@ -50,7 +50,7 @@
    "services":{
       "default":{
          "protocol":"${APR_PROTOCOL}",
-         "enabled":true
+         "enabled":false
       },
       "circuit-breaker":{
          "activityLimit":"${APPLICATION_CIRCUIT_BREAKER_INTERVAL}",
