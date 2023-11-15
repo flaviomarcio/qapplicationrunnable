@@ -7,6 +7,4 @@ InterfaceAnnotations::InterfaceAnnotations(QObject *parent)//:QAnnotation::Exten
     Q_UNUSED(parent)
 }
 
-InterfaceAnnotations::~InterfaceAnnotations() {}
-
 } // namespace QAprPrivate

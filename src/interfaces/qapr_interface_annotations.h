@@ -20,7 +20,6 @@ public:
     //! \param parent
     //!
     explicit InterfaceAnnotations(QObject *parent = nullptr);
-    virtual ~InterfaceAnnotations();
 
 public:
     //!

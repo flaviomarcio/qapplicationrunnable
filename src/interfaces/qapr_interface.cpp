@@ -18,11 +18,11 @@ public:
     bool transactionRollbackForce = false;
     explicit InterfacePvt(QRpc::Controller *parent)
         : QObject{parent},
+          parent{parent},
           transaction{parent},
           pool{qAprCnn.setting()},
           session{parent}
     {
-        this->parent = parent;
         this->transaction.lr().clear();//clear thread erros
     }
 

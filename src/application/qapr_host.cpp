@@ -12,17 +12,14 @@ public:
     int port=-1;
     QVariantHash headers;
     QByteArray basePath;
-    explicit HostPvt(Host *parent):QObject{parent}
+    explicit HostPvt(Host *parent):QObject{parent}, parent{parent}
     {
-        this->parent=parent;
     }
 };
 
-Host::Host(QObject *parent) : ObjectWrapper{parent}
+Host::Host(QObject *parent) : ObjectWrapper{parent}, p{new HostPvt{this}}
 {
-    this->p=new HostPvt{this};
 }
-
 
 bool Host::isValid() const
 {
